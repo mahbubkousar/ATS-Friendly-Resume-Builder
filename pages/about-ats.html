@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About ATS - ResumeSync</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="../index.html" class="flex items-center space-x-2 text-2xl font-bold text-gray-800">
+                    <img src="../assets/images/RsumeSync_logo.png" alt="ResumeSync Logo" class="h-16 w-auto">
+                </a>
+
+                <!-- Mobile menu button -->
+                <button id="mobileMenuBtn" class="md:hidden text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                    <a href="../index.html#features" class="text-gray-600 hover:text-blue-600 transition">Features</a>
+                    <a href="about-ats.html" class="text-blue-600 font-semibold">About ATS</a>
+                    <a href="login.html" class="text-gray-600 hover:text-blue-600 transition">Login</a>
+                    <a href="register.html" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Sign Up</a>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="../index.html" class="text-gray-600 hover:text-blue-600 transition">Home</a>
+                    <a href="../index.html#features" class="text-gray-600 hover:text-blue-600 transition">Features</a>
+                    <a href="about-ats.html" class="text-blue-600 font-semibold">About ATS</a>
+                    <a href="login.html" class="text-gray-600 hover:text-blue-600 transition">Login</a>
+                    <a href="register.html" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition text-center">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-block bg-white bg-opacity-20 px-4 py-2 rounded-full mb-4">
+                    <span class="text-sm font-semibold">Understanding ATS</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">What is an Applicant Tracking System?</h1>
+                <p class="text-xl text-blue-100 mb-8">Learn how ATS works and why your resume needs to be optimized to get past automated screening</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Introduction -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <div class="bg-blue-100 p-4 rounded-lg">
+                            <i class="fas fa-robot text-3xl text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-4">What is ATS?</h2>
+                            <p class="text-gray-700 text-lg leading-relaxed">
+                                An <strong>Applicant Tracking System (ATS)</strong> is software used by employers and recruiters to collect, scan, sort, and rank job applications. It acts as a digital gatekeeper, automatically filtering resumes before they reach human recruiters.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded mt-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-semibold text-yellow-800 mb-1">Critical Statistic:</p>
+                                <p class="text-yellow-700">Over <strong>98% of Fortune 500 companies</strong> use ATS to screen resumes, and up to <strong>75% of resumes are rejected</strong> before a human ever sees them.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How ATS Works -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-cogs text-blue-600 mr-3"></i>
+                        How ATS Works
+                    </h2>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4 border-l-4 border-blue-500 pl-4">
+                            <div class="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-blue-600">1</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Resume Parsing</h3>
+                                <p class="text-gray-700">The ATS scans and extracts information from your resume (name, contact info, work experience, education, skills) and stores it in a structured database.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 border-l-4 border-green-500 pl-4">
+                            <div class="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-green-600">2</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Keyword Matching</h3>
+                                <p class="text-gray-700">The system searches for specific keywords and phrases from the job description. Resumes are scored based on how well they match the required skills and qualifications.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 border-l-4 border-purple-500 pl-4">
+                            <div class="bg-purple-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-purple-600">3</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Ranking & Filtering</h3>
+                                <p class="text-gray-700">Candidates are ranked based on their match score. Only the top-ranking resumes are passed to human recruiters for review.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 border-l-4 border-orange-500 pl-4">
+                            <div class="bg-orange-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <span class="font-bold text-orange-600">4</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Disqualification</h3>
+                                <p class="text-gray-700">Resumes with formatting issues, missing keywords, or parsing errors are automatically rejected, regardless of the candidate's actual qualifications.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ATS-Friendly Resume Requirements -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-check-circle text-green-600 mr-3"></i>
+                        ATS-Friendly Resume Requirements
+                    </h2>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Format & Structure -->
+                        <div class="bg-blue-50 rounded-xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-file-alt text-2xl text-blue-600 mr-3"></i>
+                                <h3 class="text-xl font-bold text-gray-800">Format & Structure</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Use standard file formats (.docx or .pdf)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Simple, clean layout without complex designs</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Standard fonts (Arial, Calibri, Times New Roman)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Font size between 10-12pt</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Clear section headings</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="bg-green-50 rounded-xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-align-left text-2xl text-green-600 mr-3"></i>
+                                <h3 class="text-xl font-bold text-gray-800">Content</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Include relevant keywords from job description</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Use standard section titles (Experience, Education)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Spell out acronyms (first mention)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Use action verbs and quantifiable achievements</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Include both hard and soft skills</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- What to Avoid -->
+                        <div class="bg-red-50 rounded-xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-times-circle text-2xl text-red-600 mr-3"></i>
+                                <h3 class="text-xl font-bold text-gray-800">What to Avoid</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-times text-red-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Tables, text boxes, or columns</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-times text-red-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Graphics, images, or logos</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-times text-red-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Headers and footers (except name)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-times text-red-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Fancy fonts or colors</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-times text-red-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Special characters or symbols</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Technical Details -->
+                        <div class="bg-purple-50 rounded-xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-code text-2xl text-purple-600 mr-3"></i>
+                                <h3 class="text-xl font-bold text-gray-800">Technical Details</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Use standard date formats (MM/YYYY)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Include phone number and email at the top</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Use standard bullet points (•, -, or ·)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Left-align text for better parsing</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Save with a clear filename (FirstName_LastName_Resume.pdf)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyword Optimization -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-key text-yellow-600 mr-3"></i>
+                        Keyword Optimization Strategy
+                    </h2>
+
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">1. Analyze the Job Description</h3>
+                            <p class="text-gray-700 mb-4">Read the job posting carefully and identify:</p>
+                            <ul class="space-y-2 ml-6">
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">▸</span>
+                                    <span class="text-gray-700"><strong>Required skills:</strong> Technical skills, software, tools, certifications</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">▸</span>
+                                    <span class="text-gray-700"><strong>Action words:</strong> Managed, developed, implemented, led, analyzed</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">▸</span>
+                                    <span class="text-gray-700"><strong>Industry terms:</strong> Specific jargon or terminology used in the field</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2">▸</span>
+                                    <span class="text-gray-700"><strong>Qualifications:</strong> Education level, years of experience, certifications</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">2. Integrate Keywords Naturally</h3>
+                            <p class="text-gray-700">Don't just list keywords—use them in context throughout your resume:</p>
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-3">
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-500 mb-1">❌ Bad Example:</p>
+                                    <p class="text-gray-800">"Skills: Python, JavaScript, React, Node.js"</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">✅ Good Example:</p>
+                                    <p class="text-gray-800">"Developed full-stack web applications using <strong>React</strong> and <strong>Node.js</strong>, implementing RESTful APIs with <strong>Python</strong> and <strong>JavaScript</strong>"</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">3. Use Both Acronyms and Full Terms</h3>
+                            <p class="text-gray-700 mb-3">Some ATS search for acronyms, others for full terms. Include both:</p>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <p class="text-gray-800">Example: "Bachelor of Science (<strong>BS</strong>) in Computer Science" or "Search Engine Optimization (<strong>SEO</strong>)"</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">4. Match Job Title & Level</h3>
+                            <p class="text-gray-700">If you're applying for a "Senior Software Engineer," use that exact title in your resume (if accurate).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Common ATS Mistakes -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-600 mr-3"></i>
+                        Common ATS Mistakes That Reject Resumes
+                    </h2>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">❌ Using Images for Text</h3>
+                            <p class="text-gray-700 text-sm">ATS cannot read text embedded in images. Your name, contact info, and skills must be plain text.</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">❌ Creative Section Headers</h3>
+                            <p class="text-gray-700 text-sm">Using "Where I've Been" instead of "Experience" confuses the ATS. Stick to standard titles.</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">❌ Incorrect File Type</h3>
+                            <p class="text-gray-700 text-sm">Submitting .jpg, .png, or uncommon formats. Always use .docx or .pdf unless specified otherwise.</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">❌ Keyword Stuffing</h3>
+                            <p class="text-gray-700 text-sm">Hiding keywords in white text or listing them unnaturally. Modern ATS can detect this.</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">❌ Missing Contact Information</h3>
+                            <p class="text-gray-700 text-sm">Putting your email or phone in the header/footer where ATS can't parse it.</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">❌ Inconsistent Formatting</h3>
+                            <p class="text-gray-700 text-sm">Different date formats, inconsistent spacing, or mixed fonts confuse the parser.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ATS Score Factors -->
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-3xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        What Affects Your ATS Score?
+                    </h2>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-white bg-opacity-10 rounded-xl p-6 backdrop-blur">
+                            <div class="text-4xl font-bold mb-2">40%</div>
+                            <h3 class="font-bold text-lg mb-2">Keyword Match</h3>
+                            <p class="text-blue-100 text-sm">How well your skills and experience match the job requirements</p>
+                        </div>
+                        <div class="bg-white bg-opacity-10 rounded-xl p-6 backdrop-blur">
+                            <div class="text-4xl font-bold mb-2">30%</div>
+                            <h3 class="font-bold text-lg mb-2">Formatting</h3>
+                            <p class="text-blue-100 text-sm">How easily the ATS can parse and extract your information</p>
+                        </div>
+                        <div class="bg-white bg-opacity-10 rounded-xl p-6 backdrop-blur">
+                            <div class="text-4xl font-bold mb-2">30%</div>
+                            <h3 class="font-bold text-lg mb-2">Relevance</h3>
+                            <p class="text-blue-100 text-sm">How relevant your experience is to the specific role</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-lg p-8 text-center">
+                    <div class="inline-block bg-blue-600 p-4 rounded-full mb-4">
+                        <i class="fas fa-rocket text-3xl text-white"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Ready to Create Your ATS-Friendly Resume?</h2>
+                    <p class="text-gray-700 text-lg mb-6 max-w-2xl mx-auto">
+                        Use ResumeSync's AI-powered builder to create a resume that passes ATS screening and impresses recruiters. Get instant feedback and optimization tips.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="register.html" class="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition">
+                            <i class="fas fa-plus-circle mr-2"></i>Create Resume Now
+                        </a>
+                        <a href="editor.html" class="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition border-2 border-blue-600">
+                            <i class="fas fa-play-circle mr-2"></i>Try Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 text-2xl font-bold text-white mb-4">
+                        <img src="../assets/images/RsumeSync_logo.png" alt="ResumeSync Logo" class="h-16 w-auto">
+                    </div>
+                    <p class="text-gray-400">AI-Powered ATS-Friendly Resume Builder</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html#features" class="hover:text-blue-500 transition">Features</a></li>
+                        <li><a href="../index.html#templates" class="hover:text-blue-500 transition">Templates</a></li>
+                        <li><a href="about-ats.html" class="hover:text-blue-500 transition">About ATS</a></li>
+                        <li><a href="login.html" class="hover:text-blue-500 transition">Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-blue-500 transition">Documentation</a></li>
+                        <li><a href="#" class="hover:text-blue-500 transition">Help Center</a></li>
+                        <li><a href="#" class="hover:text-blue-500 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-blue-500 transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold mb-4">Contact</h3>
+                    <p class="text-gray-400 text-sm">North South University<br>CSE482L Project<br>Fall 2025</p>
+                </div>
+            </div>
+            <hr class="border-gray-700 mb-8">
+            <div class="text-center text-gray-400 text-sm">
+                <p>&copy; 2025 ResumeSync. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

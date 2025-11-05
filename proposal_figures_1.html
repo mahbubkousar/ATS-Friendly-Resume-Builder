@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeSync - Additional Features Wireframes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .wireframe-section {
+            margin-bottom: 60px;
+        }
+
+        .wireframe-title {
+            font-size: 1.5rem;
+            color: #444;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wireframe-container {
+            background: white;
+            border: 3px solid #333;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sketch-style elements */
+        .sketch-box {
+            border: 2px solid #333;
+            background: white;
+            position: relative;
+        }
+
+        .sketch-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.03) 10px,
+                rgba(0,0,0,0.03) 20px
+            );
+            pointer-events: none;
+        }
+
+        .placeholder-text {
+            background: repeating-linear-gradient(
+                to right,
+                #666 0px,
+                #666 70%,
+                transparent 70%,
+                transparent 100%
+            );
+            height: 1em;
+            margin: 5px 0;
+        }
+
+        .button-sketch {
+            border: 2px solid #333;
+            background: white;
+            padding: 10px 20px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .button-sketch:hover {
+            background: #f0f0f0;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 #333;
+        }
+
+        .button-primary {
+            background: #333;
+            color: white;
+        }
+
+        /* Figure 5: Chat Interface */
+        .chat-interface {
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            height: 60px;
+            border-bottom: 2px solid #333;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f8f8;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-bubble {
+            border: 2px solid #333;
+            padding: 15px;
+            background: white;
+            position: relative;
+            max-width: 80%;
+        }
+
+        .message.ai .message-bubble {
+            background: #f0f8ff;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message.user .message-bubble {
+            background: #e8f5e9;
+            margin-left: auto;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #666;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chat-input-area {
+            border-top: 2px solid #333;
+            padding: 20px;
+            background: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #999;
+            font-family: inherit;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-action-btn {
+            padding: 8px 15px;
+            border: 2px solid #666;
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Figure 6: CLI Interface */
+        .cli-interface {
+            height: 700px;
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background: #ff5f56;
+        }
+
+        .terminal-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .terminal-dot.green {
+            background: #27c93f;
+        }
+
+        .terminal-line {
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .terminal-prompt {
+            color: #00ff00;
+            display: inline;
+        }
+
+        .terminal-command {
+            color: #ffffff;
+            display: inline;
+        }
+
+        .terminal-output {
+            color: #b0b0b0;
+            margin-left: 0;
+            white-space: pre-wrap;
+        }
+
+        .terminal-success {
+            color: #27c93f;
+        }
+
+        .terminal-warning {
+            color: #ffbd2e;
+        }
+
+        .terminal-error {
+            color: #ff5f56;
+        }
+
+        .terminal-info {
+            color: #56b6ff;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0;
+            }
+        }
+
+        .ascii-art {
+            color: #00ff00;
+            font-size: 0.8rem;
+            margin: 15px 0;
+            line-height: 1.2;
+        }
+
+        @media (max-width: 768px) {
+            .message-bubble {
+                max-width: 100%;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .quick-action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-rocket"></i> ResumeSync Additional Features</h1>
+        <p class="subtitle">Advanced features wireframes for enhanced user experience</p>
+
+        <!-- Figure 5: Conversational AI Chat Interface -->
+        <div class="wireframe-section">
+            <h2 class="wireframe-title">
+                <i class="fas fa-comments"></i>
+                Figure 5: Conversational AI Chat Interface for Resume Building
+            </h2>
+            <div class="wireframe-container chat-interface">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-robot" style="font-size: 1.5rem;"></i>
+                        <span style="font-weight: bold; font-size: 1.2rem;">ResumeSync AI Assistant</span>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <button class="button-sketch">Clear Chat</button>
+                        <button class="button-sketch">Export Resume</button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Area -->
+                <div class="chat-messages">
+                    <!-- AI Welcome Message -->
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <strong>ResumeSync AI:</strong><br>
+                                Hello! I'm here to help you create a professional, ATS-friendly resume. 
+                                Let's start with some basic information. What's your full name?
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Response -->
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                My name is John Doe
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Follow-up -->
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <strong>ResumeSync AI:</strong><br>
+                                Nice to meet you, John! What's your current job title or the position you're targeting?
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Response -->
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                I'm a software engineer with 5 years of experience looking for senior positions
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Processing -->
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <strong>ResumeSync AI:</strong><br>
+                                Excellent! A senior software engineer position - that's great. 
+                                Let me gather more details to create a compelling resume. 
+                                Can you tell me about your most recent work experience? 
+                                Include the company name, your role, and key achievements.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Detailed Response -->
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                I work at TechCorp as a Software Engineer. I led a team of 4 developers 
+                                to migrate our monolithic application to microservices, reducing deployment 
+                                time by 60% and improving system reliability.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Analysis and Suggestion -->
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <strong>ResumeSync AI:</strong><br>
+                                Impressive achievements! I notice you mentioned specific metrics (60% reduction, 
+                                team of 4) - that's excellent for ATS optimization. 
+                                <br><br>
+                                I'll format this as:<br>
+                                <div class="sketch-box" style="padding: 10px; margin: 10px 0;">
+                                    <strong>Software Engineer | TechCorp</strong><br>
+                                    • Led 4-person development team in successful microservices migration<br>
+                                    • Reduced deployment time by 60% through architectural improvements<br>
+                                    • Enhanced system reliability and scalability
+                                </div>
+                                <br>
+                                Would you like to add more experiences or shall we move to your education?
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Typing Indicator -->
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
+                        <input type="text" class="chat-input" placeholder="Type your message here...">
+                        <button class="button-sketch button-primary">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn">Add Experience</button>
+                        <button class="quick-action-btn">Add Education</button>
+                        <button class="quick-action-btn">Add Skills</button>
+                        <button class="quick-action-btn">Upload Existing Resume</button>
+                        <button class="quick-action-btn">Paste Job Description</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Figure 6: CLI Tool with MCP -->
+        <div class="wireframe-section">
+            <h2 class="wireframe-title">
+                <i class="fas fa-terminal"></i>
+                Figure 6: Command-Line Tool using MCP for Interactive Session
+            </h2>
+            <div class="wireframe-container cli-interface">
+                <!-- Terminal Header -->
+                <div class="terminal-header">
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot yellow"></div>
+                    <div class="terminal-dot green"></div>
+                    <span style="margin-left: auto; color: #666; font-size: 0.9rem;">
+                        resumesync-cli v1.0.0 | MCP Protocol Active
+                    </span>
+                </div>
+
+                <!-- ASCII Art Logo -->
+                <pre class="ascii-art">
+╔═══════════════════════════════════════════════════════════╗
+║  ____                           ____                     ║
+║ |  _ \ ___  ___ _   _ _ __ ___   ___ / ___| _   _ _ __   __ ║
+║ | |_) / _ \/ __| | | | '_ ` _ \ / _ \___ \| | | | '_ \ / __|║
+║ |  _ <  __/\__ \ |_| | | | | | |  __/___) | |_| | | | | (__ ║
+║ |_| \_\___||___/\__,_|_| |_| |_|\___|____/ \__, |_| |_|\___║
+║                                            |___/           ║
+╚═══════════════════════════════════════════════════════════╝
+                </pre>
+
+                <!-- Terminal Session -->
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$ </span>
+                    <span class="terminal-command">resumesync --help</span>
+                </div>
+                <div class="terminal-output">
+ResumeSync CLI - AI-Powered Resume Builder via MCP Protocol
+
+USAGE:
+    resumesync [COMMAND] [OPTIONS]
+
+COMMANDS:
+    create      Create a new resume interactively
+    analyze     Analyze existing resume against job description
+    optimize    Optimize resume for specific keywords
+    export      Export resume to various formats
+    config      Configure API keys and preferences
+
+OPTIONS:
+    --from      Import from existing file (PDF, DOCX, JSON)
+    --template  Use specific template (professional, modern, minimal)
+    --verbose   Show detailed MCP communication logs
+    --help      Show this help message
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$ </span>
+                    <span class="terminal-command">resumesync create --from my_cv.pdf</span>
+                </div>
+                <div class="terminal-output">
+<span class="terminal-info">[INFO] Establishing MCP connection to ResumeSync server...</span>
+<span class="terminal-success">[SUCCESS] Connected to MCP server at api.resumesync.com:8080</span>
+<span class="terminal-info">[INFO] Uploading and parsing my_cv.pdf...</span>
+<span class="terminal-success">[SUCCESS] Document parsed successfully</span>
+
+<span class="terminal-warning">[MCP ANALYSIS] Found 3 areas that need clarification:</span>
+
+1. Your experience section mentions "improved system performance" 
+   but lacks specific metrics.
+   
+2. The bullet point "Worked on various projects" is too vague.
+
+3. Missing keywords for senior positions: "leadership", "architecture", "mentoring"
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-info">[MCP INTERACTIVE SESSION INITIATED]</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt" style="color: #ffbd2e;">MCP> </span>
+                    <span class="terminal-command">Let's improve your experience section. For "improved system performance", can you provide specific metrics?</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt" style="color: #56b6ff;">You> </span>
+                    <span class="terminal-command">I reduced API response time from 800ms to 200ms and increased throughput by 300%</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt" style="color: #ffbd2e;">MCP> </span>
+                    <span class="terminal-command">Excellent! I'll update that bullet point to:</span>
+                </div>
+                <div class="terminal-output" style="border-left: 3px solid #27c93f; padding-left: 10px; margin: 10px 0;">
+• Optimized system performance, reducing API response time by 75% (800ms to 200ms)
+• Increased system throughput by 300% through strategic architectural improvements
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt" style="color: #ffbd2e;">MCP> </span>
+                    <span class="terminal-command">Now, about "various projects" - can you name 2-3 specific projects and their impact?</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt" style="color: #56b6ff;">You> </span>
+                    <span class="terminal-command">I led the payment gateway integration, built a real-time notification system, and created an automated testing framework</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt" style="color: #ffbd2e;">MCP> </span>
+                    <span class="terminal-command">Perfect! Here's the enhanced version with ATS-optimized keywords:</span>
+                </div>
+                <div class="terminal-output" style="border-left: 3px solid #27c93f; padding-left: 10px; margin: 10px 0;">
+• Led end-to-end payment gateway integration, processing $2M+ monthly transactions
+• Architected real-time notification system serving 50,000+ active users
+• Developed automated testing framework, reducing QA time by 40% and bugs by 60%
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-success">[MCP SESSION] Resume optimization complete. ATS Score improved from 72% to 91%</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$ </span>
+                    <span class="terminal-command">resumesync export --format pdf --template professional</span>
+                </div>
+                <div class="terminal-output">
+<span class="terminal-info">[INFO] Generating PDF with professional template...</span>
+<span class="terminal-success">[SUCCESS] Resume exported to: ./John_Doe_Resume_2025.pdf</span>
+<span class="terminal-info">[INFO] File size: 125KB | ATS Score: 91% | Keywords matched: 18/20</span>
+                </div>
+
+                <div class="terminal-line">
+                    <span class="terminal-prompt">$ </span>
+                    <span class="terminal-cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

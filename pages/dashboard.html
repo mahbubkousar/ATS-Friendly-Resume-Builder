@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ResumeSync</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="../index.html" class="flex items-center space-x-2 text-2xl font-bold text-gray-800">
+                    <img src="../assets/images/RsumeSync_logo.png" alt="ResumeSync Logo" class="h-16 w-auto">
+                </a>
+
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-blue-600 font-medium">Dashboard</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600 transition">My Resumes</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-600 transition">Templates</a>
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
+                            <img src="../assets/images/user-avatar.png" alt="User" class="w-8 h-8 rounded-full" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=John+Doe&background=3B82F6&color=fff'">
+                            <span class="font-medium">John Doe</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"><i class="fas fa-user mr-2"></i>Profile</a>
+                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"><i class="fas fa-cog mr-2"></i>Settings</a>
+                            <hr class="my-2">
+                            <a href="../index.html" class="block px-4 py-2 text-red-600 hover:bg-gray-100"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Welcome Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome back, User!</h1>
+            <p class="text-gray-600">Here's an overview of your resume building progress</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <!-- Card 1 -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-blue-100 p-3 rounded-lg">
+                        <i class="fas fa-file-alt text-2xl text-blue-600"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800">5</span>
+                </div>
+                <h3 class="text-gray-600 font-medium">Resumes Created</h3>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg">
+                        <i class="fas fa-chart-line text-2xl text-green-600"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800">85%</span>
+                </div>
+                <h3 class="text-gray-600 font-medium">Avg ATS Score</h3>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-purple-100 p-3 rounded-lg">
+                        <i class="fas fa-paper-plane text-2xl text-purple-600"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800">12</span>
+                </div>
+                <h3 class="text-gray-600 font-medium">Applications Sent</h3>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Quick Actions</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button onclick="window.location.href='editor.html'" class="bg-blue-600 text-white p-6 rounded-xl hover:bg-blue-700 transition text-center">
+                    <i class="fas fa-plus-circle text-3xl mb-3"></i>
+                    <h3 class="font-semibold">Create New Resume</h3>
+                </button>
+                <button class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-600 transition text-center">
+                    <i class="fas fa-upload text-3xl mb-3 text-blue-600"></i>
+                    <h3 class="font-semibold text-gray-800">Upload Resume</h3>
+                </button>
+                <button class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-600 transition text-center">
+                    <i class="fas fa-robot text-3xl mb-3 text-blue-600"></i>
+                    <h3 class="font-semibold text-gray-800">AI Analysis</h3>
+                </button>
+                <button class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-600 transition text-center">
+                    <i class="fas fa-layer-group text-3xl mb-3 text-blue-600"></i>
+                    <h3 class="font-semibold text-gray-800">Browse Templates</h3>
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Resumes -->
+        <div>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Recent Resumes</h2>
+                <a href="#" class="text-blue-600 hover:text-blue-700 font-medium">View All <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Resume Card 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition">
+                    <div class="h-48 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                        <img src="../assets/images/resume-preview-1.png" alt="Resume Preview" class="h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/EBF8FF/3B82F6?text=Software+Engineer+Resume'">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Software Engineer Resume</h3>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">92%</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Last edited: 2 days ago</p>
+                        <div class="flex gap-2">
+                            <button onclick="window.location.href='editor.html'" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                            <button class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition">
+                                <i class="fas fa-download mr-1"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Card 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition">
+                    <div class="h-48 bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+                        <img src="../assets/images/resume-preview-2.png" alt="Resume Preview" class="h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/F3E8FF/9333EA?text=Data+Analyst+Resume'">
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">Data Analyst Resume</h3>
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">78%</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Last edited: 1 week ago</p>
+                        <div class="flex gap-2">
+                            <button onclick="window.location.href='editor.html'" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                            <button class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition">
+                                <i class="fas fa-download mr-1"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create New Card -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-md flex items-center justify-center hover:shadow-xl transition cursor-pointer" onclick="window.location.href='editor.html'">
+                    <div class="text-center p-8">
+                        <div class="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-plus text-4xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Create New Resume</h3>
+                        <p class="text-gray-600">Start from scratch or use a template</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-6 mt-12">
+        <div class="container mx-auto px-4 text-center text-sm">
+            <p>&copy; 2025 ResumeSync. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // User menu toggle
+        document.getElementById('userMenuBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('userMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('userMenu');
+            const btn = document.getElementById('userMenuBtn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

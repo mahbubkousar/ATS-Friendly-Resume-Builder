@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeSynce - Wireframe Sketches</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .wireframe-section {
+            margin-bottom: 60px;
+        }
+
+        .wireframe-title {
+            font-size: 1.5rem;
+            color: #444;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wireframe-container {
+            background: white;
+            border: 3px solid #333;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sketch-style elements */
+        .sketch-box {
+            border: 2px solid #333;
+            background: white;
+            position: relative;
+        }
+
+        .sketch-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.03) 10px,
+                rgba(0,0,0,0.03) 20px
+            );
+            pointer-events: none;
+        }
+
+        .placeholder-text {
+            background: repeating-linear-gradient(
+                to right,
+                #666 0px,
+                #666 70%,
+                transparent 70%,
+                transparent 100%
+            );
+            height: 1em;
+            margin: 5px 0;
+        }
+
+        .placeholder-image {
+            background: #f0f0f0;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 2rem;
+        }
+
+        .button-sketch {
+            border: 2px solid #333;
+            background: white;
+            padding: 10px 20px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .button-sketch:hover {
+            background: #f0f0f0;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 #333;
+        }
+
+        .button-primary {
+            background: #333;
+            color: white;
+        }
+
+        /* Figure 2: Home Page */
+        .home-page {
+            height: 700px;
+        }
+
+        .navbar {
+            height: 60px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .hero-section {
+            height: 400px;
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero-subtitle {
+            width: 60%;
+            margin: 0 auto 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .features-section {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            height: 150px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Figure 3: User Dashboard */
+        .dashboard {
+            display: flex;
+            height: 700px;
+        }
+
+        .sidebar {
+            width: 250px;
+            border-right: 2px solid #333;
+            padding: 20px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 15px;
+            border: 1px solid #999;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .sidebar-menu li.active {
+            background: #333;
+            color: white;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            height: 100px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .resume-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .resume-card {
+            height: 200px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Figure 4: Resume Editor */
+        .editor-container {
+            display: flex;
+            height: 800px;
+        }
+
+        .editor-sidebar {
+            width: 300px;
+            border-right: 2px solid #333;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .form-field {
+            margin-bottom: 15px;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #999;
+            background: white;
+        }
+
+        .preview-panel {
+            flex: 1;
+            padding: 20px;
+            background: #fafafa;
+            border-right: 2px solid #333;
+        }
+
+        .preview-paper {
+            background: white;
+            border: 2px solid #333;
+            padding: 40px;
+            margin: 0 auto;
+            max-width: 600px;
+            min-height: 700px;
+        }
+
+        .ai-panel {
+            width: 350px;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .ai-score {
+            text-align: center;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border: 8px solid #333;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .suggestions-list {
+            padding: 20px;
+        }
+
+        .suggestion-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #333;
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .features-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .resume-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .editor-container {
+                flex-direction: column;
+            }
+            
+            .editor-sidebar,
+            .ai-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-pencil-ruler"></i> ResumeForge Wireframe Sketches</h1>
+        <p class="subtitle">Low-fidelity wireframes showing the basic layout and structure</p>
+
+        <!-- Figure 2: Home Page -->
+        <div class="wireframe-section">
+            <h2 class="wireframe-title">
+                <i class="fas fa-home"></i>
+                Figure 2: Home Page Wireframe
+            </h2>
+            <div class="wireframe-container home-page">
+                <!-- Navigation Bar -->
+                <div class="navbar">
+                    <div class="logo">ResumeSync</div>
+                    <div class="nav-links">
+                        <span>Features</span>
+                        <span>Templates</span>
+                        <span>Pricing</span>
+                        <span>About</span>
+                        <button class="button-sketch">Login</button>
+                        <button class="button-sketch button-primary">Sign Up</button>
+                    </div>
+                </div>
+
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <div class="hero-title">Build ATS-Friendly Resumes with AI</div>
+                    <div class="hero-subtitle">
+                        <div class="placeholder-text"></div>
+                        <div class="placeholder-text"></div>
+                        <div class="placeholder-text" style="width: 70%;"></div>
+                    </div>
+                    <div class="hero-buttons">
+                        <button class="button-sketch button-primary" style="padding: 15px 40px; font-size: 1.2rem;">
+                            Get Started Free
+                        </button>
+                        <button class="button-sketch" style="padding: 15px 40px; font-size: 1.2rem;">
+                            Watch Demo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="features-section">
+                    <div class="sketch-box feature-card">
+                        <i class="fas fa-robot" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <h3>AI Analysis</h3>
+                        <div class="placeholder-text"></div>
+                        <div class="placeholder-text" style="width: 80%;"></div>
+                    </div>
+                    <div class="sketch-box feature-card">
+                        <i class="fas fa-file-alt" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <h3>ATS Templates</h3>
+                        <div class="placeholder-text"></div>
+                        <div class="placeholder-text" style="width: 70%;"></div>
+                    </div>
+                    <div class="sketch-box feature-card">
+                        <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <h3>Score Tracking</h3>
+                        <div class="placeholder-text"></div>
+                        <div class="placeholder-text" style="width: 90%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Figure 3: User Dashboard -->
+        <div class="wireframe-section">
+            <h2 class="wireframe-title">
+                <i class="fas fa-tachometer-alt"></i>
+                Figure 3: User Dashboard Wireframe
+            </h2>
+            <div class="wireframe-container dashboard">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <h3 style="margin-bottom: 20px;">Dashboard Menu</h3>
+                    <ul class="sidebar-menu">
+                        <li class="active"><i class="fas fa-home"></i> Overview</li>
+                        <li><i class="fas fa-file"></i> My Resumes</li>
+                        <li><i class="fas fa-palette"></i> Templates</li>
+                        <li><i class="fas fa-chart-bar"></i> Analytics</li>
+                        <li><i class="fas fa-user"></i> Profile</li>
+                        <li><i class="fas fa-cog"></i> Settings</li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="dashboard-content">
+                    <h2 style="margin-bottom: 30px;">Welcome back, User!</h2>
+                    
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="sketch-box stat-card">
+                            <div style="font-size: 2rem; font-weight: bold;">5</div>
+                            <div>Resumes Created</div>
+                        </div>
+                        <div class="sketch-box stat-card">
+                            <div style="font-size: 2rem; font-weight: bold;">85%</div>
+                            <div>Avg ATS Score</div>
+                        </div>
+                        <div class="sketch-box stat-card">
+                            <div style="font-size: 2rem; font-weight: bold;">12</div>
+                            <div>Applications Sent</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Resumes -->
+                    <h3 style="margin-bottom: 20px;">Recent Resumes</h3>
+                    <div class="resume-list">
+                        <div class="sketch-box resume-card">
+                            <div>
+                                <h4>Software Engineer Resume</h4>
+                                <div style="color: #666; margin: 10px 0;">Last edited: 2 days ago</div>
+                                <div style="color: #4CAF50;">ATS Score: 92%</div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="button-sketch">Edit</button>
+                                <button class="button-sketch">Download</button>
+                            </div>
+                        </div>
+                        <div class="sketch-box resume-card">
+                            <div>
+                                <h4>Data Analyst Resume</h4>
+                                <div style="color: #666; margin: 10px 0;">Last edited: 1 week ago</div>
+                                <div style="color: #FFA500;">ATS Score: 78%</div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="button-sketch">Edit</button>
+                                <button class="button-sketch">Download</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="button-sketch button-primary" style="margin-top: 30px; padding: 15px 30px;">
+                        <i class="fas fa-plus"></i> Create New Resume
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Figure 4: Resume Editor -->
+        <div class="wireframe-section">
+            <h2 class="wireframe-title">
+                <i class="fas fa-edit"></i>
+                Figure 4: Resume Editor Wireframe
+            </h2>
+            <div class="wireframe-container editor-container">
+                <!-- Form Sidebar -->
+                <div class="editor-sidebar">
+                    <h3>Resume Information</h3>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Details</h3>
+                        <div class="form-field">
+                            <input type="text" placeholder="Full Name">
+                        </div>
+                        <div class="form-field">
+                            <input type="text" placeholder="Email">
+                        </div>
+                        <div class="form-field">
+                            <input type="text" placeholder="Phone">
+                        </div>
+                        <div class="form-field">
+                            <input type="text" placeholder="Location">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-briefcase"></i> Experience</h3>
+                        <div class="sketch-box" style="padding: 15px; margin-bottom: 10px;">
+                            <div style="font-weight: bold;">Job Title</div>
+                            <div style="color: #666;">Company Name</div>
+                            <div style="color: #999; font-size: 0.9em;">Date Range</div>
+                        </div>
+                        <button class="button-sketch" style="width: 100%;">
+                            <i class="fas fa-plus"></i> Add Experience
+                        </button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                        <div class="sketch-box" style="padding: 15px; margin-bottom: 10px;">
+                            <div style="font-weight: bold;">Degree</div>
+                            <div style="color: #666;">Institution</div>
+                            <div style="color: #999; font-size: 0.9em;">Year</div>
+                        </div>
+                        <button class="button-sketch" style="width: 100%;">
+                            <i class="fas fa-plus"></i> Add Education
+                        </button>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-tools"></i> Skills</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
+                            <span class="sketch-box" style="padding: 5px 10px;">JavaScript</span>
+                            <span class="sketch-box" style="padding: 5px 10px;">Python</span>
+                            <span class="sketch-box" style="padding: 5px 10px;">React</span>
+                        </div>
+                        <input type="text" placeholder="Add a skill..." style="width: 100%; padding: 8px; border: 2px solid #999;">
+                    </div>
+                </div>
+
+                <!-- Preview Panel -->
+                <div class="preview-panel">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span style="margin-right: 20px;">Template: Professional</span>
+                        <button class="button-sketch">Change Template</button>
+                    </div>
+                    <div class="preview-paper">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">Mahbub Kousar</div>
+                            <div style="color: #666;">mahbubkousar@gmail.com | +880 170000000</div>
+                            <div style="color: #666;">Dhaka, Bangladesh</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <div style="font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 10px;">
+                                PROFESSIONAL SUMMARY
+                            </div>
+                            <div class="placeholder-text"></div>
+                            <div class="placeholder-text"></div>
+                            <div class="placeholder-text" style="width: 80%;"></div>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <div style="font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 10px;">
+                                EXPERIENCE
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-weight: bold;">Software Engineer</div>
+                                <div style="color: #666;">Tech Company | 2020 - Present</div>
+                                <div class="placeholder-text" style="margin-top: 5px;"></div>
+                                <div class="placeholder-text" style="width: 90%;"></div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 25px;">
+                            <div style="font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 10px;">
+                                EDUCATION
+                            </div>
+                            <div>
+                                <div style="font-weight: bold;">Bachelor of Science in Computer Science</div>
+                                <div style="color: #666;">University Name | 2016 - 2020</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="font-weight: bold; border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 10px;">
+                                SKILLS
+                            </div>
+                            <div class="placeholder-text" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Panel -->
+                <div class="ai-panel">
+                    <h3 style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-robot"></i> AI Analysis
+                    </h3>
+                    
+                    <div class="sketch-box ai-score">
+                        <div class="score-circle">85%</div>
+                        <div style="font-size: 1.2rem;">ATS Score</div>
+                        <div style="color: #4CAF50;">Good Match!</div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label>Job Description:</label>
+                        <textarea placeholder="Paste job description here..." style="width: 100%; height: 100px; padding: 10px; border: 2px solid #999; margin-top: 5px;"></textarea>
+                        <button class="button-sketch button-primary" style="width: 100%; margin-top: 10px;">
+                            Analyze Match
+                        </button>
+                    </div>
+
+                    <div class="suggestions-list">
+                        <h4 style="margin-bottom: 15px;">Suggestions:</h4>
+                        <div class="suggestion-item">
+                            <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                            <strong>Keywords:</strong> Add "Agile", "Scrum"
+                        </div>
+                        <div class="suggestion-item">
+                            <i class="fas fa-exclamation-circle" style="color: #FFA500;"></i>
+                            <strong>Experience:</strong> Use more action verbs
+                        </div>
+                        <div class="suggestion-item">
+                            <i class="fas fa-info-circle" style="color: #2196F3;"></i>
+                            <strong>Format:</strong> Keep to 2 pages max
+                        </div>
+                    </div>
+
+                    <button class="button-sketch" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-download"></i> Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeForge - Use Case Diagram</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .diagram-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .legend h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .actor-icon {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-project-diagram"></i>Use Case Diagram</h1>
+        <p class="subtitle">AI-Powered ATS-Friendly Resume Builder & Analyzer</p>
+        
+        <div class="diagram-container">
+            <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+                <!-- Define patterns and gradients -->
+                <defs>
+                    <linearGradient id="systemGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#e8f4fd;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#f0f8ff;stop-opacity:1" />
+                    </linearGradient>
+                    
+                    <filter id="dropShadow">
+                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+                    </filter>
+                    
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#4a5568"/>
+                    </marker>
+                </defs>
+
+                <!-- System Boundary Box -->
+                <rect x="280" y="50" width="900" height="800" 
+                      fill="url(#systemGradient)" 
+                      stroke="#4a5568" 
+                      stroke-width="2" 
+                      stroke-dasharray="5,5" 
+                      rx="15"/>
+                
+                <!-- System Title -->
+                <text x="730" y="85" text-anchor="middle" font-size="32" font-weight="bold" fill="#2d3748">
+                    ResumeSync System
+                </text>
+
+                <!-- Actor: Job Seeker (Primary) -->
+                <g id="job-seeker">
+                    <!-- Stick figure -->
+                    <circle cx="100" cy="200" r="20" fill="none" stroke="#667eea" stroke-width="3"/>
+                    <line x1="100" y1="220" x2="100" y2="280" stroke="#667eea" stroke-width="3"/>
+                    <line x1="100" y1="240" x2="70" y2="260" stroke="#667eea" stroke-width="3"/>
+                    <line x1="100" y1="240" x2="130" y2="260" stroke="#667eea" stroke-width="3"/>
+                    <line x1="100" y1="280" x2="80" y2="320" stroke="#667eea" stroke-width="3"/>
+                    <line x1="100" y1="280" x2="120" y2="320" stroke="#667eea" stroke-width="3"/>
+                    <text x="100" y="350" text-anchor="middle" font-size="20" font-weight="600" fill="#333">Job Seeker</text>
+                </g>
+
+                <!-- Actor: Recent Graduate -->
+                <g id="recent-graduate">
+                    <!-- Stick figure -->
+                    <circle cx="100" cy="500" r="20" fill="none" stroke="#48bb78" stroke-width="3"/>
+                    <line x1="100" y1="520" x2="100" y2="580" stroke="#48bb78" stroke-width="3"/>
+                    <line x1="100" y1="540" x2="70" y2="560" stroke="#48bb78" stroke-width="3"/>
+                    <line x1="100" y1="540" x2="130" y2="560" stroke="#48bb78" stroke-width="3"/>
+                    <line x1="100" y1="580" x2="80" y2="620" stroke="#48bb78" stroke-width="3"/>
+                    <line x1="100" y1="580" x2="120" y2="620" stroke="#48bb78" stroke-width="3"/>
+                    <text x="100" y="650" text-anchor="middle" font-size="20" font-weight="600" fill="#333">Recent Graduate</text>
+                </g>
+
+                <!-- Actor: Career Changer -->
+                <g id="career-changer">
+                    <!-- Stick figure -->
+                    <circle cx="100" cy="750" r="20" fill="none" stroke="#ed8936" stroke-width="3"/>
+                    <line x1="100" y1="770" x2="100" y2="830" stroke="#ed8936" stroke-width="3"/>
+                    <line x1="100" y1="790" x2="70" y2="810" stroke="#ed8936" stroke-width="3"/>
+                    <line x1="100" y1="790" x2="130" y2="810" stroke="#ed8936" stroke-width="3"/>
+                    <line x1="100" y1="830" x2="80" y2="870" stroke="#ed8936" stroke-width="3"/>
+                    <line x1="100" y1="830" x2="120" y2="870" stroke="#ed8936" stroke-width="3"/>
+                    <text x="100" y="900" text-anchor="middle" font-size="20" font-weight="600" fill="#333">Career Changer</text>
+                </g>
+
+                <!-- External System: Gemini API -->
+                <g id="gemini-api">
+                    <rect x="1250" y="450" width="120" height="60" fill="#fff" stroke="#9f7aea" stroke-width="2" filter="url(#dropShadow)"/>
+                    <text x="1310" y="475" text-anchor="middle" font-size="16" font-weight="600" fill="#333">«external»</text>
+                    <text x="1310" y="495" text-anchor="middle" font-size="20" font-weight="600" fill="#333">Gemini API</text>
+                </g>
+
+                <!-- Use Cases - Column 1 -->
+                <!-- 1. Register/Login -->
+                <ellipse cx="450" cy="150" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="450" y="155" text-anchor="middle" font-size="18" fill="#333">Register/Login</text>
+
+                <!-- 2. Create Resume -->
+                <ellipse cx="450" cy="250" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="450" y="255" text-anchor="middle" font-size="18" fill="#333">Create Resume</text>
+
+                <!-- 3. Edit Resume -->
+                <ellipse cx="450" cy="350" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="450" y="355" text-anchor="middle" font-size="18" fill="#333">Edit Resume</text>
+
+                <!-- 9. Save Resume -->
+                <ellipse cx="450" cy="450" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="450" y="455" text-anchor="middle" font-size="18" fill="#333">Save Resume</text>
+
+                <!-- 10. Export as PDF -->
+                <ellipse cx="450" cy="550" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="450" y="555" text-anchor="middle" font-size="18" fill="#333">Export as PDF</text>
+
+                <!-- 11. Manage Multiple Resumes -->
+                <ellipse cx="450" cy="650" rx="90" ry="45" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="450" y="645" text-anchor="middle" font-size="17" fill="#333">Manage Multiple</text>
+                <text x="450" y="660" text-anchor="middle" font-size="17" fill="#333">Resumes</text>
+
+                <!-- Use Cases - Column 2 -->
+                <!-- 4. Choose Template -->
+                <ellipse cx="700" cy="180" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="700" y="185" text-anchor="middle" font-size="18" fill="#333">Choose Template</text>
+
+                <!-- 5. Preview Resume -->
+                <ellipse cx="700" cy="280" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="700" y="285" text-anchor="middle" font-size="18" fill="#333">Preview Resume</text>
+
+                <!-- Use Cases - Column 3 (AI Features) -->
+                <!-- 6. AI Analysis -->
+                <ellipse cx="950" cy="480" rx="90" ry="45" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="950" y="475" text-anchor="middle" font-size="18" fill="#333">Analyze Resume</text>
+                <text x="950" y="490" text-anchor="middle" font-size="18" fill="#333">with AI</text>
+
+                <!-- 7. Get ATS Score -->
+                <ellipse cx="750" cy="580" rx="90" ry="35" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="750" y="585" text-anchor="middle" font-size="18" fill="#333">Get ATS Score</text>
+
+                <!-- 8. Get Keyword Suggestions -->
+                <ellipse cx="950" cy="620" rx="90" ry="45" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="950" y="615" text-anchor="middle" font-size="17" fill="#333">Get Keyword</text>
+                <text x="950" y="630" text-anchor="middle" font-size="17" fill="#333">Suggestions</text>
+
+                <!-- 12. Get Content Tips -->
+                <ellipse cx="750" cy="700" rx="90" ry="45" fill="#fff" stroke="#667eea" stroke-width="2" filter="url(#dropShadow)"/>
+                <text x="750" y="692" text-anchor="middle" font-size="17" fill="#333">Get Content</text>
+                <text x="750" y="712" text-anchor="middle" font-size="17" fill="#333">Improvement Tips</text>
+
+                <!-- Associations (Actor to Use Case) -->
+                <!-- Job Seeker connections -->
+                <line x1="140" y1="200" x2="360" y2="150" stroke="#4a5568" stroke-width="1.5"/>
+                <line x1="140" y1="210" x2="360" y2="250" stroke="#4a5568" stroke-width="1.5"/>
+                <line x1="140" y1="220" x2="360" y2="350" stroke="#4a5568" stroke-width="1.5"/>
+                <line x1="140" y1="230" x2="360" y2="450" stroke="#4a5568" stroke-width="1.5"/>
+                <line x1="140" y1="240" x2="360" y2="550" stroke="#4a5568" stroke-width="1.5"/>
+                <line x1="140" y1="250" x2="360" y2="650" stroke="#4a5568" stroke-width="1.5"/>
+                <line x1="140" y1="200" x2="860" y2="480" stroke="#4a5568" stroke-width="1.5"/>
+
+                <!-- Recent Graduate connections -->
+                <line x1="140" y1="500" x2="360" y2="250" stroke="#48bb78" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="140" y1="520" x2="660" y2="700" stroke="#48bb78" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+                <!-- Career Changer connections -->
+                <line x1="140" y1="750" x2="360" y2="350" stroke="#ed8936" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="140" y1="760" x2="860" y2="620" stroke="#ed8936" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+                <!-- Include relationships (dashed lines with arrows) -->
+                <!-- Create Resume includes Choose Template -->
+                <line x1="540" y1="240" x2="610" y2="195" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+
+                <!-- Create Resume includes Preview Resume -->
+                <line x1="540" y1="260" x2="610" y2="275" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+
+                <!-- AI Analysis includes Get ATS Score -->
+                <line x1="880" y1="510" x2="820" y2="555" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+
+                <!-- AI Analysis includes Get Keyword Suggestions -->
+                <line x1="950" y1="525" x2="950" y2="575" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+
+                <!-- AI Analysis includes Get Content Tips -->
+                <line x1="880" y1="515" x2="820" y2="665" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+
+                <!-- Extend relationships -->
+                <!-- Edit Resume extends Save Resume -->
+                <line x1="450" y1="385" x2="450" y2="415" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+                <text x="475" y="403" font-size="14" fill="#666" font-style="italic">«extend»</text>
+
+                <!-- System boundary to Gemini API -->
+                <line x1="1040" y1="480" x2="1250" y2="480" stroke="#9f7aea" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="1120" y="465" font-size="16" fill="#666">API Call</text>
+            </svg>
+        </div>
+
+        <div class="legend">
+            <h3><i class="fas fa-info-circle"></i> Diagram Legend</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <i class="fas fa-user actor-icon"></i>
+                    <span><strong>Actor:</strong> System user (Job Seeker, etc.)</span>
+                </div>
+                <div class="legend-item">
+                    <svg class="legend-icon" viewBox="0 0 30 20">
+                        <ellipse cx="15" cy="10" rx="14" ry="9" fill="#fff" stroke="#667eea" stroke-width="2"/>
+                    </svg>
+                    <span><strong>Use Case:</strong> System functionality</span>
+                </div>
+                <div class="legend-item">
+                    <svg class="legend-icon" viewBox="0 0 30 20">
+                        <line x1="0" y1="10" x2="30" y2="10" stroke="#4a5568" stroke-width="1.5"/>
+                    </svg>
+                    <span><strong>Association:</strong> Actor uses functionality</span>
+                </div>
+                <div class="legend-item">
+                    <svg class="legend-icon" viewBox="0 0 30 20">
+                        <line x1="0" y1="10" x2="30" y2="10" stroke="#4a5568" stroke-width="1.5" stroke-dasharray="3,3"/>
+                    </svg>
+                    <span><strong>Include/Extend:</strong> Use case relationships</span>
+                </div>
+                <div class="legend-item">
+                    <svg class="legend-icon" viewBox="0 0 30 20">
+                        <rect x="2" y="2" width="26" height="16" fill="none" stroke="#9f7aea" stroke-width="2"/>
+                    </svg>
+                    <span><strong>External System:</strong> Third-party integration</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

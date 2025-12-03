@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume Template</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: white;
+        }
+        /* Print and page break styles */
+        @page {
+            size: A4;
+            margin: 0.75in 1in;
+        }
+
+        @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                overflow: visible;
+            }
+
+            .resume-container {
+                padding: 0;
+                margin: 0;
+                box-shadow: none;
+            }
+
+            /* Force page breaks */
+            .page-break {
+                page-break-before: always;
+                break-before: page;
+            }
+
+            /* Prevent orphans and widows */
+            p, li, .entry-description {
+                orphans: 3;
+                widows: 3;
+            }
+        }
+
+        .resume-container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0.75in 40px;
+            background: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .name {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #212529;
+            font-family: 'Arial', sans-serif;
+        }
+        .title {
+            font-size: 17px;
+            color: #495057;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            font-family: 'Arial', sans-serif;
+        }
+        .contact-info span {
+            color: #6c757d;
+        }
+        .contact-info span::after {
+            content: "|";
+            margin-left: 18px;
+            color: #dee2e6;
+        }
+        .contact-info span:last-child::after {
+            content: "";
+        }
+        .section {
+            margin-bottom: 26px;
+            page-break-inside: auto;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 14px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #6c757d;
+            font-family: 'Arial', sans-serif;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+        .summary {
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: justify;
+            color: #343a40;
+        }
+        .entry {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+        .entry-header {
+            margin-bottom: 6px;
+        }
+        .entry-title-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+        .entry-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #212529;
+            font-family: 'Arial', sans-serif;
+        }
+        .entry-date {
+            font-size: 13px;
+            color: #6c757d;
+            font-family: 'Arial', sans-serif;
+        }
+        .entry-company {
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .entry-description {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #495057;
+        }
+        .entry-description ul {
+            margin-left: 22px;
+            margin-top: 6px;
+        }
+        .entry-description li {
+            margin-bottom: 5px;
+            page-break-inside: avoid;
+        }
+        .skills-section {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #343a40;
+        }
+        .skill-row {
+            margin-bottom: 8px;
+        }
+        .skill-label {
+            font-weight: 600;
+            display: inline-block;
+            min-width: 140px;
+            color: #212529;
+            font-family: 'Arial', sans-serif;
+        }
+        .skill-items {
+            display: inline;
+            color: #495057;
+        }
+        @media print {
+            body { -webkit-print-color-adjust: exact; }
+            .resume-container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="header">
+            <div class="name" data-field="name">Mahbubur Rahman Khan</div>
+            <div class="title" data-field="title">Senior Software Engineer</div>
+            <div class="contact-info">
+                <span data-field="email">mahbubur.khan@email.com</span>
+                <span data-field="phone">+880 1712-345678</span>
+                <span data-field="location">Dhaka, Bangladesh</span>
+                <span data-field="linkedin">linkedin.com/in/mahbuburkhan</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">PROFESSIONAL SUMMARY</div>
+            <div class="summary" data-field="summary">
+                Detail-oriented financial analyst with 6+ years of experience in financial modeling, forecasting, and strategic planning. Proven ability to analyze complex financial data and provide actionable insights to drive business decisions. CFA Level II candidate.
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">PROFESSIONAL EXPERIENCE</div>
+            <div data-field="experience-list">
+                <div class="entry">
+                    <div class="entry-header">
+                        <div class="entry-title-line">
+                            <div class="entry-title">Senior Financial Analyst</div>
+                            <div class="entry-date">June 2020 - Present</div>
+                        </div>
+                        <div class="entry-company">Global Finance Corp., Chittagong, Bangladesh</div>
+                    </div>
+                    <div class="entry-description">
+                        <ul>
+                            <li>Developed financial models to support M&A transactions valued at $500M+</li>
+                            <li>Prepared quarterly board presentations analyzing company performance metrics</li>
+                            <li>Collaborated with department heads to create annual budgets and forecasts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">EDUCATION</div>
+            <div data-field="education-list">
+                <div class="entry">
+                    <div class="entry-header">
+                        <div class="entry-title-line">
+                            <div class="entry-title">Bachelor of Science in Computer Science</div>
+                            <div class="entry-date">2015 - 2019</div>
+                        </div>
+                        <div class="entry-company">North South University, Dhaka, Bangladesh</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">SKILLS & COMPETENCIES</div>
+            <div class="skills-section" data-field="skills">
+                <div class="skill-row">
+                    <span class="skill-label">Financial Analysis:</span>
+                    <span class="skill-items">Financial Modeling, Valuation, DCF Analysis, Scenario Planning</span>
+                </div>
+                <div class="skill-row">
+                    <span class="skill-label">Technical Skills:</span>
+                    <span class="skill-items">Excel (Advanced), Bloomberg Terminal, SQL, Python, Tableau</span>
+                </div>
+                <div class="skill-row">
+                    <span class="skill-label">Business Skills:</span>
+                    <span class="skill-items">Strategic Planning, Risk Management, Forecasting, Due Diligence</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" data-section="certifications" style="display:none;">
+            <div class="section-title">CERTIFICATIONS & LICENSES</div>
+            <div data-field="certifications-list">
+                <div class="entry">
+                    <div class="entry-header">
+                        <div class="entry-title-line">
+                            <div class="entry-title">Certified Financial Analyst (CFA)</div>
+                            <div class="entry-date">2021</div>
+                        </div>
+                        <div class="entry-company">CFA Institute</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" data-section="affiliations" style="display:none;">
+            <div class="section-title">PROFESSIONAL AFFILIATIONS</div>
+            <div class="entry-description" data-field="affiliations">
+                <ul>
+                    <li>Member, American Finance Association</li>
+                    <li>Member, CFA Institute</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

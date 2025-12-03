@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Standard CV Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Georgia', serif;
+            color: #1a1a1a;
+            line-height: 1.5;
+            background: white;
+        }
+
+        /* Print and page break styles */
+        @page {
+            size: A4;
+            margin: 0.75in 1in;
+        }
+
+        @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+                overflow: visible;
+            }
+
+            .cv-container {
+                padding: 0;
+                margin: 0;
+                box-shadow: none;
+            }
+
+            /* Force page breaks */
+            .page-break {
+                page-break-before: always;
+                break-before: page;
+            }
+
+            /* Prevent orphans and widows */
+            p, li, .description {
+                orphans: 3;
+                widows: 3;
+            }
+        }
+
+        .cv-container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in 1in;
+            background: white;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 22pt;
+            font-weight: normal;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .contact-info {
+            font-size: 11pt;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .contact-info div {
+            margin: 3px 0;
+        }
+
+        .academic-profiles {
+            display: none;
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: 25px;
+            page-break-inside: auto;
+        }
+
+        .section-title {
+            font-size: 13pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Education */
+        .education-entry {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .degree-line {
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 3px;
+        }
+
+        .institution {
+            font-style: italic;
+            font-size: 11pt;
+            margin-bottom: 3px;
+        }
+
+        .date-gpa {
+            font-size: 10.5pt;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        .dissertation {
+            font-size: 10.5pt;
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .dissertation-label {
+            font-style: italic;
+        }
+
+        .advisor {
+            font-size: 10pt;
+            margin-left: 20px;
+            color: #444;
+        }
+
+        /* Research Experience */
+        .experience-entry {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .position-title {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+
+        .employer-date {
+            font-size: 10.5pt;
+            margin-bottom: 5px;
+        }
+
+        .employer {
+            font-style: italic;
+        }
+
+        .description {
+            font-size: 10.5pt;
+            margin-top: 5px;
+            text-align: justify;
+        }
+
+        .description ul {
+            margin-left: 25px;
+            margin-top: 5px;
+        }
+
+        .description li {
+            margin-bottom: 4px;
+            page-break-inside: avoid;
+        }
+
+        /* Publications */
+        .publication-subsection {
+            margin-bottom: 15px;
+        }
+
+        .publication-type {
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 8px;
+            margin-top: 10px;
+            page-break-after: avoid;
+        }
+
+        .publication {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            text-indent: -25px;
+            font-size: 10.5pt;
+            line-height: 1.4;
+            page-break-inside: avoid;
+        }
+
+        .publication-authors {
+            font-weight: normal;
+        }
+
+        .publication-year {
+            font-weight: bold;
+        }
+
+        .publication-title {
+            font-style: italic;
+        }
+
+        .publication-journal {
+            font-weight: normal;
+        }
+
+        /* Presentations */
+        .presentation {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            text-indent: -25px;
+            font-size: 10.5pt;
+            line-height: 1.4;
+        }
+
+        /* Grants */
+        .grant-entry {
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+
+        .grant-title {
+            font-weight: bold;
+            font-size: 10.5pt;
+        }
+
+        .grant-details {
+            font-size: 10.5pt;
+            margin-left: 20px;
+            margin-top: 3px;
+        }
+
+        /* Teaching */
+        .teaching-category {
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+
+        .teaching-category-title {
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 6px;
+            page-break-after: avoid;
+        }
+
+        .course {
+            font-size: 10.5pt;
+            margin-bottom: 6px;
+            margin-left: 20px;
+            page-break-inside: avoid;
+        }
+
+        .course-title {
+            font-weight: bold;
+        }
+
+        /* Service */
+        .service-entry {
+            margin-bottom: 8px;
+            font-size: 10.5pt;
+        }
+
+        .service-role {
+            font-weight: bold;
+        }
+
+        /* Professional Memberships */
+        .membership {
+            margin-bottom: 6px;
+            font-size: 10.5pt;
+        }
+
+        /* References */
+        .reference {
+            margin-bottom: 18px;
+        }
+
+        .reference-name {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+
+        .reference-title {
+            font-size: 10.5pt;
+            font-style: italic;
+        }
+
+        .reference-institution {
+            font-size: 10.5pt;
+        }
+
+        .reference-contact {
+            font-size: 10pt;
+            color: #444;
+            margin-top: 3px;
+        }
+
+        /* Print Optimization */
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .cv-container {
+                padding: 0.5in;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Page Numbers for Multi-page */
+        @page {
+            margin: 1in;
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 data-field="name">Dr. Mahbubur Rahman Khan</h1>
+            <div class="contact-info">
+                <div data-field="department">Department of Computer Science & Engineering | North South University</div>
+                <div data-field="location">Plot 15, Block B, Bashundhara, Dhaka 1229, Bangladesh</div>
+                <div><span data-field="email">mahbubur.khan@northsouth.edu</span> | <span data-field="phone">+880 1712-345678</span></div>
+                <div class="academic-profiles">
+                    <span data-field="orcid-display" style="display:none;">ORCID: <span data-field="orcid"></span></span>
+                    <span data-field="scholar-separator" style="display:none;"> | </span>
+                    <span data-field="googleScholar-display" style="display:none;"><span data-field="googleScholar-text">Google Scholar Profile</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Summary -->
+        <div class="section" data-section="summary" style="display:none;">
+            <div class="section-title">Professional Summary</div>
+            <div class="description" data-field="summary">
+                <!-- Professional summary will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="section" data-section="education">
+            <div class="section-title">Education</div>
+            <div data-field="education-list">
+                <!-- Education entries will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Research Experience -->
+        <div class="section" data-section="experience">
+            <div class="section-title">Research Experience</div>
+            <div data-field="experience-list">
+                <!-- Experience entries will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Research Interests -->
+        <div class="section" data-section="research-interests" style="display:none;">
+            <div class="section-title">Research Interests</div>
+            <div class="description" data-field="research-interests">
+                <!-- Research interests will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Publications -->
+        <div class="section" data-section="publications" style="display:none;">
+            <div class="section-title">Publications</div>
+            <div data-field="publications-list">
+                <!-- Publications will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Grants and Fellowships -->
+        <div class="section" data-section="grants" style="display:none;">
+            <div class="section-title">Grants and Fellowships</div>
+            <div data-field="grants-list">
+                <!-- Grants will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Teaching Experience -->
+        <div class="section" data-section="teaching" style="display:none;">
+            <div class="section-title">Teaching Experience</div>
+            <div data-field="teaching-list">
+                <!-- Teaching entries will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Skills & Expertise -->
+        <div class="section" data-section="skills" style="display:none;">
+            <div class="section-title">Skills & Expertise</div>
+            <div class="description" data-field="skills">
+                <!-- Skills will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Professional Memberships -->
+        <div class="section" data-section="memberships" style="display:none;">
+            <div class="section-title">Professional Memberships</div>
+            <div data-field="memberships">
+                <!-- Memberships will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

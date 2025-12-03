@@ -1,0 +1,72 @@
+<?php
+header('Content-Type: application/json');
+require_once '../config/database.php';
+require_once '../config/session.php';
+
+requireLogin();
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit();
+}
+
+$input = json_decode(file_get_contents('php://input'), true);
+$resumeId = $input['resume_id'] ?? null;
+
+if (!$resumeId) {
+    echo json_encode(['success' => false, 'message' => 'Resume ID required']);
+    exit();
+}
+
+$user = getCurrentUser();
+$userId = $user['id'];
+$conn = getDBConnection();
+
+$stmt = $conn->prepare("SELECT share_token, is_public, shared_at, view_count, download_count FROM resumes WHERE resume_id = ? AND user_id = ?");
+$stmt->bind_param("ii", $resumeId, $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    echo json_encode(['success' => false, 'message' => 'Resume not found']);
+    exit();
+}
+
+$resume = $result->fetch_assoc();
+$stmt->close();
+
+$shareToken = $resume['share_token'];
+$isNewLink = false;
+
+if (empty($shareToken)) {
+    $shareToken = bin2hex(random_bytes(32));
+    $isNewLink = true;
+
+    $updateStmt = $conn->prepare("UPDATE resumes SET share_token = ?, is_public = 1, shared_at = NOW() WHERE resume_id = ?");
+    $updateStmt->bind_param("si", $shareToken, $resumeId);
+    $updateStmt->execute();
+    $updateStmt->close();
+
+    $isPublic = true;
+} else {
+    $isPublic = (bool)$resume['is_public'];
+}
+
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+$shareUrl = $protocol . '://' . $host . '/ATS/view-resume.php?token=' . $shareToken;
+
+echo json_encode([
+    'success' => true,
+    'share_url' => $shareUrl,
+    'token' => $shareToken,
+    'is_public' => $isPublic,
+    'is_new_link' => $isNewLink,
+    'stats' => [
+        'view_count' => (int)$resume['view_count'],
+        'download_count' => (int)$resume['download_count'],
+        'shared_at' => $resume['shared_at']
+    ]
+]);
+?>

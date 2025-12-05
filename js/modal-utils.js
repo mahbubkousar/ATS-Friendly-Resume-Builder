@@ -1,106 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const notificationModal = document.getElementById('notificationModal');
     const progressModal = document.getElementById('analysisProgressModal');
 
-    
+
     const isEditorPage = document.getElementById('resumePreview') !== null;
 
-    if (!notificationModal) {
-        console.error('ERROR: Notification modal (#notificationModal) not found in DOM!');
-    } else {
-        console.log('✓ Notification modal loaded successfully');
-    }
 
-    
     if (!progressModal && isEditorPage) {
         console.error('ERROR: Progress modal (#analysisProgressModal) not found in DOM!');
     } else if (progressModal) {
         console.log('✓ Progress modal loaded successfully');
     }
 });
-
-
-function showNotificationModal(message, type = 'info', title = null) {
-    return new Promise((resolve) => {
-        const modal = document.getElementById('notificationModal');
-        const modalContent = document.getElementById('notificationModalContent');
-        const modalIcon = modalContent.querySelector('.modal-icon i');
-        const modalTitle = document.getElementById('notificationTitle');
-        const modalMessage = document.getElementById('notificationMessage');
-        const okBtn = document.getElementById('notificationOkBtn');
-
-        
-        modalContent.classList.remove('success', 'error', 'warning', 'info');
-
-        
-        modalContent.classList.add(type);
-
-        
-        const icons = {
-            success: 'fa-check-circle',
-            error: 'fa-exclamation-circle',
-            warning: 'fa-exclamation-triangle',
-            info: 'fa-info-circle'
-        };
-
-        modalIcon.className = `fas ${icons[type] || icons.info}`;
-
-        
-        if (!title) {
-            const titles = {
-                success: 'Success',
-                error: 'Error',
-                warning: 'Warning',
-                info: 'Information'
-            };
-            title = titles[type] || 'Notification';
-        }
-
-        modalTitle.textContent = title;
-        modalMessage.textContent = message;
-
-        
-        modal.classList.add('active');
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-
-        
-        const handleClickOutside = (e) => {
-            if (e.target === modal) {
-                cleanup();
-            }
-        };
-
-        
-        const handleEsc = (e) => {
-            if (e.key === 'Escape') {
-                cleanup();
-            }
-        };
-
-        
-        const handleOk = () => {
-            cleanup();
-        };
-
-        
-        const cleanup = () => {
-            console.log('Cleaning up notification modal');
-            modal.classList.remove('active');
-            modal.style.display = 'none';
-            document.body.style.overflow = '';
-            okBtn.removeEventListener('click', handleOk);
-            document.removeEventListener('keydown', handleEsc);
-            modal.removeEventListener('click', handleClickOutside);
-            resolve();
-        };
-
-        
-        okBtn.addEventListener('click', handleOk);
-        document.addEventListener('keydown', handleEsc);
-        modal.addEventListener('click', handleClickOutside);
-    });
-}
 
 
 function showProgressModal() {
@@ -258,9 +168,3 @@ function showConfirmationModal(message, title = 'Confirm Action') {
     });
 }
 
-
-if (typeof showNotification === 'undefined') {
-    function showNotification(message, type = 'info') {
-        showNotificationModal(message, type);
-    }
-}

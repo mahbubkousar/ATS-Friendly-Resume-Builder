@@ -50,14 +50,14 @@ function handleFileSelection(file) {
     
     const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!validTypes.includes(file.type)) {
-        showNotification('Please upload a PDF or DOC file');
+        console.log('Please upload a PDF or DOC file');
         resumeFile.value = '';
         return;
     }
 
     
     if (file.size > 5 * 1024 * 1024) {
-        showNotification('File size must be less than 5MB');
+        console.log('File size must be less than 5MB');
         resumeFile.value = '';
         return;
     }
@@ -81,7 +81,7 @@ if (removeFileBtn) {
         resumeFile.value = '';
         dropZoneLabel.style.display = 'flex';
         fileSelected.classList.remove('show');
-        showNotification('File removed');
+        console.log('File removed');
     });
 }
 
@@ -181,14 +181,14 @@ if (jobDescFile) {
 function handleJobFileSelection(file) {
     
     if (file.type !== 'application/pdf') {
-        showNotification('Please upload a PDF file for job description');
+        console.log('Please upload a PDF file for job description');
         jobDescFile.value = '';
         return;
     }
 
     
     if (file.size > 5 * 1024 * 1024) {
-        showNotification('File size must be less than 5MB');
+        console.log('File size must be less than 5MB');
         jobDescFile.value = '';
         return;
     }
@@ -198,7 +198,7 @@ function handleJobFileSelection(file) {
     jobFileSize.textContent = formatFileSize(file.size);
     jobFileLabel.style.display = 'none';
     jobFileSelected.classList.add('show');
-    showNotification('Job description uploaded');
+    console.log('Job description uploaded');
 }
 
 
@@ -207,7 +207,7 @@ if (removeJobFileBtn) {
         jobDescFile.value = '';
         jobFileLabel.style.display = 'flex';
         jobFileSelected.classList.remove('show');
-        showNotification('Job description file removed');
+        console.log('Job description file removed');
     });
 }
 
@@ -252,7 +252,7 @@ if (analyzeBtn) {
         const hasText = resumeText && resumeText.value.trim().length > 0;
 
         if (!hasFile && !hasText) {
-            showNotification('Please upload a resume or paste your resume text');
+            console.log('Please upload a resume or paste your resume text');
             return;
         }
 
@@ -261,7 +261,7 @@ if (analyzeBtn) {
         const hasJobFile = jobDescFile && jobDescFile.files.length > 0;
 
         if (!hasJobText && !hasJobFile) {
-            showNotification('Tip: Add a job description for more accurate keyword matching!');
+            console.log('Tip: Add a job description for more accurate keyword matching!');
         }
 
         
@@ -276,7 +276,7 @@ if (analyzeBtn) {
         } catch (error) {
             console.error('Analysis error:', error);
             hideProgressModal();
-            showNotification('Analysis failed. Please try again.');
+            console.log('Analysis failed. Please try again.');
         } finally {
             
             analyzeBtn.disabled = false;
@@ -450,7 +450,7 @@ function displayResults(analysis) {
     
     updateMetricDetails(analysis);
 
-    showNotification('Analysis complete!');
+    console.log('Analysis complete!');
 }
 
 
@@ -755,7 +755,7 @@ if (checkAnotherBtn) {
         
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        showNotification('Ready to analyze another resume');
+        console.log('Ready to analyze another resume');
     });
 }
 

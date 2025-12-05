@@ -84,11 +84,11 @@ downloadButtons.forEach((btn) => {
 
         if (resumeId) {
             
-            showNotification('Opening resume for PDF export...');
+            console.log('Opening resume for PDF export...');
             const editorUrl = `/ATS/editor.php?id=${resumeId}&download=true`;
             window.open(editorUrl, '_blank');
         } else {
-            showNotification('Download feature coming soon!');
+            console.log('Download feature coming soon!');
         }
     });
 });
@@ -102,7 +102,7 @@ shareButtons.forEach((btn) => {
             openShareModal(resumeId);
         } else {
             console.error('Share button clicked but no resume ID found');
-            showNotification('Share feature coming soon!');
+            console.log('Share feature coming soon!');
         }
     });
 });
@@ -172,7 +172,7 @@ async function deleteResume(resumeId, button) {
         const result = await response.json();
 
         if (result.success) {
-            showNotification(`Resume "${result.resume_title}" deleted successfully!`, 'success');
+            console.log(`Resume "${result.resume_title}" deleted successfully!`, 'success');
 
             
             
@@ -200,14 +200,14 @@ async function deleteResume(resumeId, button) {
             }
         } else {
             
-            showNotification('Error: ' + result.message, 'error');
+            console.log('Error: ' + result.message, 'error');
             button.disabled = false;
             button.innerHTML = '<i class="fas fa-trash"></i> Delete';
         }
     } catch (error) {
         
         console.error('Delete error:', error);
-        showNotification('Failed to delete resume. Please try again.', 'error');
+        console.log('Failed to delete resume. Please try again.', 'error');
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-trash"></i> Delete';
     }
@@ -341,7 +341,7 @@ function closeShareModal() {
 document.getElementById('generateLinkBtn')?.addEventListener('click', async () => {
     if (!currentResumeId) {
         console.error('No resume ID set for share link generation');
-        showNotification('Error: No resume selected');
+        console.log('Error: No resume selected');
         return;
     }
 
@@ -383,16 +383,16 @@ document.getElementById('generateLinkBtn')?.addEventListener('click', async () =
             document.getElementById('shareLinkSection').style.display = 'block';
 
             if (result.is_new_link) {
-                showNotification('Share link generated successfully!');
+                console.log('Share link generated successfully!');
             } else {
-                showNotification('Existing share link loaded!');
+                console.log('Existing share link loaded!');
             }
         } else {
-            showNotification('Failed to generate share link: ' + (result.message || 'Unknown error'));
+            console.log('Failed to generate share link: ' + (result.message || 'Unknown error'));
         }
     } catch (error) {
         console.error('Error generating share link:', error);
-        showNotification('Error generating share link');
+        console.log('Error generating share link');
     }
 });
 
@@ -401,14 +401,14 @@ document.getElementById('copyLinkBtn')?.addEventListener('click', () => {
     const linkInput = document.getElementById('shareLink');
     linkInput.select();
     document.execCommand('copy');
-    showNotification('Link copied to clipboard!');
+    console.log('Link copied to clipboard!');
 });
 
 
 document.getElementById('togglePublicBtn')?.addEventListener('click', async () => {
     if (!currentResumeId) {
         console.error('No resume ID set for toggle');
-        showNotification('Error: No resume selected');
+        console.log('Error: No resume selected');
         return;
     }
 
@@ -447,13 +447,13 @@ document.getElementById('togglePublicBtn')?.addEventListener('click', async () =
                 statusBadge.style.color = '#991b1b';
             }
 
-            showNotification(result.message);
+            console.log(result.message);
         } else {
-            showNotification('Failed to toggle resume visibility');
+            console.log('Failed to toggle resume visibility');
         }
     } catch (error) {
         console.error('Error toggling visibility:', error);
-        showNotification('Error toggling resume visibility');
+        console.log('Error toggling resume visibility');
     }
 });
 
@@ -468,7 +468,7 @@ document.getElementById('openLinkBtn')?.addEventListener('click', () => {
 const createResumeBtn = document.getElementById('navCtaBtn');
 if (navCtaBtn) {
     createResumeBtn.addEventListener('click', () => {
-        showNotification('Opening resume builder...');
+        console.log('Opening resume builder...');
         setTimeout(() => {
             window.location.href = 'editor.php';
         }, 500);
@@ -573,7 +573,7 @@ filterButtons.forEach(btn => {
         this.classList.add('active');
 
         const filter = this.getAttribute('data-filter');
-        showNotification(`Filtering resumes: ${filter}`);
+        console.log(`Filtering resumes: ${filter}`);
     });
 });
 
@@ -592,7 +592,7 @@ const templateButtons = document.querySelectorAll('.btn-use-template');
 templateButtons.forEach(btn => {
     btn.addEventListener('click', function() {
         const templateName = this.closest('.template-card').querySelector('.template-name').textContent;
-        showNotification(`Opening ${templateName} template...`);
+        console.log(`Opening ${templateName} template...`);
         setTimeout(() => {
             window.location.href = 'editor.php';
         }, 500);
@@ -603,7 +603,7 @@ templateButtons.forEach(btn => {
 const saveProfileBtn = document.querySelector('.btn-save-profile');
 if (saveProfileBtn) {
     saveProfileBtn.addEventListener('click', function() {
-        showNotification('Profile saved successfully!');
+        console.log('Profile saved successfully!');
     });
 }
 
@@ -611,7 +611,7 @@ if (saveProfileBtn) {
 const changePhotoBtn = document.querySelector('.btn-change-photo');
 if (changePhotoBtn) {
     changePhotoBtn.addEventListener('click', function() {
-        showNotification('Photo upload feature coming soon!');
+        console.log('Photo upload feature coming soon!');
     });
 }
 
@@ -621,7 +621,7 @@ toggleSwitches.forEach(toggle => {
     toggle.addEventListener('change', function() {
         const settingName = this.closest('.setting-item').querySelector('.setting-name').textContent;
         const status = this.checked ? 'enabled' : 'disabled';
-        showNotification(`${settingName} ${status}`);
+        console.log(`${settingName} ${status}`);
     });
 });
 
@@ -630,7 +630,7 @@ const settingActionBtns = document.querySelectorAll('.btn-setting-action');
 settingActionBtns.forEach(btn => {
     btn.addEventListener('click', function() {
         const settingName = this.closest('.setting-item').querySelector('.setting-name').textContent;
-        showNotification(`Opening ${settingName}...`);
+        console.log(`Opening ${settingName}...`);
     });
 });
 
@@ -649,7 +649,7 @@ deleteBtns.forEach(btn => {
                 resumeCard.style.animation = 'fadeOut 0.3s ease';
                 setTimeout(() => {
                     resumeCard.remove();
-                    showNotification('Resume deleted successfully');
+                    console.log('Resume deleted successfully');
                 }, 300);
             }
         } else {
@@ -659,7 +659,7 @@ deleteBtns.forEach(btn => {
                 'Delete Account'
             );
             if (confirmed) {
-                showNotification('Account deletion initiated. Please check your email.');
+                console.log('Account deletion initiated. Please check your email.');
             }
         }
     });
@@ -790,17 +790,17 @@ function createExperienceEntry(exp, index) {
 
 
 function addProfileEducation() {
-    showNotification('Add education form feature coming soon!');
+    console.log('Add education form feature coming soon!');
 }
 
 
 function addProfileExperience() {
-    showNotification('Add experience form feature coming soon!');
+    console.log('Add experience form feature coming soon!');
 }
 
 
 function editEducation(index) {
-    showNotification('Edit education feature coming soon!');
+    console.log('Edit education feature coming soon!');
 }
 
 
@@ -814,13 +814,13 @@ async function deleteEducation(index) {
         data.education.splice(index, 1);
         localStorage.setItem('registrationData', JSON.stringify(data));
         loadProfileEducationEntries(data.education);
-        showNotification('Education entry deleted');
+        console.log('Education entry deleted');
     }
 }
 
 
 function editExperience(index) {
-    showNotification('Edit experience feature coming soon!');
+    console.log('Edit experience feature coming soon!');
 }
 
 
@@ -834,7 +834,7 @@ async function deleteExperience(index) {
         data.experience.splice(index, 1);
         localStorage.setItem('registrationData', JSON.stringify(data));
         loadProfileExperienceEntries(data.experience);
-        showNotification('Experience entry deleted');
+        console.log('Experience entry deleted');
     }
 }
 

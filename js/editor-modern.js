@@ -716,7 +716,7 @@ async function saveResume() {
 
         if (result.success) {
             resumeState.id = result.resume_id;
-            showNotification('Resume saved successfully!', 'success');
+            console.log('Resume saved successfully!', 'success');
 
             
             if (!resumeData.id) {
@@ -725,11 +725,11 @@ async function saveResume() {
                 resumeData.id = result.resume_id;
             }
         } else {
-            showNotification('Error saving resume: ' + result.message, 'error');
+            console.log('Error saving resume: ' + result.message, 'error');
         }
     } catch (error) {
         console.error('Save error:', error);
-        showNotification('Error saving resume. Please try again.', 'error');
+        console.log('Error saving resume. Please try again.', 'error');
     } finally {
         saveBtn.textContent = originalText;
         saveBtn.disabled = false;

@@ -58,16 +58,16 @@ document.getElementById('educationForm')?.addEventListener('submit', async (e) =
         const result = await response.json();
 
         if (result.success) {
-            showNotification('Education added successfully!');
+            console.log('Education added successfully!');
             closeEducationModal();
             
             location.reload();
         } else {
-            showNotification('Error: ' + result.message);
+            console.log('Error: ' + result.message);
         }
     } catch (error) {
         console.error('Error adding education:', error);
-        showNotification('Failed to add education');
+        console.log('Failed to add education');
     }
 });
 
@@ -98,16 +98,16 @@ document.getElementById('experienceForm')?.addEventListener('submit', async (e) 
         const result = await response.json();
 
         if (result.success) {
-            showNotification('Experience added successfully!');
+            console.log('Experience added successfully!');
             closeExperienceModal();
             
             location.reload();
         } else {
-            showNotification('Error: ' + result.message);
+            console.log('Error: ' + result.message);
         }
     } catch (error) {
         console.error('Error adding experience:', error);
-        showNotification('Failed to add experience');
+        console.log('Failed to add experience');
     }
 });
 
@@ -125,14 +125,14 @@ async function deleteEducation(id) {
         const result = await response.json();
 
         if (result.success) {
-            showNotification('Education deleted successfully!');
+            console.log('Education deleted successfully!');
             location.reload();
         } else {
-            showNotification('Error: ' + result.message);
+            console.log('Error: ' + result.message);
         }
     } catch (error) {
         console.error('Error deleting education:', error);
-        showNotification('Failed to delete education');
+        console.log('Failed to delete education');
     }
 }
 
@@ -149,14 +149,14 @@ async function deleteExperience(id) {
         const result = await response.json();
 
         if (result.success) {
-            showNotification('Experience deleted successfully!');
+            console.log('Experience deleted successfully!');
             location.reload();
         } else {
-            showNotification('Error: ' + result.message);
+            console.log('Error: ' + result.message);
         }
     } catch (error) {
         console.error('Error deleting experience:', error);
-        showNotification('Failed to delete experience');
+        console.log('Failed to delete experience');
     }
 }
 

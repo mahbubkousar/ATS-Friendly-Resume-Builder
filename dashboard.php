@@ -91,120 +91,6 @@ if ($conn) {
         $stmt->close();
     }
 
-    // Get upcoming interview notifications (within next 7 days)
-    $upcomingInterviews = [];
-    $stmt = $conn->prepare("
-        SELECT
-            application_id,
-            company_name,
-            job_title,
-            interview_date,
-            interview_location,
-            status
-        FROM job_applications
-        WHERE user_id = ?
-        AND interview_date IS NOT NULL
-        AND interview_date >= NOW()
-        AND interview_date <= DATE_ADD(NOW(), INTERVAL 7 DAY)
-        ORDER BY interview_date ASC
-    ");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $upcomingInterviews[] = $row;
-
-            // Auto-generate notification if it doesn't exist (check both read and unread)
-            $checkNotifStmt = $conn->prepare("
-                SELECT notification_id FROM notifications
-                WHERE user_id = ?
-                AND application_id = ?
-                AND notification_type = 'interview_reminder'
-                AND DATE(scheduled_for) = DATE(?)
-            ");
-            $checkNotifStmt->bind_param("iis", $userId, $row['application_id'], $row['interview_date']);
-            $checkNotifStmt->execute();
-            $notifResult = $checkNotifStmt->get_result();
-
-            if ($notifResult->num_rows === 0) {
-                // Create notification
-                $interviewDateTime = new DateTime($row['interview_date']);
-                $now = new DateTime();
-                $interval = $now->diff($interviewDateTime);
-                $daysUntil = $interval->days;
-
-                $timeText = '';
-                if ($daysUntil == 0) {
-                    $timeText = 'today';
-                } elseif ($daysUntil == 1) {
-                    $timeText = 'tomorrow';
-                } else {
-                    $timeText = "in {$daysUntil} days";
-                }
-
-                $title = "Interview Scheduled {$timeText}";
-                $message = "You have an interview with {$row['company_name']} for the position of {$row['job_title']} on " . $interviewDateTime->format('M j, Y \a\t g:i A');
-
-                if (!empty($row['interview_location'])) {
-                    $message .= " at {$row['interview_location']}";
-                }
-
-                $link = "dashboard.php#applications";
-
-                $insertNotifStmt = $conn->prepare("
-                    INSERT INTO notifications (user_id, application_id, notification_type, title, message, link, scheduled_for)
-                    VALUES (?, ?, 'interview_reminder', ?, ?, ?, ?)
-                ");
-                $insertNotifStmt->bind_param(
-                    "iissss",
-                    $userId,
-                    $row['application_id'],
-                    $title,
-                    $message,
-                    $link,
-                    $row['interview_date']
-                );
-                $insertNotifStmt->execute();
-                $insertNotifStmt->close();
-            }
-            $checkNotifStmt->close();
-        }
-        $stmt->close();
-    }
-
-    // Get unread notification count
-    $notificationCount = 0;
-    $stmt = $conn->prepare("SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($row = $result->fetch_assoc()) {
-            $notificationCount = $row['count'];
-        }
-        $stmt->close();
-    }
-
-    // Get recent unread notifications for modal (limit 5)
-    $recentNotifications = [];
-    $stmt = $conn->prepare("
-        SELECT n.*, ja.job_title, ja.company_name
-        FROM notifications n
-        LEFT JOIN job_applications ja ON n.application_id = ja.application_id
-        WHERE n.user_id = ? AND n.is_read = 0
-        ORDER BY n.created_at DESC
-        LIMIT 5
-    ");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $recentNotifications[] = $row;
-        }
-        $stmt->close();
-    }
 }
 
 $resumeCount = count($resumes);
@@ -231,85 +117,10 @@ $resumeCount = count($resumes);
                 <a href="dashboard.php" class="nav-link active">Dashboard</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
                 <a href="ats-converter.php" class="nav-link">ATS Converter</a>
-                <button class="notification-icon" id="notificationBtn" aria-label="Notifications">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge" id="notificationBadge" style="<?php echo $notificationCount > 0 ? '' : 'display: none;'; ?>"><?php echo $notificationCount; ?></span>
-                </button>
                 <a href="editor.php" class="nav-cta" style="text-decoration: none; display: inline-block; text-align: center;">Create Resume</a>
             </div>
         </div>
     </nav>
-
-    <!-- Notification Modal -->
-    <div class="notification-modal" id="notificationModal">
-        <div class="notification-header">
-            <h3>Notifications</h3>
-            <button class="close-modal" id="closeNotificationModal">&times;</button>
-        </div>
-        <div class="notification-body" id="notificationBody">
-            <?php if (count($recentNotifications) > 0): ?>
-                <?php foreach ($recentNotifications as $notification):
-                    // Determine icon based on notification type
-                    $iconClass = 'fa-bell';
-                    $iconColor = '#7c3aed';
-                    if ($notification['notification_type'] === 'interview_reminder') {
-                        $iconClass = 'fa-calendar-check';
-                        $iconColor = '#7c3aed';
-                    } elseif ($notification['notification_type'] === 'follow_up_reminder') {
-                        $iconClass = 'fa-clock';
-                        $iconColor = '#f59e0b';
-                    } elseif ($notification['notification_type'] === 'status_update') {
-                        $iconClass = 'fa-info-circle';
-                        $iconColor = '#3b82f6';
-                    }
-
-                    // Calculate time ago
-                    $createdAt = new DateTime($notification['created_at']);
-                    $now = new DateTime();
-                    $interval = $now->diff($createdAt);
-
-                    if ($interval->days > 0) {
-                        $timeAgo = $interval->days . ' day' . ($interval->days > 1 ? 's' : '') . ' ago';
-                    } elseif ($interval->h > 0) {
-                        $timeAgo = $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
-                    } elseif ($interval->i > 0) {
-                        $timeAgo = $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
-                    } else {
-                        $timeAgo = 'Just now';
-                    }
-                ?>
-                <div class="notification-item" data-notification-id="<?php echo $notification['notification_id']; ?>" data-application-id="<?php echo $notification['application_id'] ?? ''; ?>">
-                    <div class="notification-icon-wrapper">
-                        <i class="fas <?php echo $iconClass; ?>" style="color: <?php echo $iconColor; ?>;"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h4 class="notification-title"><?php echo htmlspecialchars($notification['title']); ?></h4>
-                        <p class="notification-text"><?php echo htmlspecialchars($notification['message']); ?></p>
-                        <p class="notification-time">
-                            <i class="fas fa-clock"></i> <?php echo $timeAgo; ?>
-                        </p>
-                    </div>
-                    <?php if (!empty($notification['application_id'])): ?>
-                    <div class="notification-actions">
-                        <button class="view-application-btn" onclick="markAsReadAndView(<?php echo $notification['notification_id']; ?>, <?php echo $notification['application_id']; ?>)">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div style="text-align: center; padding: 2rem; color: #718096;">
-                    <i class="fas fa-bell-slash" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                    <p>No new notifications</p>
-                </div>
-            <?php endif; ?>
-        </div>
-        <div class="notification-footer">
-            <a href="notifications.php" class="view-all-notifications">View All Notifications</a>
-        </div>
-    </div>
-    <div class="notification-overlay" id="notificationOverlay"></div>
 
     <div class="dashboard-container">
         <aside class="sidebar">
@@ -1214,20 +1025,6 @@ $resumeCount = count($resumes);
     </div>
 
     <!-- MODALS -->
-    <!-- Notification Modal -->
-    <div class="modal-overlay" id="notificationModal" style="display: none;">
-        <div class="notification-modal" id="notificationModalContent">
-            <div class="modal-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h3 id="notificationTitle">Success</h3>
-            <p id="notificationMessage">Operation completed successfully</p>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-btn-primary" id="notificationOkBtn">OK</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Confirmation Modal -->
     <div class="modal-overlay" id="confirmationModal" style="display: none;">
         <div class="notification-modal warning" id="confirmationModalContent">

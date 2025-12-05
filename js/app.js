@@ -93,72 +93,8 @@ const getStartedBtn = document.getElementById('getStartedBtn');
 const navCtaBtn = document.getElementById('navCtaBtn');
 
 function handleStartBuilding() {
-    
-    showNotification('Redirecting to login...');
-
-    
-    setTimeout(() => {
-        window.location.href = 'login.php';
-    }, 500);
+    window.location.href = 'login.php';
 }
-
-
-
-function showNotification(message, type = 'info') {
-    
-    if (typeof showNotificationModal === 'function') {
-        showNotificationModal(message, type);
-        return;
-    }
-
-    
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #1a202c;
-        color: white;
-        padding: 1.5rem 2rem;
-        border-radius: 16px;
-        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 400;
-        letter-spacing: 0.01em;
-        z-index: 1000;
-        animation: slideInRight 0.4s ease, fadeOut 0.4s ease 2.6s forwards;
-        max-width: 320px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    `;
-
-    document.body.appendChild(notification);
-
-    setTimeout(() => notification.remove(), 3000);
-}
-
-
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-            transform: translateX(400px);
-        }
-    }
-`;
-document.head.appendChild(notificationStyle);
 
 if (getStartedBtn) {
     getStartedBtn.addEventListener('click', handleStartBuilding);

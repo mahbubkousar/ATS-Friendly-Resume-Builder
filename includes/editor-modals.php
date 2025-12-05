@@ -1,18 +1,4 @@
 <!-- MODALS LOADED SUCCESSFULLY -->
-<!-- Notification Modal -->
-<div class="modal-overlay" id="notificationModal" style="display: none;">
-    <div class="notification-modal" id="notificationModalContent">
-        <div class="modal-icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <h3 id="notificationTitle">Success</h3>
-        <p id="notificationMessage">Operation completed successfully</p>
-        <div class="modal-buttons">
-            <button class="modal-btn modal-btn-primary" id="notificationOkBtn">OK</button>
-        </div>
-    </div>
-</div>
-
 <!-- Analysis Progress Modal -->
 <div class="modal-overlay" id="analysisProgressModal" style="display: none;">
     <div class="progress-modal">

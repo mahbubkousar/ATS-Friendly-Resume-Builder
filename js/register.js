@@ -23,34 +23,6 @@ const stepInfo = {
 };
 
 
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #1a202c;
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.9rem;
-        font-weight: 500;
-        z-index: 10000;
-        animation: slideInRight 0.4s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    `;
-
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.style.animation = 'fadeOut 0.4s ease forwards';
-        setTimeout(() => notification.remove(), 400);
-    }, 3000);
-}
-
 
 function init() {
     updateStep(1);
@@ -143,23 +115,24 @@ function validateCurrentStep() {
         const terms = document.getElementById('terms').checked;
 
         if (password.length < 8) {
-            showNotification('Password must be at least 8 characters long');
+            console.log('Password must be at least 8 characters long');
+            alert('Password must be at least 8 characters long');
             return false;
         }
 
         if (password !== confirmPassword) {
-            showNotification('Passwords do not match');
+            console.log('Passwords do not match');
             return false;
         }
 
         if (!terms) {
-            showNotification('Please agree to the Terms of Service');
+            console.log('Please agree to the Terms of Service');
             return false;
         }
     }
 
     if (!isValid) {
-        showNotification('Please fill in all required fields');
+        console.log('Please fill in all required fields');
     }
 
     return isValid;
@@ -435,12 +408,12 @@ function handleSubmit(e) {
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            showNotification(result.message);
+            console.log(result.message);
             setTimeout(() => {
                 window.location.href = result.redirect;
             }, 1000);
         } else {
-            showNotification(result.message);
+            console.log(result.message);
             submitButton.disabled = false;
             submitButton.innerHTML = originalText;
 
@@ -457,7 +430,7 @@ function handleSubmit(e) {
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('An error occurred. Please try again.');
+        console.log('An error occurred. Please try again.');
         submitButton.disabled = false;
         submitButton.innerHTML = originalText;
     });

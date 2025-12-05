@@ -858,7 +858,7 @@ function saveResume() {
     const resumeTitle = document.getElementById('resumeTitle')?.value.trim();
 
     if (!resumeTitle) {
-        showNotification('Please enter a resume title');
+        console.log('Please enter a resume title');
         return;
     }
 
@@ -883,7 +883,7 @@ function saveResume() {
         status: 'draft'
     };
 
-    showNotification('Saving resume...');
+    console.log('Saving resume...');
 
     fetch('/ATS/api/save-resume.php', {
         method: 'POST',
@@ -895,7 +895,7 @@ function saveResume() {
     .then(response => response.json())
     .then(result => {
         if (result.success) {
-            showNotification('Resume saved successfully!');
+            console.log('Resume saved successfully!');
             currentResumeData.id = result.resume_id;
 
             
@@ -904,12 +904,12 @@ function saveResume() {
                 window.history.pushState({}, '', newUrl);
             }
         } else {
-            showNotification('Error: ' + result.message);
+            console.log('Error: ' + result.message);
         }
     })
     .catch(err => {
         console.error('Save error:', err);
-        showNotification('Failed to save resume');
+        console.log('Failed to save resume');
     });
 }
 
@@ -918,17 +918,17 @@ async function downloadPDF() {
         
         const iframe = document.getElementById('resumePreview');
         if (!iframe || !iframe.contentWindow) {
-            showNotification('Preview not loaded yet');
+            console.log('Preview not loaded yet');
             return;
         }
 
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
         if (!iframeDoc) {
-            showNotification('Cannot access preview content');
+            console.log('Cannot access preview content');
             return;
         }
 
-        showNotification('Generating PDF...');
+        console.log('Generating PDF...');
 
         
         const resumeContainer = iframeDoc.querySelector('.resume-container') || iframeDoc.body;
@@ -1006,10 +1006,10 @@ async function downloadPDF() {
         pdf.save(filename);
 
         const totalPages = pdf.internal.getNumberOfPages();
-        showNotification(`PDF downloaded successfully! (${totalPages} page${totalPages > 1 ? 's' : ''})`);
+        console.log(`PDF downloaded successfully! (${totalPages} page${totalPages > 1 ? 's' : ''})`);
     } catch (error) {
         console.error('Error downloading PDF:', error);
-        showNotification('Error downloading PDF');
+        console.log('Error downloading PDF');
     }
 }
 
@@ -1100,7 +1100,7 @@ async function performAIAnalysis() {
         const jobDescFile = document.getElementById('jobDescFile')?.files[0];
 
         if (!jobDescText && !jobDescFile) {
-            showNotification('Please provide a job description to analyze against');
+            console.log('Please provide a job description to analyze against');
             return;
         }
 
@@ -1173,17 +1173,17 @@ async function performAIAnalysis() {
                 analysis.keywords_missing || []
             );
 
-            showNotification('Analysis complete!');
+            console.log('Analysis complete!');
         } else {
             console.error('API returned error:', result);
             updateScoreDisplay('error', '--', 'Analysis failed');
-            showNotification('Error: ' + (result.message || 'Analysis failed'));
+            console.log('Error: ' + (result.message || 'Analysis failed'));
         }
 
     } catch (error) {
         console.error('Analysis error:', error);
         updateScoreDisplay('error', '--', 'Analysis failed');
-        showNotification('Failed to analyze resume. Please try again.');
+        console.log('Failed to analyze resume. Please try again.');
     } finally {
         
         const analyzeBtn = document.querySelector('.analyze-btn');
@@ -1382,13 +1382,13 @@ function setupJobDescriptionToggle() {
             const file = e.target.files[0];
             if (file) {
                 if (file.type !== 'application/pdf') {
-                    showNotification('Please upload a PDF file only');
+                    console.log('Please upload a PDF file only');
                     jobDescFile.value = '';
                     return;
                 }
 
                 if (file.size > 10 * 1024 * 1024) {
-                    showNotification('File size must be less than 10MB');
+                    console.log('File size must be less than 10MB');
                     jobDescFile.value = '';
                     return;
                 }
@@ -1396,7 +1396,7 @@ function setupJobDescriptionToggle() {
                 fileName.textContent = file.name;
                 fileUploadLabel.style.display = 'none';
                 fileInfo.classList.remove('hidden');
-                showNotification('File uploaded successfully');
+                console.log('File uploaded successfully');
             }
         });
     }

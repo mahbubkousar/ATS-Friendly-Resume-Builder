@@ -68,7 +68,8 @@ if (!$resumeData) {
             <div class="nav-links">
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
                 <button class="nav-cta" id="saveResumeBtn">Save Resume</button>
                 <button class="nav-cta download-btn" id="downloadBtn">Print / Download PDF</button>
             </div>
@@ -297,6 +298,7 @@ if (!$resumeData) {
         ]); ?>;
     </script>
     <script src="js/navigation-fix.js"></script>
+    <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=3"></script>
     <script src="js/app.js?v=5"></script>
     <script src="js/editor-professional.js?v=10"></script>

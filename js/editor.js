@@ -913,182 +913,26 @@ function saveResume() {
     });
 }
 
-async function downloadPDF() {
+// Simplified PDF download using browser print function (same as other editors)
+function downloadPDF() {
     try {
-        
         const iframe = document.getElementById('resumePreview');
         if (!iframe || !iframe.contentWindow) {
             console.log('Preview not loaded yet');
             return;
         }
 
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc) {
-            console.log('Cannot access preview content');
-            return;
-        }
-
         console.log('Generating PDF...');
 
-        
-        const resumeContainer = iframeDoc.querySelector('.resume-container') || iframeDoc.body;
+        // Use browser's print dialog - simpler and more reliable
+        const iframeWindow = iframe.contentWindow;
+        iframeWindow.focus();
+        iframeWindow.print();
 
-        
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'pt',
-            format: 'letter'
-        });
-
-        
-        const pageWidth = 612; 
-        const pageHeight = 792; 
-        const margin = 36; 
-        const contentWidth = pageWidth - (2 * margin);
-        const contentHeight = pageHeight - (2 * margin);
-
-        
-        const contentBlocks = getContentBlocks(iframeDoc, resumeContainer);
-
-        console.log(`Found ${contentBlocks.length} content blocks to paginate`);
-
-        let currentPage = 0;
-        let currentY = margin;
-
-        for (let i = 0; i < contentBlocks.length; i++) {
-            const block = contentBlocks[i];
-
-            
-            const blockCanvas = await html2canvas(block.element, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff',
-                windowWidth: 850
-            });
-
-            
-            const blockHeight = (blockCanvas.height / blockCanvas.width) * contentWidth;
-
-            
-            const spaceRemaining = (currentPage === 0 ? pageHeight : contentHeight) - (currentY - margin);
-
-            
-            if (blockHeight > spaceRemaining && currentY > margin + 10) {
-                pdf.addPage();
-                currentPage++;
-                currentY = margin + 30; 
-                console.log(`Page ${currentPage + 1}: Starting new page for ${block.type}`);
-            }
-
-            
-            if (blockHeight > contentHeight) {
-                await renderLargeBlock(pdf, blockCanvas, block, currentY, margin, contentWidth, contentHeight, pageHeight);
-                currentPage = pdf.internal.getNumberOfPages() - 1;
-                currentY = margin + 30;
-            } else {
-                
-                const imgData = blockCanvas.toDataURL('image/png');
-                pdf.addImage(imgData, 'PNG', margin, currentY, contentWidth, blockHeight);
-                currentY += blockHeight;
-
-                
-                if (block.type === 'section' || block.type === 'header') {
-                    currentY += 8; 
-                }
-            }
-        }
-
-        
-        const fullName = document.getElementById('fullName')?.value || 'Resume';
-        const filename = fullName.replace(/[^a-zA-Z0-9_\-\.]/g, '_') + '_Resume.pdf';
-        pdf.save(filename);
-
-        const totalPages = pdf.internal.getNumberOfPages();
-        console.log(`PDF downloaded successfully! (${totalPages} page${totalPages > 1 ? 's' : ''})`);
+        console.log('PDF print dialog opened');
     } catch (error) {
-        console.error('Error downloading PDF:', error);
+        console.error('Error opening print dialog:', error);
         console.log('Error downloading PDF');
-    }
-}
-
-
-function getContentBlocks(iframeDoc, container) {
-    const blocks = [];
-
-    
-    const children = Array.from(container.children);
-
-    console.log(`Container has ${children.length} direct children`);
-
-    children.forEach((child, index) => {
-        
-        let type = 'content';
-
-        if (child.classList.contains('header') || child.classList.contains('resume-header') || child.tagName === 'HEADER') {
-            type = 'header';
-        } else if (child.classList.contains('section')) {
-            type = 'section';
-        } else if (child.classList.contains('summary') || child.classList.contains('professional-summary')) {
-            type = 'summary';
-        } else if (child.classList.contains('contact-info')) {
-            type = 'contact';
-        } else if (child.classList.contains('skills-section')) {
-            type = 'skills';
-        }
-
-        
-        const rect = child.getBoundingClientRect();
-        if (rect.height > 5 && rect.width > 5) {
-            blocks.push({
-                element: child,
-                type,
-                index,
-                height: rect.height,
-                className: child.className
-            });
-            console.log(`Block ${index}: ${type} (${child.tagName}.${child.className}) - ${rect.height.toFixed(0)}px`);
-        } else {
-            console.log(`Skipping empty block ${index}: ${child.tagName}.${child.className}`);
-        }
-    });
-
-    console.log(`Total blocks to render: ${blocks.length}`);
-    return blocks;
-}
-
-
-async function renderLargeBlock(pdf, canvas, block, startY, margin, contentWidth, contentHeight, pageHeight) {
-    const ratio = contentWidth / canvas.width;
-    const totalHeight = canvas.height * ratio;
-    const numSlices = Math.ceil(totalHeight / contentHeight);
-
-    console.log(`Splitting large ${block.type} across ${numSlices} pages`);
-
-    for (let slice = 0; slice < numSlices; slice++) {
-        if (slice > 0) {
-            pdf.addPage();
-            startY = margin + 30;
-        }
-
-        const sourceY = (slice * contentHeight) / ratio;
-        const sourceHeight = Math.min((contentHeight / ratio), canvas.height - sourceY);
-
-        
-        const sliceCanvas = document.createElement('canvas');
-        sliceCanvas.width = canvas.width;
-        sliceCanvas.height = sourceHeight;
-        const ctx = sliceCanvas.getContext('2d');
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
-
-        ctx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
-
-        const sliceData = sliceCanvas.toDataURL('image/png');
-        const sliceHeight = sourceHeight * ratio;
-        pdf.addImage(sliceData, 'PNG', margin, startY, contentWidth, sliceHeight);
     }
 }
 

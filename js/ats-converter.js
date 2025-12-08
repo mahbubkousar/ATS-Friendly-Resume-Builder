@@ -1,3 +1,10 @@
+/*
+ * ATS CONVERTER JAVASCRIPT - TEMPORARILY DISABLED
+ * This file is commented out as the ATS Converter feature is disabled.
+ * To re-enable: Remove the comment blocks at the beginning and end of this file.
+ */
+
+/* COMMENTED OUT - All ATS Converter functionality
 
 
 
@@ -826,3 +833,4 @@ function startOver() {
         uploadSection.style.display = 'block';
     }
 }
+END OF COMMENTED OUT CONTENT */

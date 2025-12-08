@@ -116,7 +116,8 @@ $resumeCount = count($resumes);
             <div class="nav-links">
                 <a href="dashboard.php" class="nav-link active">Dashboard</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
                 <a href="editor.php" class="nav-cta" style="text-decoration: none; display: inline-block; text-align: center;">Create Resume</a>
             </div>
         </div>
@@ -156,12 +157,6 @@ $resumeCount = count($resumes);
                     </svg>
                     <span>Applications</span>
                 </a>
-                <a href="#analytics" class="sidebar-link">
-                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M3 17V13M10 17V7M17 17V11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span>Analytics</span>
-                </a>
                 <a href="#profile" class="sidebar-link">
                     <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
@@ -189,10 +184,6 @@ $resumeCount = count($resumes);
                     <div class="stat-card">
                         <div class="stat-number"><?php echo $resumeCount; ?></div>
                         <div class="stat-label">Resumes Created</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">0%</div>
-                        <div class="stat-label">Avg ATS Score</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number"><?php echo count($applications); ?></div>
@@ -227,9 +218,6 @@ $resumeCount = count($resumes);
                                         <a href="editor-<?php echo $resume['template_name'] ?? 'classic'; ?>.php?id=<?php echo $resume['resume_id']; ?>" class="btn-edit" style="text-decoration: none;">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <button class="btn-download btn-download-resume" data-resume-id="<?php echo $resume['resume_id']; ?>">
-                                            <i class="fas fa-download"></i> Download
-                                        </button>
                                         <button class="btn-delete btn-delete-resume" data-resume-id="<?php echo $resume['resume_id']; ?>" data-resume-title="<?php echo htmlspecialchars($resume['resume_title']); ?>">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
@@ -277,9 +265,6 @@ $resumeCount = count($resumes);
                                     <a href="editor-<?php echo $resume['template_name'] ?? 'classic'; ?>.php?id=<?php echo $resume['resume_id']; ?>" class="btn-edit" style="text-decoration: none;">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <button class="btn-download btn-download-resume" data-resume-id="<?php echo $resume['resume_id']; ?>">
-                                        <i class="fas fa-download"></i> Download
-                                    </button>
                                     <button class="btn-share btn-share-resume" data-resume-id="<?php echo $resume['resume_id']; ?>">
                                         <i class="fas fa-share-alt"></i> Share
                                     </button>
@@ -521,19 +506,6 @@ $resumeCount = count($resumes);
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Analytics Tab -->
-            <div id="analytics" class="tab-content">
-                <header class="dashboard-header">
-                    <h1 class="dashboard-greeting">Analytics</h1>
-                    <p class="section-description">Track your resume performance</p>
-                </header>
-                <div style="text-align: center; padding: 4rem 2rem; color: #718096;">
-                    <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1rem; display: block; color: #cbd5e0;"></i>
-                    <h3 style="color: #4a5568; margin-bottom: 0.5rem;">No analytics data yet</h3>
-                    <p>Create and share resumes to start tracking performance</p>
                 </div>
             </div>
 

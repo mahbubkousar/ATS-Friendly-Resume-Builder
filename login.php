@@ -67,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="nav-links">
                 <a href="index.php" class="nav-link">Home</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
             </div>
         </div>
     </nav>

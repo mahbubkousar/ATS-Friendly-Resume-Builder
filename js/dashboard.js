@@ -74,24 +74,10 @@ sidebarLinks.forEach(link => {
 });
 
 
-const downloadButtons = document.querySelectorAll('.btn-download');
 const shareButtons = document.querySelectorAll('.btn-share');
 const deleteButtons = document.querySelectorAll('.btn-delete');
 
-downloadButtons.forEach((btn) => {
-    btn.addEventListener('click', async (e) => {
-        const resumeId = e.target.closest('.btn-download-resume')?.dataset.resumeId;
-
-        if (resumeId) {
-            
-            console.log('Opening resume for PDF export...');
-            const editorUrl = `/ATS/editor.php?id=${resumeId}&download=true`;
-            window.open(editorUrl, '_blank');
-        } else {
-            console.log('Download feature coming soon!');
-        }
-    });
-});
+// Download buttons removed - downloads only available from editor panel
 
 shareButtons.forEach((btn) => {
     btn.addEventListener('click', async (e) => {
@@ -466,7 +452,7 @@ document.getElementById('openLinkBtn')?.addEventListener('click', () => {
 
 
 const createResumeBtn = document.getElementById('navCtaBtn');
-if (navCtaBtn) {
+if (createResumeBtn) {
     createResumeBtn.addEventListener('click', () => {
         console.log('Opening resume builder...');
         setTimeout(() => {

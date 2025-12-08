@@ -447,8 +447,14 @@ function displayResults(analysis) {
     
     updateInsights(analysis);
 
-    
+
     updateMetricDetails(analysis);
+
+    // Load and show ATS guidelines references
+    loadATSGuidelines();
+    setTimeout(() => {
+        showGuidelinesSection();
+    }, 2000);
 
     console.log('Analysis complete!');
 }
@@ -840,3 +846,78 @@ document.addEventListener('click', (e) => {
 });
 
 console.log('ATS Score Checker loaded');
+
+/**
+ * Load ATS Guidelines References
+ * Displays source documents used for scoring calculation
+ */
+async function loadATSGuidelines() {
+    try {
+        const response = await fetch('/ATS/api/get-ats-guidelines.php');
+        const data = await response.json();
+
+        if (data.success && data.guidelines && data.guidelines.length > 0) {
+            const guidelinesSection = document.getElementById('guidelinesSection');
+            const guidelinesGrid = document.getElementById('guidelinesGrid');
+
+            // Create guideline cards
+            let html = '';
+            data.guidelines.forEach((guideline, index) => {
+                html += `
+                    <div class="guideline-card" style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+                        <div style="display: flex; align-items: start; gap: 1rem;">
+                            <div style="flex-shrink: 0; width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <h4 style="font-size: 1rem; color: #1e293b; margin: 0 0 0.5rem 0; font-weight: 600;">
+                                    ${guideline.title}
+                                </h4>
+                                <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 1rem 0;">
+                                    ${guideline.size_formatted} • Updated ${guideline.modified}
+                                </p>
+                                <a href="${guideline.download_url}"
+                                   class="download-guideline-btn"
+                                   download="${guideline.file_name}"
+                                   style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: #7c3aed; color: white; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s;">
+                                    <i class="fas fa-download"></i>
+                                    Download Reference
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            guidelinesGrid.innerHTML = html;
+
+            // Add hover effect to download buttons
+            const style = document.createElement('style');
+            style.textContent = `
+                .download-guideline-btn:hover {
+                    background: #6d28d9 !important;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    } catch (error) {
+        console.error('Failed to load ATS guidelines:', error);
+    }
+}
+
+/**
+ * Show guidelines section after analysis
+ */
+function showGuidelinesSection() {
+    const guidelinesSection = document.getElementById('guidelinesSection');
+    if (guidelinesSection) {
+        guidelinesSection.style.display = 'block';
+
+        // Smooth scroll to guidelines
+        setTimeout(() => {
+            guidelinesSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 500);
+    }
+}

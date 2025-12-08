@@ -70,7 +70,8 @@ if (!$resumeData) {
             <div class="nav-links">
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
                 <button class="nav-cta" id="saveResumeBtn">Save Resume</button>
                 <button class="nav-cta download-btn" id="downloadBtn">Print / Download PDF</button>
             </div>

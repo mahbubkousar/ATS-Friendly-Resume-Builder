@@ -18,7 +18,8 @@
             <div class="nav-links">
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
                 <button class="nav-cta" id="navCtaBtn">Start Free</button>
             </div>
         </div>

@@ -1,9 +1,20 @@
 <?php
+/*
+ * ATS CONVERTER - TEMPORARILY DISABLED
+ * This feature is currently disabled and will redirect users to the dashboard.
+ * To re-enable: Remove the header redirect below and uncomment all code.
+ */
+header('Location: dashboard.php');
+exit();
+
+/* COMMENTED OUT - ATS Converter functionality
 require_once 'config/session.php';
 requireLogin();
 
 $user = getCurrentUser();
+*/
 ?>
+<!-- ALL CONTENT BELOW IS COMMENTED OUT - ATS Converter disabled
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -222,3 +233,4 @@ $user = getCurrentUser();
     <script src="js/ats-converter.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+END OF COMMENTED OUT CONTENT -->

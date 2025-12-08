@@ -19,7 +19,8 @@
             <div class="nav-links">
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
                 <a href="score-checker.php" class="nav-link">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
                 <a href="login.php" class="nav-cta" style="text-decoration: none; display: inline-block; text-align: center;">Get Started</a>
             </div>
         </div>

@@ -23,7 +23,8 @@ requireLogin();
             <div class="nav-links">
                 <a href="dashboard.php" class="nav-link">Dashboard</a>
                 <a href="score-checker.php" class="nav-link active">ATS Checker</a>
-                <a href="ats-converter.php" class="nav-link">ATS Converter</a>
+                <!-- ATS Converter temporarily disabled -->
+                <!--<a href="ats-converter.php" class="nav-link">ATS Converter</a>-->
                 <?php
                 $currentUser = getCurrentUser();
                 if ($currentUser):
@@ -374,6 +375,21 @@ requireLogin();
             </section>
         </div>
     </main>
+
+    <!-- ATS Guidelines Reference Section -->
+    <section class="guidelines-section" id="guidelinesSection" style="display: none; padding: 3rem 0; background: #f8fafc;">
+        <div class="container">
+            <div class="guidelines-header" style="text-align: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 0.5rem;">
+                    <i class="fas fa-book"></i> ATS Scoring References
+                </h3>
+                <p style="color: #64748b;">Our scoring is based on industry-standard ATS guidelines from leading universities</p>
+            </div>
+            <div class="guidelines-grid" id="guidelinesGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; max-width: 900px; margin: 0 auto;">
+                <!-- Guidelines will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="container">

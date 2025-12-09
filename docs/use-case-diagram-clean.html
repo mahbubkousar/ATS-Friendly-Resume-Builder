@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeSync - Use Case Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A3 landscape;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: white;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1700px;
+            width: 100%;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title-section h1 {
+            font-size: 36px;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .title-section h2 {
+            font-size: 20px;
+            color: #718096;
+            font-weight: 400;
+        }
+
+        /* Main diagram wrapper - Calculated: 1700px width x 900px height */
+        .diagram-wrapper {
+            position: relative;
+            width: 1700px;
+            height: 900px;
+            background: white;
+            margin: 0 auto;
+        }
+
+        /* System Boundary - leaves 150px margins on sides, 80px top/bottom */
+        .system-boundary {
+            position: absolute;
+            left: 150px;
+            top: 80px;
+            right: 150px;
+            bottom: 80px;
+            border: 3px dashed #3182ce;
+            border-radius: 16px;
+            background: #f7fafc;
+        }
+
+        .system-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 8px 32px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #2b6cb0;
+            border: 3px solid #3182ce;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Actors - 100px wide each */
+        .actor {
+            position: absolute;
+            text-align: center;
+            z-index: 100;
+            width: 120px;
+        }
+
+        .actor-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+        }
+
+        .actor-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2d3748;
+            line-height: 1.3;
+        }
+
+        /* Use Cases - ellipses with 160px width, 60px height */
+        .use-case {
+            position: absolute;
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 50%;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a202c;
+            width: 160px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            cursor: default;
+            transition: all 0.3s ease;
+            line-height: 1.3;
+        }
+
+        .use-case:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+        }
+
+        /* Primary use cases */
+        .use-case.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #5a67d8;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Connection lines */
+        svg.connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Legend */
+        .legend {
+            position: absolute;
+            bottom: 100px;
+            right: 180px;
+            background: white;
+            border: 3px solid #cbd5e0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 200;
+        }
+
+        .legend-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 6px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #4a5568;
+        }
+
+        .legend-symbol {
+            margin-right: 10px;
+        }
+
+        .legend-box {
+            width: 40px;
+            height: 20px;
+            border: 2px solid #2d3748;
+            border-radius: 10px;
+        }
+
+        .legend-box.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #5a67d8;
+        }
+
+        .legend-line {
+            width: 40px;
+            height: 2px;
+            background: #4a5568;
+        }
+
+        .legend-line.include {
+            background: none;
+            border-top: 2px dashed #48bb78;
+        }
+
+        /* Download button */
+        .download-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .diagram-wrapper {
+                page-break-inside: avoid;
+            }
+
+            .use-case, .use-case.primary {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .system-boundary {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- Download Button -->
+    <button class="download-btn no-print" onclick="downloadPDF()">
+        <i class="fa-solid fa-file-pdf"></i> Download PDF
+    </button>
+
+    <div class="container">
+        <!-- Title -->
+        <div class="title-section">
+            <h1>ResumeSync System</h1>
+            <h2>Use Case Diagram</h2>
+        </div>
+
+        <!-- Diagram -->
+        <div class="diagram-wrapper">
+            <!-- System Boundary -->
+            <div class="system-boundary">
+                <div class="system-label">ResumeSync System</div>
+            </div>
+
+            <!-- SVG for all connection lines -->
+            <svg class="connections" viewBox="0 0 1700 900">
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#4a5568"/>
+                    </marker>
+                    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#2b6cb0"/>
+                    </marker>
+                    <marker id="arrow-include" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#48bb78"/>
+                    </marker>
+                </defs>
+
+                <!-- Guest User (60, 200) to Register Account (270, 160) -->
+                <line x1="120" y1="200" x2="250" y2="180" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)" opacity="0.6"/>
+
+                <!-- Guest User (60, 200) to Login (480, 160) -->
+                <line x1="120" y1="200" x2="460" y2="180" stroke="#4a5568" stroke-width="2" marker-end="url(#arrow)" opacity="0.6"/>
+
+                <!-- Registered User (60, 450) to various use cases -->
+                <!-- To Create Resume (270, 300) -->
+                <line x1="120" y1="450" x2="250" y2="320" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Edit Resume (270, 400) -->
+                <line x1="120" y1="450" x2="250" y2="420" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Save Resume (270, 500) -->
+                <line x1="120" y1="450" x2="250" y2="480" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Delete Resume (270, 600) -->
+                <line x1="120" y1="450" x2="250" y2="580" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To View Preview (700, 300) -->
+                <line x1="120" y1="450" x2="680" y2="320" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To AI Generation (700, 450) -->
+                <line x1="120" y1="450" x2="680" y2="450" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Check ATS (700, 600) -->
+                <line x1="120" y1="450" x2="680" y2="580" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Download PDF (1130, 300) -->
+                <line x1="120" y1="450" x2="1110" y2="320" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Track Applications (1130, 450) -->
+                <line x1="120" y1="450" x2="1110" y2="450" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- To Share Resume (1130, 600) -->
+                <line x1="120" y1="450" x2="1110" y2="580" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+
+                <!-- Include relationships -->
+                <!-- Manual Editor to Create Resume -->
+                <line x1="430" y1="300" x2="480" y2="300" stroke="#48bb78" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-include)"/>
+
+                <!-- AI Editor to Edit Resume -->
+                <line x1="430" y1="400" x2="480" y2="400" stroke="#48bb78" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-include)"/>
+
+                <!-- Gemini AI (1640, 450) to AI features -->
+                <!-- To AI Generation (700, 450) -->
+                <line x1="1580" y1="450" x2="860" y2="450" stroke="#805ad5" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+
+                <!-- To Check ATS (700, 600) -->
+                <line x1="1580" y1="470" x2="860" y2="590" stroke="#805ad5" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+            </svg>
+
+            <!-- ACTORS -->
+            <!-- Guest User: Left, Y=200 (center of 80px actor is at Y=200, so top at 160) -->
+            <div class="actor" style="left: 0px; top: 160px;">
+                <svg class="actor-icon" viewBox="0 0 100 100">
+                    <circle cx="50" cy="28" r="15" fill="none" stroke="#4a5568" stroke-width="4"/>
+                    <line x1="50" y1="43" x2="50" y2="75" stroke="#4a5568" stroke-width="4"/>
+                    <line x1="50" y1="52" x2="25" y2="65" stroke="#4a5568" stroke-width="4"/>
+                    <line x1="50" y1="52" x2="75" y2="65" stroke="#4a5568" stroke-width="4"/>
+                    <line x1="50" y1="75" x2="30" y2="95" stroke="#4a5568" stroke-width="4"/>
+                    <line x1="50" y1="75" x2="70" y2="95" stroke="#4a5568" stroke-width="4"/>
+                </svg>
+                <div class="actor-label">Guest User</div>
+            </div>
+
+            <!-- Registered User: Left, Y=450 -->
+            <div class="actor" style="left: 0px; top: 410px;">
+                <svg class="actor-icon" viewBox="0 0 100 100">
+                    <circle cx="50" cy="28" r="15" fill="none" stroke="#2b6cb0" stroke-width="4"/>
+                    <line x1="50" y1="43" x2="50" y2="75" stroke="#2b6cb0" stroke-width="4"/>
+                    <line x1="50" y1="52" x2="25" y2="65" stroke="#2b6cb0" stroke-width="4"/>
+                    <line x1="50" y1="52" x2="75" y2="65" stroke="#2b6cb0" stroke-width="4"/>
+                    <line x1="50" y1="75" x2="30" y2="95" stroke="#2b6cb0" stroke-width="4"/>
+                    <line x1="50" y1="75" x2="70" y2="95" stroke="#2b6cb0" stroke-width="4"/>
+                </svg>
+                <div class="actor-label">Registered<br>User</div>
+            </div>
+
+            <!-- Gemini AI: Right, Y=450 -->
+            <div class="actor" style="right: 0px; top: 410px;">
+                <svg class="actor-icon" viewBox="0 0 100 100">
+                    <rect x="15" y="20" width="70" height="50" rx="4" fill="none" stroke="#805ad5" stroke-width="4"/>
+                    <rect x="10" y="70" width="80" height="6" rx="3" fill="#805ad5"/>
+                    <line x1="50" y1="70" x2="50" y2="76" stroke="#805ad5" stroke-width="4"/>
+                    <text x="50" y="52" font-size="24" fill="#805ad5" text-anchor="middle" font-weight="bold">AI</text>
+                </svg>
+                <div class="actor-label" style="color: #805ad5;">Google<br>Gemini AI</div>
+            </div>
+
+            <!-- USE CASES -->
+            <!-- SPACING CALCULATION:
+                 Canvas width: 1700px
+                 Margins: 150px left/right
+                 Usable width: 1400px
+                 Actor width: 120px each side = 240px
+                 Remaining for use cases: 1160px
+
+                 3 columns of use cases: 160px each = 480px
+                 Gaps: (1160 - 480) / 4 = 170px per gap
+
+                 Column 1 (Left): X = 150 + 120 = 270
+                 Column 2 (Center): X = 270 + 160 + 170 = 600 (adjusted to 700 for better spacing)
+                 Column 3 (Right): X = 1700 - 150 - 120 - 160/2 = 1130 (center of ellipse)
+
+                 Rows: Y spacing = 100px between centers
+            -->
+
+            <!-- Column 1: Left side - Resume CRUD operations -->
+            <!-- Y=160 (top row) -->
+            <div class="use-case" style="left: 190px; top: 130px;">
+                Register<br>Account
+            </div>
+
+            <!-- Y=300 -->
+            <div class="use-case primary" style="left: 190px; top: 270px;">
+                Create<br>Resume
+            </div>
+
+            <!-- Y=400 -->
+            <div class="use-case primary" style="left: 190px; top: 370px;">
+                Edit<br>Resume
+            </div>
+
+            <!-- Y=500 -->
+            <div class="use-case" style="left: 190px; top: 470px;">
+                Save<br>Resume
+            </div>
+
+            <!-- Y=600 -->
+            <div class="use-case" style="left: 190px; top: 570px;">
+                Delete<br>Resume
+            </div>
+
+            <!-- Column 1.5: Editor types (between left and center) -->
+            <div class="use-case" style="left: 400px; top: 130px;">
+                Login to<br>System
+            </div>
+
+            <div class="use-case" style="left: 400px; top: 270px;">
+                Use Manual<br>Editor
+            </div>
+
+            <div class="use-case" style="left: 400px; top: 370px;">
+                Use AI<br>Editor
+            </div>
+
+            <!-- Column 2: Center - AI Features -->
+            <!-- Y=300 -->
+            <div class="use-case" style="left: 620px; top: 270px;">
+                View Resume<br>Preview
+            </div>
+
+            <!-- Y=450 -->
+            <div class="use-case primary" style="left: 620px; top: 420px;">
+                AI Resume<br>Generation
+            </div>
+
+            <!-- Y=600 -->
+            <div class="use-case primary" style="left: 620px; top: 570px;">
+                Check ATS<br>Score
+            </div>
+
+            <!-- Column 3: Right side - Output & Management -->
+            <!-- Y=300 -->
+            <div class="use-case primary" style="left: 1050px; top: 270px;">
+                Download<br>Resume as PDF
+            </div>
+
+            <!-- Y=450 -->
+            <div class="use-case" style="left: 1050px; top: 420px;">
+                Track Job<br>Applications
+            </div>
+
+            <!-- Y=600 -->
+            <div class="use-case" style="left: 1050px; top: 570px;">
+                Share<br>Resume
+            </div>
+
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-title">Legend</div>
+                <div class="legend-item">
+                    <svg width="40" height="25" class="legend-symbol">
+                        <circle cx="20" cy="6" r="4" fill="none" stroke="#2d3748" stroke-width="1.5"/>
+                        <line x1="20" y1="10" x2="20" y2="18" stroke="#2d3748" stroke-width="1.5"/>
+                        <line x1="20" y1="13" x2="15" y2="16" stroke="#2d3748" stroke-width="1.5"/>
+                        <line x1="20" y1="13" x2="25" y2="16" stroke="#2d3748" stroke-width="1.5"/>
+                    </svg>
+                    <span>Actor</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol legend-box primary"></div>
+                    <span>Primary Use Case</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol legend-box"></div>
+                    <span>Use Case</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol legend-line"></div>
+                    <span>Association</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol legend-line include"></div>
+                    <span>&lt;&lt;include&gt;&gt;</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            const btn = document.querySelector('.download-btn');
+            btn.style.display = 'none';
+
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                    btn.style.display = 'block';
+                }, 1000);
+            }, 100);
+        }
+
+        // Keyboard shortcut
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                downloadPDF();
+            }
+        });
+
+        console.log('%c✓ Use Case Diagram Loaded', 'color: #48bb78; font-weight: bold; font-size: 14px;');
+        console.log('Press Ctrl+P (or Cmd+P) to save as PDF');
+        console.log('Recommended settings: Landscape, A3, Background graphics enabled');
+    </script>
+</body>
+</html>

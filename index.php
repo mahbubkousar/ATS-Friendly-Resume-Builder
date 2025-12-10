@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResumeSync - ATS Friendly Resume Builder</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta name="description" content="Create ATS-optimized resumes that get past automated screening systems and land more interviews.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

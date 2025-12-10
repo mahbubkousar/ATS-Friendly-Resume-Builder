@@ -8,6 +8,7 @@ requireLogin();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATS Score Checker - ResumeSync</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta name="description" content="Check your resume's ATS compatibility score for free. Get instant feedback and recommendations.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

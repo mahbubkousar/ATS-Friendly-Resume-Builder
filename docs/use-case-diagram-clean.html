@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResumeSync - Use Case Diagram</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <style>
         * {
             margin: 0;
@@ -319,37 +320,37 @@
                 <!-- To Delete Resume (270, 600) -->
                 <line x1="120" y1="450" x2="250" y2="580" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- To View Preview (700, 300) -->
-                <line x1="120" y1="450" x2="680" y2="320" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+                <!-- To View Preview (620, 710) - bottom row -->
+                <line x1="120" y1="450" x2="600" y2="700" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- To AI Generation (700, 450) -->
-                <line x1="120" y1="450" x2="680" y2="450" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+                <!-- To AI Generation (850, 710) - bottom row -->
+                <line x1="120" y1="450" x2="830" y2="700" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- To Check ATS (700, 600) -->
-                <line x1="120" y1="450" x2="680" y2="580" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+                <!-- To Check ATS (1080, 710) - bottom row -->
+                <line x1="120" y1="450" x2="1060" y2="700" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- To Download PDF (1130, 300) -->
-                <line x1="120" y1="450" x2="1110" y2="320" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+                <!-- To Download PDF (1050, 300) -->
+                <line x1="120" y1="450" x2="1030" y2="320" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- To Track Applications (1130, 450) -->
-                <line x1="120" y1="450" x2="1110" y2="450" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+                <!-- To Track Applications (1050, 450) -->
+                <line x1="120" y1="450" x2="1030" y2="450" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- To Share Resume (1130, 600) -->
-                <line x1="120" y1="450" x2="1110" y2="580" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
+                <!-- To Share Resume (1050, 600) -->
+                <line x1="120" y1="450" x2="1030" y2="600" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow-blue)" opacity="0.7"/>
 
-                <!-- Include relationships -->
-                <!-- Manual Editor to Create Resume -->
-                <line x1="430" y1="300" x2="480" y2="300" stroke="#48bb78" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-include)"/>
+                <!-- Include relationships (green dashed) -->
+                <!-- Manual Editor (480, 300) includes Create Resume (270, 300) -->
+                <line x1="350" y1="300" x2="380" y2="300" stroke="#48bb78" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-include)"/>
 
-                <!-- AI Editor to Edit Resume -->
-                <line x1="430" y1="400" x2="480" y2="400" stroke="#48bb78" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-include)"/>
+                <!-- AI Editor (480, 400) includes Edit Resume (270, 400) -->
+                <line x1="350" y1="400" x2="380" y2="400" stroke="#48bb78" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-include)"/>
 
-                <!-- Gemini AI (1640, 450) to AI features -->
-                <!-- To AI Generation (700, 450) -->
-                <line x1="1580" y1="450" x2="860" y2="450" stroke="#805ad5" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+                <!-- Gemini AI (1640, 450) to AI features at bottom -->
+                <!-- To AI Generation (850, 710) -->
+                <line x1="1580" y1="470" x2="1010" y2="700" stroke="#805ad5" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
 
-                <!-- To Check ATS (700, 600) -->
-                <line x1="1580" y1="470" x2="860" y2="590" stroke="#805ad5" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
+                <!-- To Check ATS (1080, 710) -->
+                <line x1="1580" y1="480" x2="1240" y2="700" stroke="#805ad5" stroke-width="2.5" stroke-dasharray="8,4" opacity="0.7"/>
             </svg>
 
             <!-- ACTORS -->
@@ -447,19 +448,16 @@
                 Use AI<br>Editor
             </div>
 
-            <!-- Column 2: Center - AI Features -->
-            <!-- Y=300 -->
-            <div class="use-case" style="left: 620px; top: 270px;">
+            <!-- Column 2: Center - AI Features (moved to bottom) -->
+            <div class="use-case" style="left: 620px; top: 680px;">
                 View Resume<br>Preview
             </div>
 
-            <!-- Y=450 -->
-            <div class="use-case primary" style="left: 620px; top: 420px;">
+            <div class="use-case primary" style="left: 850px; top: 680px;">
                 AI Resume<br>Generation
             </div>
 
-            <!-- Y=600 -->
-            <div class="use-case primary" style="left: 620px; top: 570px;">
+            <div class="use-case primary" style="left: 1080px; top: 680px;">
                 Check ATS<br>Score
             </div>
 

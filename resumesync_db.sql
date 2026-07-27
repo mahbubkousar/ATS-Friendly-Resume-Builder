@@ -6,6 +6,9 @@
 -- Generation Time: Dec 08, 2025 at 05:01 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
+--
+-- SANITIZED EXPORT: This file must contain schema and public template seed data only.
+-- Never commit user records, resume content, credentials, tokens, or activity logs.
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -115,40 +118,6 @@ CREATE TABLE `activity_logs` (
   `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`metadata`)),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `activity_logs`
---
-
-INSERT INTO `activity_logs` (`log_id`, `user_id`, `activity_type`, `activity_description`, `ip_address`, `user_agent`, `metadata`, `created_at`) VALUES
-(1, 1, 'resume_created', 'Resume created: Resume 1', NULL, NULL, NULL, '2025-12-01 09:05:05'),
-(2, 1, 'resume_deleted', 'Resume deleted: Resume 1', NULL, NULL, NULL, '2025-12-01 09:10:00'),
-(3, 1, 'resume_created', 'Resume created: Untitled Resume', NULL, NULL, NULL, '2025-12-01 09:19:25'),
-(4, 1, 'resume_created', 'Resume created: ACDM 1', NULL, NULL, NULL, '2025-12-01 13:32:13'),
-(5, 1, 'resume_created', 'Resume created: Untitled Resume', NULL, NULL, NULL, '2025-12-01 13:55:05'),
-(6, 1, 'resume_created', 'Resume created: ACCCC', NULL, NULL, NULL, '2025-12-01 14:01:49'),
-(7, 1, 'resume_created', 'Resume created: AI Generated Resume', NULL, NULL, NULL, '2025-12-02 07:09:12'),
-(8, 1, 'resume_created', 'Resume created: AI Generated Resume', NULL, NULL, NULL, '2025-12-02 07:09:13'),
-(9, 1, 'resume_created', 'Resume created: ATS Optimized', NULL, NULL, NULL, '2025-12-02 07:52:30'),
-(10, 1, 'resume_created', 'Resume created: ATS Optimized Resume', NULL, NULL, NULL, '2025-12-02 08:13:20'),
-(11, 1, 'resume_created', 'Resume created: Untitled Resume', NULL, NULL, NULL, '2025-12-02 08:44:51'),
-(12, 1, 'resume_deleted', 'Resume deleted: ACDM 1', NULL, NULL, NULL, '2025-12-02 08:51:37'),
-(13, 1, 'resume_deleted', 'Resume deleted: Untitled Resume', NULL, NULL, NULL, '2025-12-02 08:51:41'),
-(14, 1, 'resume_deleted', 'Resume deleted: Untitled Resumett', NULL, NULL, NULL, '2025-12-02 08:51:45'),
-(15, 1, 'resume_deleted', 'Resume deleted: AI Generated Resume', NULL, NULL, NULL, '2025-12-02 08:51:50'),
-(16, 1, 'resume_deleted', 'Resume deleted: okay', NULL, NULL, NULL, '2025-12-02 08:51:54'),
-(17, 1, 'resume_deleted', 'Resume deleted: AI Generated Resume', NULL, NULL, NULL, '2025-12-02 08:52:04'),
-(18, 1, 'resume_deleted', 'Resume deleted: ATS Optimized Resume', NULL, NULL, NULL, '2025-12-02 08:54:03'),
-(19, 1, 'resume_deleted', 'Resume deleted: ATS Optimized', NULL, NULL, NULL, '2025-12-02 08:54:07'),
-(20, 1, 'resume_deleted', 'Resume deleted: ACCCC', NULL, NULL, NULL, '2025-12-02 08:54:11'),
-(21, 1, 'resume_created', 'Resume created: one', NULL, NULL, NULL, '2025-12-02 12:53:02'),
-(22, 1, 'resume_deleted', 'Resume deleted: one', NULL, NULL, NULL, '2025-12-02 12:53:08'),
-(23, 1, 'resume_created', 'Resume created: Harshana Weligampola Academic', NULL, NULL, NULL, '2025-12-02 13:44:47'),
-(24, 1, 'resume_deleted', 'Resume deleted: Harshana Weligampola Academic', NULL, NULL, NULL, '2025-12-03 09:06:38'),
-(25, 1, 'resume_created', 'Resume created: HW', NULL, NULL, NULL, '2025-12-03 11:25:33'),
-(26, 1, 'resume_deleted', 'Resume deleted: HW', NULL, NULL, NULL, '2025-12-05 17:25:25'),
-(27, 1, 'resume_created', 'Resume created: AI Generated Resume', NULL, NULL, NULL, '2025-12-05 17:48:04'),
-(28, 1, 'resume_deleted', 'Resume deleted: AI Generated Resume', NULL, NULL, NULL, '2025-12-05 17:48:16');
 
 -- --------------------------------------------------------
 
@@ -539,13 +508,6 @@ CREATE TABLE `users` (
   `last_login` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`user_id`, `email`, `password_hash`, `full_name`, `phone`, `date_of_birth`, `address_line1`, `address_line2`, `city`, `state`, `zip_code`, `country`, `professional_title`, `professional_summary`, `profile_photo_url`, `email_notifications`, `resume_tips`, `application_updates`, `profile_visibility`, `dark_mode`, `two_factor_enabled`, `email_verified`, `verification_token`, `reset_token`, `reset_token_expiry`, `account_status`, `created_at`, `updated_at`, `last_login`) VALUES
-(1, 'mahbubkousar@gmail.com', '$2y$10$nN93t8lpPJ786zuyS3YTNeFbkdl2zWirGOMNiwI06xFq0wbwigkrm', 'Mahbubur Rahman Khan', '+8801753019520', NULL, 'Projonmo Hostel', NULL, 'Dhaka Cantonment', 'Dhaka', '1020', 'Bangladesh', 'BS Student', '', NULL, 1, 1, 1, 'private', 0, 0, 0, NULL, NULL, NULL, 'active', '2025-12-01 08:24:36', '2025-12-01 08:24:36', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -868,7 +830,7 @@ ALTER TABLE `user_skills`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `log_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `log_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `application_activity`
@@ -904,13 +866,13 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `resumes`
 --
 ALTER TABLE `resumes`
-  MODIFY `resume_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `resume_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `resume_downloads`
 --
 ALTER TABLE `resume_downloads`
-  MODIFY `download_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `download_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `resume_sections`
@@ -928,19 +890,19 @@ ALTER TABLE `resume_shares`
 -- AUTO_INCREMENT for table `resume_views`
 --
 ALTER TABLE `resume_views`
-  MODIFY `view_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `view_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `templates`
 --
 ALTER TABLE `templates`
-  MODIFY `template_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `template_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_certifications`

@@ -183,6 +183,9 @@ echo $user['id'];       // User's ID
 ## Security Notes
 
 - Never commit `config/database.php` with production credentials
+- Never commit database exports containing user accounts, password hashes, resumes, tokens, or activity logs
+- Keep tracked SQL files limited to schema definitions and synthetic/public seed data
+- Store local exports under `database-backups/` or name them `*.local.sql` so Git ignores them
 - Always use HTTPS in production
 - Consider adding CSRF protection for forms
 - Implement rate limiting for login attempts

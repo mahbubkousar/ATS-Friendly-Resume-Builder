@@ -19,3 +19,10 @@ Thumbs.db
 # Logs
 *.log
 error_log
+
+# Local database exports and backups
+*.local.sql
+*.dump.sql
+*.sql.gz
+database-backups/
+backups/

@@ -20,11 +20,13 @@ if (file_exists($envFile)) {
 define('GEMINI_API_KEY', getenv('GEMINI_API_KEY') ?: $_ENV['GEMINI_API_KEY'] ?? '');
 define('GEMINI_MODEL_NAME', 'gemini-2.0-flash-exp');
 define('GEMINI_API_ENDPOINT', 'https://generativelanguage.googleapis.com/v1beta/models/' . GEMINI_MODEL_NAME . ':generateContent');
+define('GEMINI_CONNECT_TIMEOUT', 10);
+define('GEMINI_REQUEST_TIMEOUT', 60);
 
 function callGeminiAPI($prompt, $systemInstruction = '') {
     $apiKey = GEMINI_API_KEY;
 
-    if ($apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+    if ($apiKey === '' || $apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
         return [
             'success' => false,
             'error' => 'Gemini API key not configured. Please update config/gemini.php'
@@ -77,6 +79,8 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json'
     ]);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, GEMINI_CONNECT_TIMEOUT);
+    curl_setopt($ch, CURLOPT_TIMEOUT, GEMINI_REQUEST_TIMEOUT);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

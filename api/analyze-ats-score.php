@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../config/gemini.php';
+require_once '../includes/upload-security.php';
 
 requireLogin();
 
@@ -15,51 +16,68 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $user = getCurrentUser();
 $userId = $user['id'];
 
-$resumeText = $_POST['resume_text'] ?? '';
-$jobDescription = $_POST['job_description'] ?? '';
-$fileType = $_POST['file_type'] ?? '';
+$resumeText = isset($_POST['resume_text']) && is_string($_POST['resume_text'])
+    ? $_POST['resume_text']
+    : '';
+$jobDescription = isset($_POST['job_description']) && is_string($_POST['job_description'])
+    ? $_POST['job_description']
+    : '';
+$fileType = isset($_POST['file_type']) && is_string($_POST['file_type'])
+    ? $_POST['file_type']
+    : '';
 $resumeId = $_POST['resume_id'] ?? null;
 
-if (isset($_FILES['resume_file']) && $_FILES['resume_file']['error'] === UPLOAD_ERR_OK) {
-    $file = $_FILES['resume_file'];
-    $fileExt = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $fileType = $fileExt;
+try {
+    validateDocumentTextLength($resumeText, 'Resume text', MAX_RESUME_TEXT_BYTES);
+    validateDocumentTextLength($jobDescription, 'Job description', MAX_JOB_DESCRIPTION_TEXT_BYTES);
 
-    $fileContent = file_get_contents($file['tmp_name']);
-    $base64Content = base64_encode($fileContent);
+    if (isset($_FILES['resume_file']) && $_FILES['resume_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $document = validateDocumentUpload($_FILES['resume_file'], ['pdf', 'doc', 'docx']);
+        $fileType = $document['extension'];
+        $base64Content = base64_encode(readValidatedDocument($document));
 
-    $extractPrompt = "Extract all text content from this resume document. Return ONLY the plain text content, no formatting, no markdown, no explanations. Just the raw text from the document.";
+        $extractPrompt = "Extract all text content from this resume document. Return ONLY the plain text content, no formatting, no markdown, no explanations. Just the raw text from the document.";
 
-    $extractResult = callGeminiAPIWithFile($base64Content, $fileExt, $extractPrompt);
+        $extractResult = callGeminiAPIWithFile($base64Content, $document['mime_type'], $extractPrompt);
 
-    if (!$extractResult['success']) {
-        $errorDetails = $extractResult['error'];
-        if (isset($extractResult['response'])) {
-            $errorDetails .= ' | Response: ' . substr($extractResult['response'], 0, 500);
+        if (!$extractResult['success']) {
+            echo json_encode(['success' => false, 'message' => 'Failed to extract text from file']);
+            exit();
         }
-        echo json_encode(['success' => false, 'message' => 'Failed to extract text from file: ' . $errorDetails]);
-        exit();
+
+        $resumeText = $extractResult['text'];
+        validateDocumentTextLength($resumeText, 'Extracted resume text', MAX_RESUME_TEXT_BYTES);
     }
 
-    $resumeText = $extractResult['text'];
-}
-
-if (isset($_FILES['job_description_file']) && $_FILES['job_description_file']['error'] === UPLOAD_ERR_OK) {
-    $jobFile = $_FILES['job_description_file'];
-    $jobFileExt = strtolower(pathinfo($jobFile['name'], PATHINFO_EXTENSION));
-
-    if ($jobFileExt === 'pdf') {
-        $jobFileContent = file_get_contents($jobFile['tmp_name']);
-        $jobBase64Content = base64_encode($jobFileContent);
+    if (isset($_FILES['job_description_file'])
+        && $_FILES['job_description_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $jobDocument = validateDocumentUpload($_FILES['job_description_file'], ['pdf']);
+        $jobBase64Content = base64_encode(readValidatedDocument($jobDocument));
 
         $jobExtractPrompt = "Extract all text content from this job description document. Return ONLY the plain text content, no formatting, no markdown, no explanations. Just the raw text from the document.";
 
-        $jobExtractResult = callGeminiAPIWithFile($jobBase64Content, $jobFileExt, $jobExtractPrompt);
+        $jobExtractResult = callGeminiAPIWithFile(
+            $jobBase64Content,
+            $jobDocument['mime_type'],
+            $jobExtractPrompt
+        );
 
-        if ($jobExtractResult['success']) {
-            $jobDescription = $jobExtractResult['text'];
+        if (!$jobExtractResult['success']) {
+            echo json_encode(['success' => false, 'message' => 'Failed to extract job description']);
+            exit();
         }
+
+        $jobDescription = $jobExtractResult['text'];
+        validateDocumentTextLength(
+            $jobDescription,
+            'Extracted job description',
+            MAX_JOB_DESCRIPTION_TEXT_BYTES
+        );
     }
+} catch (UploadValidationException $e) {
+    http_response_code($e->getStatusCode());
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    exit();
 }
 
 if (empty($resumeText)) {
@@ -119,20 +137,13 @@ echo json_encode([
     'analysis' => $analysisResult
 ]);
 
-function callGeminiAPIWithFile($base64Content, $fileType, $prompt) {
+function callGeminiAPIWithFile($base64Content, $mimeType, $prompt) {
     $apiKey = GEMINI_API_KEY;
 
-    if ($apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+    if ($apiKey === '' || $apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
         return ['success' => false, 'error' => 'API key not configured'];
     }
 
-    $mimeTypes = [
-        'pdf' => 'application/pdf',
-        'doc' => 'application/msword',
-        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-
-    $mimeType = $mimeTypes[$fileType] ?? 'application/pdf';
     $url = GEMINI_API_ENDPOINT . '?key=' . $apiKey;
 
     $data = [
@@ -156,6 +167,8 @@ function callGeminiAPIWithFile($base64Content, $fileType, $prompt) {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, GEMINI_CONNECT_TIMEOUT);
+    curl_setopt($ch, CURLOPT_TIMEOUT, GEMINI_REQUEST_TIMEOUT);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

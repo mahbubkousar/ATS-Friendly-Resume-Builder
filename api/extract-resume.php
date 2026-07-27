@@ -2,8 +2,8 @@
 
 
 
-ini_set('max_execution_time', '300');
-ini_set('memory_limit', '256M');
+ini_set('max_execution_time', '75');
+ini_set('memory_limit', '128M');
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -21,12 +21,18 @@ error_log("FILES data: " . print_r($_FILES, true));
 try {
     require_once '../config/session.php';
     require_once '../config/gemini.php';
+    require_once '../includes/upload-security.php';
 } catch (Throwable $e) {
     error_log("Configuration error: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+    exit;
+}
 
 if (!isLoggedIn()) {
     error_log("User not authenticated");
@@ -40,42 +46,13 @@ if (!isset($_FILES['resume'])) {
     exit;
 }
 
-if ($_FILES['resume']['error'] !== UPLOAD_ERR_OK) {
-    $uploadErrors = [
-        UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive in php.ini',
-        UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
-        UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
-        UPLOAD_ERR_NO_FILE => 'No file was uploaded',
-        UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
-        UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
-        UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the file upload'
-    ];
-
-    $errorMsg = $uploadErrors[$_FILES['resume']['error']] ?? 'Unknown upload error';
-    error_log("File upload error: " . $errorMsg);
-    echo json_encode(['success' => false, 'error' => $errorMsg]);
-    exit;
-}
-
-$file = $_FILES['resume'];
-$filePath = $file['tmp_name'];
-$fileName = $file['name'];
-$fileType = $file['type'];
-
 try {
-    error_log("File details: " . $fileName . " (" . $fileType . "), size: " . $file['size']);
-
-    
-    $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-    
-    $fileContent = file_get_contents($filePath);
-    $base64Content = base64_encode($fileContent);
+    $document = validateDocumentUpload($_FILES['resume'], ['pdf', 'doc', 'docx', 'txt']);
+    $base64Content = base64_encode(readValidatedDocument($document));
 
     error_log("File encoded to base64, length: " . strlen($base64Content));
 
-    
-    $extractedData = extractResumeDataFromFile($base64Content, $fileExt);
+    $extractedData = extractResumeDataFromFile($base64Content, $document['mime_type']);
 
     error_log("Successfully extracted resume data");
 
@@ -84,6 +61,13 @@ try {
         'data' => $extractedData
     ]);
 
+} catch (UploadValidationException $e) {
+    http_response_code($e->getStatusCode());
+    error_log("Resume upload rejected: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
 } catch (Exception $e) {
     error_log("Resume extraction error: " . $e->getMessage());
     echo json_encode([
@@ -99,24 +83,13 @@ try {
 }
 
 
-function extractResumeDataFromFile($base64Content, $fileExt) {
+function extractResumeDataFromFile($base64Content, $mimeType) {
     $apiKey = GEMINI_API_KEY;
 
-    if ($apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+    if ($apiKey === '' || $apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
         throw new Exception('Gemini API key not configured');
     }
 
-    
-    $mimeTypes = [
-        'pdf' => 'application/pdf',
-        'doc' => 'application/msword',
-        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'txt' => 'text/plain'
-    ];
-
-    $mimeType = $mimeTypes[$fileExt] ?? 'application/pdf';
-
-    
     $prompt = "Extract all information from this resume document and return ONLY valid JSON in this exact format:\n\n";
     $prompt .= '{"personal_details":{"fullName":"","email":"","phone":"","location":"","linkedin":"","professionalTitle":""},"summary_text":"","experience":[{"jobTitle":"","company":"","dates":"","description":""}],"education":[{"degree":"","institution":"","year":"","details":""}],"skills":"","certifications":[{"name":"","issuer":"","year":""}],"languages":""}\n\n';
     $prompt .= "Extract all text from the resume and fill in the JSON fields. Return ONLY the JSON, no markdown, no explanations.";
@@ -150,6 +123,8 @@ function extractResumeDataFromFile($base64Content, $fileExt) {
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, GEMINI_CONNECT_TIMEOUT);
+    curl_setopt($ch, CURLOPT_TIMEOUT, GEMINI_REQUEST_TIMEOUT);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);

@@ -82,8 +82,8 @@ function handleFileSelect(file) {
     }
 
     
-    if (file.size > 10 * 1024 * 1024) {
-        showNotificationModal('File size must be less than 10MB.', 'error');
+    if (file.size > 5 * 1024 * 1024) {
+        showNotificationModal('File size must be 5MB or smaller.', 'error');
         return;
     }
 

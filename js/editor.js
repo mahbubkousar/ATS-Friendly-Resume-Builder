@@ -1231,8 +1231,8 @@ function setupJobDescriptionToggle() {
                     return;
                 }
 
-                if (file.size > 10 * 1024 * 1024) {
-                    console.log('File size must be less than 10MB');
+                if (file.size > 5 * 1024 * 1024) {
+                    console.log('File size must be 5MB or smaller');
                     jobDescFile.value = '';
                     return;
                 }

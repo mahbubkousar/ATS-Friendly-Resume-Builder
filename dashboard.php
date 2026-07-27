@@ -1,100 +1,19 @@
 <?php
 require_once 'config/session.php';
 require_once 'config/database.php';
+require_once __DIR__ . '/services/DashboardService.php';
 requireLogin();
 
 $user = getCurrentUser();
 $userName = htmlspecialchars($user['fullname'] ?? 'User');
-$userId = $user['id'];
-
-// Get user profile data
-$conn = getDBConnection();
-$userProfile = [];
-$education = [];
-$experience = [];
-$resumes = [];
-$applications = [];
-
-if ($conn) {
-    // Get user profile
-    $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $userProfile = $result->fetch_assoc();
-        } else {
-            // If profile not found, use session data as fallback
-            $userProfile = [
-                'full_name' => $user['fullname'] ?? '',
-                'email' => $user['email'] ?? '',
-                'phone' => '',
-                'date_of_birth' => null,
-                'address_line1' => '',
-                'city' => '',
-                'state' => '',
-                'zip_code' => '',
-                'country' => '',
-                'professional_title' => '',
-                'professional_summary' => ''
-            ];
-        }
-        $stmt->close();
-    }
-
-    // Get resumes
-    $stmt = $conn->prepare("SELECT * FROM resumes WHERE user_id = ? ORDER BY updated_at DESC");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $resumes[] = $row;
-        }
-        $stmt->close();
-    }
-
-    // Get education
-    $stmt = $conn->prepare("SELECT * FROM user_education WHERE user_id = ? ORDER BY start_date DESC");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $education[] = $row;
-        }
-        $stmt->close();
-    }
-
-    // Get experience
-    $stmt = $conn->prepare("SELECT * FROM user_experience WHERE user_id = ? ORDER BY start_date DESC");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $experience[] = $row;
-        }
-        $stmt->close();
-    }
-
-    // Get job applications
-    $stmt = $conn->prepare("SELECT * FROM job_applications WHERE user_id = ? ORDER BY application_date DESC");
-    if ($stmt) {
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $applications[] = $row;
-        }
-        $stmt->close();
-    }
-
-}
-
+$dashboard = (new DashboardService(getDBConnection()))->buildViewModel($user);
+$userProfile = $dashboard['userProfile'];
+$education = $dashboard['education'];
+$experience = $dashboard['experience'];
+$resumes = $dashboard['resumes'];
+$applications = $dashboard['applications'];
+$applicationStats = $dashboard['applicationStats'];
 $resumeCount = count($resumes);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -383,7 +302,7 @@ $resumeCount = count($resumes);
                             <i class="fas fa-briefcase"></i>
                         </div>
                         <div class="stat-content">
-                            <div class="stat-value"><?php echo count($applications); ?></div>
+                            <div class="stat-value"><?php echo $applicationStats['total']; ?></div>
                             <div class="stat-label">Total Applications</div>
                         </div>
                     </div>
@@ -392,7 +311,7 @@ $resumeCount = count($resumes);
                             <i class="fas fa-clock"></i>
                         </div>
                         <div class="stat-content">
-                            <div class="stat-value"><?php echo count(array_filter($applications, function($a) { return in_array($a['status'], ['Applied', 'In Review']); })); ?></div>
+                            <div class="stat-value"><?php echo $applicationStats['inProgress']; ?></div>
                             <div class="stat-label">In Progress</div>
                         </div>
                     </div>
@@ -401,7 +320,7 @@ $resumeCount = count($resumes);
                             <i class="fas fa-calendar-check"></i>
                         </div>
                         <div class="stat-content">
-                            <div class="stat-value"><?php echo count(array_filter($applications, function($a) { return in_array($a['status'], ['Interview Scheduled', 'Interview Completed']); })); ?></div>
+                            <div class="stat-value"><?php echo $applicationStats['interviews']; ?></div>
                             <div class="stat-label">Interviews</div>
                         </div>
                     </div>
@@ -410,7 +329,7 @@ $resumeCount = count($resumes);
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="stat-content">
-                            <div class="stat-value"><?php echo count(array_filter($applications, function($a) { return in_array($a['status'], ['Offer Received', 'Accepted']); })); ?></div>
+                            <div class="stat-value"><?php echo $applicationStats['offers']; ?></div>
                             <div class="stat-label">Offers</div>
                         </div>
                     </div>
@@ -453,13 +372,9 @@ $resumeCount = count($resumes);
                                         <?php endif; ?>
                                         <span><i class="fas fa-briefcase"></i> <?php echo htmlspecialchars($app['job_type']); ?></span>
                                         <span><i class="far fa-calendar"></i> Applied <?php echo date('M j, Y', strtotime($app['application_date'])); ?></span>
-                                        <?php if ($app['resume_id']):
-                                            $usedResume = array_filter($resumes, fn($r) => $r['resume_id'] == $app['resume_id']);
-                                            $usedResume = reset($usedResume);
-                                            if ($usedResume):
-                                        ?>
-                                            <span style="color: #7c3aed;"><i class="fas fa-file-alt"></i> <?php echo htmlspecialchars($usedResume['resume_title']); ?></span>
-                                        <?php endif; endif; ?>
+                                        <?php if ($app['resume_title']): ?>
+                                            <span style="color: #7c3aed;"><i class="fas fa-file-alt"></i> <?php echo htmlspecialchars($app['resume_title']); ?></span>
+                                        <?php endif; ?>
                                     </div>
 
                                     <?php if ($app['salary_range']): ?>

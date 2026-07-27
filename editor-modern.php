@@ -1,49 +1,11 @@
 <?php
-require_once 'config/session.php';
-require_once 'config/database.php';
-requireLogin();
+require_once __DIR__ . '/includes/editor-bootstrap.php';
 
-$user = getCurrentUser();
-$conn = getDBConnection();
-
-$resumeId = $_GET['id'] ?? null;
-$templateName = 'modern';
-
-$resumeData = null;
-if ($resumeId) {
-    $stmt = $conn->prepare("SELECT * FROM resumes WHERE resume_id = ? AND user_id = ?");
-    $stmt->bind_param("ii", $resumeId, $user['id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $resumeData = $result->fetch_assoc();
-    }
-    $stmt->close();
-}
-
-$personalDetails = [];
-if (!$resumeData) {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
-    if ($stmt) {
-        $stmt->bind_param("i", $user['id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $userData = $result->fetch_assoc();
-            $personalDetails = [
-                'fullName' => $userData['full_name'] ?? '',
-                'email' => $userData['email'] ?? '',
-                'phone' => $userData['phone'] ?? '',
-                'location' => ($userData['city'] ?? '') . ($userData['state'] ? ', ' . $userData['state'] : ''),
-                'professionalTitle' => $userData['professional_title'] ?? '',
-                'linkedin' => ''
-            ];
-        }
-        $stmt->close();
-    }
-} else {
-    $personalDetails = json_decode($resumeData['personal_details'], true) ?? [];
-}
+$editorContext = loadEditorContext('modern');
+$resumeId = $editorContext['resumeId'];
+$templateName = $editorContext['templateName'];
+$resumeData = $editorContext['resumeData'];
+$personalDetails = $editorContext['personalDetails'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

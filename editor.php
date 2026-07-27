@@ -1,53 +1,12 @@
 <?php
-require_once 'config/session.php';
-require_once 'config/database.php';
-requireLogin();
+require_once __DIR__ . '/includes/editor-bootstrap.php';
 
-$user = getCurrentUser();
-$conn = getDBConnection();
-
-// Get resume ID or template from URL
-$resumeId = $_GET['id'] ?? null;
-$templateName = $_GET['template'] ?? null; // Don't default to 'classic' - let user choose via modal
-
-// Load existing resume data if editing
-$resumeData = null;
-if ($resumeId) {
-    $stmt = $conn->prepare("SELECT * FROM resumes WHERE resume_id = ? AND user_id = ?");
-    $stmt->bind_param("ii", $resumeId, $user['id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $resumeData = $result->fetch_assoc();
-        $templateName = $resumeData['template_name'];
-    }
-    $stmt->close();
-}
-
-// Get user data for new resume
-$personalDetails = [];
-if (!$resumeData) {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
-    if ($stmt) {
-        $stmt->bind_param("i", $user['id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            $userData = $result->fetch_assoc();
-            $personalDetails = [
-                'fullName' => $userData['full_name'] ?? '',
-                'email' => $userData['email'] ?? '',
-                'phone' => $userData['phone'] ?? '',
-                'location' => ($userData['city'] ?? '') . ($userData['state'] ? ', ' . $userData['state'] : ''),
-                'professionalTitle' => $userData['professional_title'] ?? '',
-                'linkedin' => ''
-            ];
-        }
-        $stmt->close();
-    }
-} else {
-    $personalDetails = json_decode($resumeData['personal_details'], true) ?? [];
-}
+$editorContext = loadEditorContext();
+$resumeId = $editorContext['resumeId'];
+$templateName = $editorContext['templateName'];
+$templateDisplayName = $editorContext['templateDisplayName'];
+$resumeData = $editorContext['resumeData'];
+$personalDetails = $editorContext['personalDetails'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -137,25 +96,7 @@ if (!$resumeData) {
                 <h3 class="form-section-title">Template</h3>
                 <div class="locked-template-display">
                     <span class="template-icon"><i class="fa-solid fa-file-lines"></i></span>
-                    <span id="currentTemplateName"><?php
-                        if ($templateName) {
-                            // Get display name for current template
-                            $displayQuery = "SELECT template_display_name FROM templates WHERE template_name = ? LIMIT 1";
-                            $stmt = $conn->prepare($displayQuery);
-                            $stmt->bind_param("s", $templateName);
-                            $stmt->execute();
-                            $displayResult = $stmt->get_result();
-                            if ($displayResult && $displayResult->num_rows > 0) {
-                                $displayRow = $displayResult->fetch_assoc();
-                                echo htmlspecialchars($displayRow['template_display_name']);
-                            } else {
-                                echo htmlspecialchars(ucfirst($templateName));
-                            }
-                            $stmt->close();
-                        } else {
-                            echo 'No Template Selected';
-                        }
-                    ?></span>
+                    <span id="currentTemplateName"><?php echo htmlspecialchars($templateDisplayName); ?></span>
                     <span class="locked-badge"><i class="fa-solid fa-lock"></i> Locked</span>
                 </div>
                 <!-- Hidden input to store template name -->

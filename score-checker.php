@@ -602,7 +602,7 @@ requireLogin();
     </div>
 
     <script src="js/app.js"></script>
-    <script src="js/score-checker.js?v=9"></script>
+    <script src="js/score-checker.js?v=10"></script>
     <script>
         // User menu dropdown toggle
         const navUserTrigger = document.getElementById('navUserTrigger');

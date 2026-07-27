@@ -235,6 +235,6 @@ if (!$resumeData) {
     <script src="js/navigation-fix.js"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
-    <script src="js/ai-editor.js?v=4"></script>
+    <script src="js/ai-editor.js?v=5"></script>
 </body>
 </html>

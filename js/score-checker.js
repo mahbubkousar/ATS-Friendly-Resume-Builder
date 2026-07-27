@@ -3,8 +3,23 @@
 
 function escapeHtml(text) {
     const div = document.createElement('div');
-    div.textContent = text;
+    div.textContent = text == null ? '' : String(text);
     return div.innerHTML;
+}
+
+function createStrengthListItem(strength) {
+    const li = document.createElement('li');
+    li.className = 'good';
+
+    const icon = document.createElement('i');
+    icon.className = 'fa-solid fa-circle-check';
+
+    const text = document.createElement('span');
+    text.textContent = strength == null ? '' : String(strength);
+
+    li.appendChild(icon);
+    li.appendChild(text);
+    return li;
 }
 
 
@@ -567,8 +582,8 @@ function updateMetricDetails(analysis) {
     
     if (analysis.strengths && Array.isArray(analysis.strengths)) {
         analysis.strengths.forEach(strength => {
-            
-            const strengthLower = strength.toLowerCase();
+            const strengthText = strength == null ? '' : String(strength);
+            const strengthLower = strengthText.toLowerCase();
             let targetId = null;
 
             if (strengthLower.includes('format') || strengthLower.includes('font') || strengthLower.includes('layout')) {
@@ -584,12 +599,12 @@ function updateMetricDetails(analysis) {
                 if (detailsElement) {
                     const existingContent = detailsElement.innerHTML;
                     if (existingContent.includes('details-empty')) {
-                        detailsElement.innerHTML = '<ul><li class="good"><i class="fa-solid fa-circle-check"></i><span>' + strength + '</span></li></ul>';
-                    } else if (!existingContent.includes(strength)) {
+                        const ul = document.createElement('ul');
+                        ul.appendChild(createStrengthListItem(strengthText));
+                        detailsElement.replaceChildren(ul);
+                    } else if (!detailsElement.textContent.includes(strengthText)) {
                         const ul = detailsElement.querySelector('ul') || document.createElement('ul');
-                        const li = document.createElement('li');
-                        li.className = 'good';
-                        li.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>' + strength + '</span>';
+                        const li = createStrengthListItem(strengthText);
                         ul.insertBefore(li, ul.firstChild);
                         if (!detailsElement.querySelector('ul')) {
                             detailsElement.insertBefore(ul, detailsElement.firstChild);
@@ -695,7 +710,10 @@ function updateInsights(analysis) {
             const li = document.createElement('li');
             if (typeof improvement === 'object') {
                 
-                li.innerHTML = `<strong>${improvement.category}:</strong> ${improvement.suggestion || improvement.issue}`;
+                const label = document.createElement('strong');
+                label.textContent = `${improvement.category || 'General'}:`;
+                li.appendChild(label);
+                li.appendChild(document.createTextNode(` ${improvement.suggestion || improvement.issue || ''}`));
             } else {
                 li.textContent = improvement;
             }
@@ -714,14 +732,20 @@ function updateInsights(analysis) {
             
             if (analysis.keywords_found && analysis.keywords_found.length > 0) {
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>Strong Keywords Found:</strong> ${analysis.keywords_found.slice(0, 5).join(', ')}`;
+                const label = document.createElement('strong');
+                label.textContent = 'Strong Keywords Found:';
+                li.appendChild(label);
+                li.appendChild(document.createTextNode(` ${analysis.keywords_found.slice(0, 5).join(', ')}`));
                 infoInsight.appendChild(li);
             }
 
             
             if (analysis.keywords_missing && analysis.keywords_missing.length > 0) {
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>Consider Adding:</strong> ${analysis.keywords_missing.slice(0, 5).join(', ')}`;
+                const label = document.createElement('strong');
+                label.textContent = 'Consider Adding:';
+                li.appendChild(label);
+                li.appendChild(document.createTextNode(` ${analysis.keywords_missing.slice(0, 5).join(', ')}`));
                 infoInsight.appendChild(li);
             }
 

@@ -353,15 +353,20 @@ function addMessageToChat(role, content) {
     messageDiv.className = `message ${role === 'user' ? 'user-message' : 'assistant-message'}`;
 
     const avatarIcon = role === 'user' ? 'fa-user' : 'fa-robot';
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    const icon = document.createElement('i');
+    icon.className = `fa-solid ${avatarIcon}`;
+    avatar.appendChild(icon);
 
-    messageDiv.innerHTML = `
-        <div class="message-avatar">
-            <i class="fa-solid ${avatarIcon}"></i>
-        </div>
-        <div class="message-content">
-            <p>${content}</p>
-        </div>
-    `;
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    const paragraph = document.createElement('p');
+    paragraph.textContent = content == null ? '' : String(content);
+    messageContent.appendChild(paragraph);
+
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(messageContent);
 
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;

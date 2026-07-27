@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/auth-rate-limit.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -9,11 +10,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
+$retryAfter = consumeRegistrationRateLimit();
+if ($retryAfter > 0) {
+    http_response_code(429);
+    header('Retry-After: ' . $retryAfter);
+    echo json_encode(['success' => false, 'message' => 'Too many registration attempts. Please try again later.']);
+    exit();
+}
+
+$maximumRequestBytes = 200000;
+$contentLength = isset($_SERVER['CONTENT_LENGTH']) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
+if ($contentLength > $maximumRequestBytes) {
+    http_response_code(413);
+    echo json_encode(['success' => false, 'message' => 'Request body is too large']);
+    exit();
+}
+$rawInput = file_get_contents('php://input', false, null, 0, $maximumRequestBytes + 1);
+if ($rawInput === false || strlen($rawInput) > $maximumRequestBytes) {
+    http_response_code(413);
+    echo json_encode(['success' => false, 'message' => 'Request body is too large']);
+    exit();
+}
+$input = json_decode($rawInput, true);
+if (!is_array($input)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Request body must contain valid JSON']);
+    exit();
+}
 
 $required = ['fullname', 'email', 'password', 'phone', 'address', 'city', 'state', 'zipcode', 'country'];
 foreach ($required as $field) {
-    if (empty($input[$field])) {
+    if (!isset($input[$field]) || !is_string($input[$field]) || trim($input[$field]) === '') {
         echo json_encode(['success' => false, 'message' => "Field '{$field}' is required"]);
         exit();
     }

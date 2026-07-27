@@ -14,7 +14,11 @@ mysql -u root -p
 CREATE DATABASE resumesync_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 # Import schema
-mysql -u root -p resumesync_db < database_schema.sql
+mysql -u root -p < create_database.sql
+
+# Existing installations: apply security counter tables
+mysql -u root -p resumesync_db < migrations/001_create_ai_rate_limits.sql
+mysql -u root -p resumesync_db < migrations/002_create_auth_rate_limits.sql
 ```
 
 ### 2. Configure Database Connection
@@ -187,8 +191,8 @@ echo $user['id'];       // User's ID
 - Keep tracked SQL files limited to schema definitions and synthetic/public seed data
 - Store local exports under `database-backups/` or name them `*.local.sql` so Git ignores them
 - Always use HTTPS in production
-- Consider adding CSRF protection for forms
-- Implement rate limiting for login attempts
+- Keep CSRF protection enabled for state-changing requests
+- Keep authentication and AI rate limits aligned with production capacity
 - Add email verification for new accounts
 
 ## License

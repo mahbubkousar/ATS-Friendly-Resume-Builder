@@ -9,6 +9,7 @@ try {
     require_once '../config/session.php';
     require_once '../config/database.php';
     require_once '../config/gemini.php';
+    require_once '../includes/ai-security.php';
 } catch (Throwable $e) {
     echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
     exit;
@@ -22,18 +23,31 @@ if (!isLoggedIn()) {
 
 $user = getCurrentUser();
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    rejectAiRequest('Method not allowed.', 405);
+}
 
-$input = json_decode(file_get_contents('php://input'), true);
-$userMessage = $input['message'] ?? '';
-$resumeState = $input['resumeState'] ?? [];
-$conversationHistory = $input['conversationHistory'] ?? [];
-$templateName = $input['templateName'] ?? 'modern';
+$input = readLimitedJsonRequest();
+$userMessage = isset($input['message']) && is_string($input['message']) ? $input['message'] : '';
+$resumeState = isset($input['resumeState']) && is_array($input['resumeState'])
+    ? $input['resumeState']
+    : [];
+$conversationHistory = isset($input['conversationHistory']) && is_array($input['conversationHistory'])
+    ? $input['conversationHistory']
+    : [];
+$templateName = isset($input['templateName']) && is_string($input['templateName'])
+    ? $input['templateName']
+    : 'modern';
 
 if (empty($userMessage)) {
     echo json_encode(['success' => false, 'error' => 'Message is required']);
     exit;
 }
+if (strlen($userMessage) > AI_MAX_MESSAGE_BYTES) {
+    rejectAiRequest('Message is too long.', 413);
+}
 
+enforceAiRateLimit((int) $user['id'], 'ai-conversation');
 
 $systemInstruction = buildSystemInstruction($templateName, $resumeState);
 
@@ -154,8 +168,11 @@ function buildConversationPrompt($userMessage, $conversationHistory, $resumeStat
         $prompt .= "Recent conversation:\n";
         $recentHistory = array_slice($conversationHistory, -5);
         foreach ($recentHistory as $msg) {
-            $role = $msg['role'] === 'user' ? 'User' : 'Assistant';
-            $prompt .= "{$role}: {$msg['content']}\n";
+            if (!is_array($msg) || !isset($msg['content']) || !is_string($msg['content'])) {
+                continue;
+            }
+            $role = isset($msg['role']) && $msg['role'] === 'user' ? 'User' : 'Assistant';
+            $prompt .= "{$role}: " . substr($msg['content'], 0, AI_MAX_MESSAGE_BYTES) . "\n";
         }
         $prompt .= "\n";
     }

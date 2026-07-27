@@ -1,6 +1,7 @@
 <?php
 require_once 'config/database.php';
 require_once 'config/session.php';
+require_once 'includes/auth-rate-limit.php';
 
 if (isLoggedIn()) {
     header('Location: dashboard.php');
@@ -9,14 +10,25 @@ if (isLoggedIn()) {
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $email = isset($_POST['email']) && is_string($_POST['email'])
+        ? trim($_POST['email'])
+        : '';
+    $password = isset($_POST['password']) && is_string($_POST['password'])
+        ? $_POST['password']
+        : '';
 
     if (empty($email) || empty($password)) {
         $error = 'Please enter both email and password.';
     } else {
+        $retryAfter = consumeLoginRateLimit($email);
+        if ($retryAfter > 0) {
+            http_response_code(429);
+            header('Retry-After: ' . $retryAfter);
+            $error = 'Too many sign-in attempts. Please wait and try again.';
+        }
+
         $conn = getDBConnection();
-        if ($conn) {
+        if ($retryAfter === 0 && $conn) {
             $stmt = $conn->prepare("SELECT user_id, full_name, email, password_hash FROM users WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -25,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($result->num_rows === 1) {
                 $user = $result->fetch_assoc();
                 if (password_verify($password, $user['password_hash'])) {
+                    clearSuccessfulLoginLimit($email);
                     setUserSession($user['user_id'], $user['full_name'], $user['email']);
 
                     if (isset($_POST['remember']) && $_POST['remember'] === 'on') {
@@ -55,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $stmt->close();
-        } else {
+        } elseif ($retryAfter === 0) {
             $error = 'Database connection failed. Please try again later.';
         }
     }

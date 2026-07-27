@@ -8,6 +8,7 @@ ini_set('display_errors', '0');
 try {
     require_once '../config/session.php';
     require_once '../config/gemini.php';
+    require_once '../includes/ai-security.php';
 } catch (Throwable $e) {
     echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
     exit;
@@ -19,16 +20,27 @@ if (!isLoggedIn()) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    rejectAiRequest('Method not allowed.', 405);
+}
 
-$input = json_decode(file_get_contents('php://input'), true);
-$resumeData = $input['resumeData'] ?? [];
-$jobAnalysis = $input['jobAnalysis'] ?? [];
-$template = $input['template'] ?? 'modern';
+$input = readLimitedJsonRequest();
+$resumeData = isset($input['resumeData']) && is_array($input['resumeData'])
+    ? $input['resumeData']
+    : [];
+$jobAnalysis = isset($input['jobAnalysis']) && is_array($input['jobAnalysis'])
+    ? $input['jobAnalysis']
+    : [];
+$template = isset($input['template']) && is_string($input['template'])
+    ? $input['template']
+    : 'modern';
 
 if (empty($resumeData)) {
     echo json_encode(['success' => false, 'error' => 'Resume data is required']);
     exit;
 }
+
+enforceAiRateLimit((int) getCurrentUserId(), 'optimize-resume');
 
 try {
     $optimizedResume = optimizeForATS($resumeData, $jobAnalysis, $template);

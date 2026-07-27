@@ -4,6 +4,7 @@ require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../config/gemini.php';
 require_once '../includes/upload-security.php';
+require_once '../includes/ai-security.php';
 
 requireLogin();
 
@@ -26,6 +27,16 @@ $fileType = isset($_POST['file_type']) && is_string($_POST['file_type'])
     ? $_POST['file_type']
     : '';
 $resumeId = $_POST['resume_id'] ?? null;
+
+$aiRequestCost = 1;
+if (isset($_FILES['resume_file']) && ($_FILES['resume_file']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+    $aiRequestCost++;
+}
+if (isset($_FILES['job_description_file'])
+    && ($_FILES['job_description_file']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+    $aiRequestCost++;
+}
+enforceAiRateLimit((int) $userId, 'analyze-ats-score', $aiRequestCost);
 
 try {
     validateDocumentTextLength($resumeText, 'Resume text', MAX_RESUME_TEXT_BYTES);

@@ -22,6 +22,7 @@ try {
     require_once '../config/session.php';
     require_once '../config/gemini.php';
     require_once '../includes/upload-security.php';
+    require_once '../includes/ai-security.php';
 } catch (Throwable $e) {
     error_log("Configuration error: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
@@ -45,6 +46,8 @@ if (!isset($_FILES['resume'])) {
     echo json_encode(['success' => false, 'error' => 'No file uploaded']);
     exit;
 }
+
+enforceAiRateLimit((int) getCurrentUserId(), 'extract-resume');
 
 try {
     $document = validateDocumentUpload($_FILES['resume'], ['pdf', 'doc', 'docx', 'txt']);

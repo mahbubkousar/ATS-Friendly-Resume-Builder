@@ -285,8 +285,8 @@ async function openShareModal(resumeId) {
             
             
             
-            currentShareUrl = result.share_url;
-            document.getElementById('shareLink').value = result.share_url;
+            currentShareUrl = new URL(result.share_url, window.location.origin).href;
+            document.getElementById('shareLink').value = currentShareUrl;
             document.getElementById('viewCount').textContent = result.stats.view_count;
             document.getElementById('downloadCount').textContent = result.stats.download_count;
             document.getElementById('statusBadge').textContent = result.is_public ? 'Public' : 'Private';
@@ -351,8 +351,8 @@ document.getElementById('generateLinkBtn')?.addEventListener('click', async () =
         }
 
         if (result.success) {
-            currentShareUrl = result.share_url;
-            document.getElementById('shareLink').value = result.share_url;
+            currentShareUrl = new URL(result.share_url, window.location.origin).href;
+            document.getElementById('shareLink').value = currentShareUrl;
             document.getElementById('viewCount').textContent = result.stats.view_count;
             document.getElementById('downloadCount').textContent = result.stats.download_count;
             document.getElementById('statusBadge').textContent = result.is_public ? 'Public' : 'Private';

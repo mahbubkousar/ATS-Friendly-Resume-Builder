@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../config/app.php';
 
 requireLogin();
 
@@ -59,9 +60,9 @@ $viewsStmt->close();
 
 $shareUrl = null;
 if (!empty($resume['share_token'])) {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    $shareUrl = $protocol . '://' . $host . '/ATS/view-resume.php?token=' . $resume['share_token'];
+    $shareUrl = buildApplicationUrl(
+        '/view-resume.php?token=' . rawurlencode($resume['share_token'])
+    );
 }
 
 echo json_encode([

@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../config/app.php';
 require_once '../includes/request-validation.php';
 
 requireLogin();
@@ -59,9 +60,7 @@ if (empty($shareToken)) {
     $isPublic = (bool)$resume['is_public'];
 }
 
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'];
-$shareUrl = $protocol . '://' . $host . '/ATS/view-resume.php?token=' . $shareToken;
+$shareUrl = buildApplicationUrl('/view-resume.php?token=' . rawurlencode($shareToken));
 
 echo json_encode([
     'success' => true,

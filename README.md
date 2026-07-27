@@ -21,12 +21,14 @@ mysql -u root -p resumesync_db < migrations/001_create_ai_rate_limits.sql
 mysql -u root -p resumesync_db < migrations/002_create_auth_rate_limits.sql
 ```
 
-### 2. Configure Database Connection
-Edit `config/database.php` if needed (default settings work with standard XAMPP):
-- Host: `localhost`
-- User: `root`
-- Password: (empty)
-- Database: `resumesync_db`
+### 2. Configure Environment
+
+Copy `.env.example` to `.env`, set `APP_URL`, configure a dedicated database
+account, and add your Gemini API key. The runtime database account only needs
+`SELECT`, `INSERT`, `UPDATE`, and `DELETE` access to `resumesync_db`.
+
+Set `APP_ENV=production` when deploying. Production startup rejects root or
+empty-password database credentials.
 
 ### 3. Start XAMPP
 - Start Apache
@@ -190,6 +192,8 @@ echo $user['id'];       // User's ID
 - Never commit database exports containing user accounts, password hashes, resumes, tokens, or activity logs
 - Keep tracked SQL files limited to schema definitions and synthetic/public seed data
 - Store local exports under `database-backups/` or name them `*.local.sql` so Git ignores them
+- Keep `.env` private and use a dedicated least-privilege database account
+- Set `APP_URL` explicitly so generated share links never depend on request headers
 - Always use HTTPS in production
 - Keep CSRF protection enabled for state-changing requests
 - Keep authentication and AI rate limits aligned with production capacity

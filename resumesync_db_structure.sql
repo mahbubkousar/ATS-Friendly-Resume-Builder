@@ -19,12 +19,12 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CleanExpiredSessions` ()   BEGIN
+CREATE PROCEDURE `CleanExpiredSessions` () SQL SECURITY INVOKER BEGIN
     DELETE FROM sessions WHERE expires_at < NOW();
     SELECT ROW_COUNT() AS deleted_sessions;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateResumeWithSections` (IN `p_user_id` INT, IN `p_resume_title` VARCHAR(255), IN `p_template_name` VARCHAR(100), OUT `p_resume_id` INT)   BEGIN
+CREATE PROCEDURE `CreateResumeWithSections` (IN `p_user_id` INT, IN `p_resume_title` VARCHAR(255), IN `p_template_name` VARCHAR(100), OUT `p_resume_id` INT) SQL SECURITY INVOKER BEGIN
     -- Insert resume
     INSERT INTO resumes (user_id, resume_title, template_name, status)
     VALUES (p_user_id, p_resume_title, p_template_name, 'draft');
@@ -44,7 +44,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateResumeWithSections` (IN `p_us
     WHERE template_name = p_template_name;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetResumeDetails` (IN `p_resume_id` INT)   BEGIN
+CREATE PROCEDURE `GetResumeDetails` (IN `p_resume_id` INT) SQL SECURITY INVOKER BEGIN
     -- Resume basic info
     SELECT
         r.*,
@@ -69,7 +69,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetResumeDetails` (IN `p_resume_id`
     LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserCompleteProfile` (IN `p_user_id` INT)   BEGIN
+CREATE PROCEDURE `GetUserCompleteProfile` (IN `p_user_id` INT) SQL SECURITY INVOKER BEGIN
     -- User basic info
     SELECT * FROM users WHERE user_id = p_user_id;
 
@@ -86,7 +86,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserCompleteProfile` (IN `p_user
     SELECT * FROM resumes WHERE user_id = p_user_id ORDER BY updated_at DESC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `LogActivity` (IN `p_user_id` INT, IN `p_activity_type` VARCHAR(100), IN `p_activity_description` TEXT, IN `p_ip_address` VARCHAR(45), IN `p_user_agent` TEXT)   BEGIN
+CREATE PROCEDURE `LogActivity` (IN `p_user_id` INT, IN `p_activity_type` VARCHAR(100), IN `p_activity_description` TEXT, IN `p_ip_address` VARCHAR(45), IN `p_user_agent` TEXT) SQL SECURITY INVOKER BEGIN
     INSERT INTO activity_logs (user_id, activity_type, activity_description, ip_address, user_agent)
     VALUES (p_user_id, p_activity_type, p_activity_description, p_ip_address, p_user_agent);
 END$$
@@ -612,7 +612,7 @@ CREATE TABLE `user_skills` (
 --
 DROP TABLE IF EXISTS `recent_activity`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `recent_activity`  AS SELECT `al`.`log_id` AS `log_id`, `al`.`user_id` AS `user_id`, `u`.`full_name` AS `full_name`, `u`.`email` AS `email`, `al`.`activity_type` AS `activity_type`, `al`.`activity_description` AS `activity_description`, `al`.`ip_address` AS `ip_address`, `al`.`created_at` AS `created_at` FROM (`activity_logs` `al` left join `users` `u` on(`al`.`user_id` = `u`.`user_id`)) ORDER BY `al`.`created_at` DESC LIMIT 0, 100 ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY INVOKER VIEW `recent_activity`  AS SELECT `al`.`log_id` AS `log_id`, `al`.`user_id` AS `user_id`, `u`.`full_name` AS `full_name`, `u`.`email` AS `email`, `al`.`activity_type` AS `activity_type`, `al`.`activity_description` AS `activity_description`, `al`.`ip_address` AS `ip_address`, `al`.`created_at` AS `created_at` FROM (`activity_logs` `al` left join `users` `u` on(`al`.`user_id` = `u`.`user_id`)) ORDER BY `al`.`created_at` DESC LIMIT 0, 100 ;
 
 -- --------------------------------------------------------
 
@@ -621,7 +621,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `resume_statistics`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `resume_statistics`  AS SELECT `r`.`resume_id` AS `resume_id`, `r`.`resume_title` AS `resume_title`, `r`.`user_id` AS `user_id`, `u`.`full_name` AS `user_name`, `r`.`template_name` AS `template_name`, `r`.`status` AS `status`, `r`.`created_at` AS `created_at`, `r`.`updated_at` AS `updated_at`, count(distinct `rs`.`section_id`) AS `total_sections`, count(distinct `ats`.`score_id`) AS `total_ats_checks`, coalesce(max(`ats`.`overall_score`),0) AS `best_ats_score`, count(distinct `sh`.`share_id`) AS `total_shares`, coalesce(sum(`sh`.`view_count`),0) AS `total_views` FROM ((((`resumes` `r` left join `users` `u` on(`r`.`user_id` = `u`.`user_id`)) left join `resume_sections` `rs` on(`r`.`resume_id` = `rs`.`resume_id`)) left join `ats_scores` `ats` on(`r`.`resume_id` = `ats`.`resume_id`)) left join `resume_shares` `sh` on(`r`.`resume_id` = `sh`.`resume_id`)) GROUP BY `r`.`resume_id` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY INVOKER VIEW `resume_statistics`  AS SELECT `r`.`resume_id` AS `resume_id`, `r`.`resume_title` AS `resume_title`, `r`.`user_id` AS `user_id`, `u`.`full_name` AS `user_name`, `r`.`template_name` AS `template_name`, `r`.`status` AS `status`, `r`.`created_at` AS `created_at`, `r`.`updated_at` AS `updated_at`, count(distinct `rs`.`section_id`) AS `total_sections`, count(distinct `ats`.`score_id`) AS `total_ats_checks`, coalesce(max(`ats`.`overall_score`),0) AS `best_ats_score`, count(distinct `sh`.`share_id`) AS `total_shares`, coalesce(sum(`sh`.`view_count`),0) AS `total_views` FROM ((((`resumes` `r` left join `users` `u` on(`r`.`user_id` = `u`.`user_id`)) left join `resume_sections` `rs` on(`r`.`resume_id` = `rs`.`resume_id`)) left join `ats_scores` `ats` on(`r`.`resume_id` = `ats`.`resume_id`)) left join `resume_shares` `sh` on(`r`.`resume_id` = `sh`.`resume_id`)) GROUP BY `r`.`resume_id` ;
 
 -- --------------------------------------------------------
 
@@ -630,7 +630,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `user_profile_summary`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_profile_summary`  AS SELECT `u`.`user_id` AS `user_id`, `u`.`full_name` AS `full_name`, `u`.`email` AS `email`, `u`.`professional_title` AS `professional_title`, `u`.`created_at` AS `created_at`, `u`.`last_login` AS `last_login`, count(distinct `r`.`resume_id`) AS `total_resumes`, count(distinct `ue`.`education_id`) AS `total_education`, count(distinct `uex`.`experience_id`) AS `total_experience`, count(distinct `us`.`skill_id`) AS `total_skills` FROM ((((`users` `u` left join `resumes` `r` on(`u`.`user_id` = `r`.`user_id`)) left join `user_education` `ue` on(`u`.`user_id` = `ue`.`user_id`)) left join `user_experience` `uex` on(`u`.`user_id` = `uex`.`user_id`)) left join `user_skills` `us` on(`u`.`user_id` = `us`.`user_id`)) WHERE `u`.`account_status` = 'active' GROUP BY `u`.`user_id` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY INVOKER VIEW `user_profile_summary`  AS SELECT `u`.`user_id` AS `user_id`, `u`.`full_name` AS `full_name`, `u`.`email` AS `email`, `u`.`professional_title` AS `professional_title`, `u`.`created_at` AS `created_at`, `u`.`last_login` AS `last_login`, count(distinct `r`.`resume_id`) AS `total_resumes`, count(distinct `ue`.`education_id`) AS `total_education`, count(distinct `uex`.`experience_id`) AS `total_experience`, count(distinct `us`.`skill_id`) AS `total_skills` FROM ((((`users` `u` left join `resumes` `r` on(`u`.`user_id` = `r`.`user_id`)) left join `user_education` `ue` on(`u`.`user_id` = `ue`.`user_id`)) left join `user_experience` `uex` on(`u`.`user_id` = `uex`.`user_id`)) left join `user_skills` `us` on(`u`.`user_id` = `us`.`user_id`)) WHERE `u`.`account_status` = 'active' GROUP BY `u`.`user_id` ;
 
 --
 -- Indexes for dumped tables
@@ -1032,15 +1032,15 @@ DELIMITER $$
 --
 -- Events
 --
-CREATE DEFINER=`root`@`localhost` EVENT `clean_expired_sessions_daily` ON SCHEDULE EVERY 1 DAY STARTS '2025-11-22 15:30:12' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+CREATE EVENT `clean_expired_sessions_daily` ON SCHEDULE EVERY 1 DAY STARTS '2025-11-22 15:30:12' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     DELETE FROM sessions WHERE expires_at < NOW();
 END$$
 
-CREATE DEFINER=`root`@`localhost` EVENT `clean_old_activity_logs_monthly` ON SCHEDULE EVERY 1 MONTH STARTS '2025-11-22 15:30:12' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+CREATE EVENT `clean_old_activity_logs_monthly` ON SCHEDULE EVERY 1 MONTH STARTS '2025-11-22 15:30:12' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     DELETE FROM activity_logs WHERE created_at < DATE_SUB(NOW(), INTERVAL 90 DAY);
 END$$
 
-CREATE DEFINER=`root`@`localhost` EVENT `clean_expired_shares_daily` ON SCHEDULE EVERY 1 DAY STARTS '2025-11-22 15:30:12' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+CREATE EVENT `clean_expired_shares_daily` ON SCHEDULE EVERY 1 DAY STARTS '2025-11-22 15:30:12' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     UPDATE resume_shares
     SET is_active = FALSE
     WHERE expiry_date IS NOT NULL AND expiry_date < NOW() AND is_active = TRUE;

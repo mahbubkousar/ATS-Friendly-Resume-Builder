@@ -80,7 +80,7 @@ document.getElementById('applicationForm')?.addEventListener('submit', async (e)
     }
 
     try {
-        const url = isEdit ? '/ATS/api/update-application.php' : '/ATS/api/add-application.php';
+        const url = appUrl(isEdit ? 'api/update-application.php' : 'api/add-application.php');
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -119,7 +119,7 @@ document.querySelectorAll('.application-status-select').forEach(select => {
         }
 
         try {
-            const response = await fetch('/ATS/api/update-application-status.php', {
+            const response = await fetch(appUrl('api/update-application-status.php'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -173,7 +173,7 @@ document.querySelectorAll('.btn-delete-application').forEach(btn => {
         }
 
         try {
-            const response = await fetch('/ATS/api/delete-application.php', {
+            const response = await fetch(appUrl('api/delete-application.php'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -295,7 +295,7 @@ document.querySelectorAll('.btn-edit-application').forEach(btn => {
         const appId = e.target.closest('button').dataset.applicationId;
         
         try {
-            const response = await fetch(`/ATS/api/get-application.php?id=${appId}`);
+            const response = await fetch(appUrl(`api/get-application.php?id=${appId}`));
             const result = await response.json();
             
             if (result.success) {
@@ -338,5 +338,5 @@ document.querySelectorAll('.btn-edit-application').forEach(btn => {
 
 document.getElementById('exportApplicationsBtn')?.addEventListener('click', () => {
     
-    window.open('/ATS/api/export-applications-pdf.php', '_blank');
+    window.open(appUrl('api/export-applications-pdf.php'), '_blank');
 });

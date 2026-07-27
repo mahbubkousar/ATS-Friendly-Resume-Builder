@@ -393,7 +393,7 @@ async function performAnalysis() {
         updateProgress(45, 'Checking keywords and terminology...');
 
         
-        const response = await fetch('/ATS/api/analyze-ats-score.php', {
+        const response = await fetch(appUrl('api/analyze-ats-score.php'), {
             method: 'POST',
             body: formData
         });
@@ -877,7 +877,7 @@ console.log('ATS Score Checker loaded');
  */
 async function loadATSGuidelines() {
     try {
-        const response = await fetch('/ATS/api/get-ats-guidelines.php');
+        const response = await fetch(appUrl('api/get-ats-guidelines.php'));
         const data = await response.json();
 
         if (data.success && data.guidelines && data.guidelines.length > 0) {

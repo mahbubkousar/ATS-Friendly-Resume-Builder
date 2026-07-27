@@ -17,7 +17,39 @@ if ($configuredAppUrl !== '') {
 }
 
 define('APP_URL', $configuredAppUrl);
-define('APP_FALLBACK_PATH', '/ATS');
+
+function detectApplicationBasePath(): string
+{
+    $configuredDocumentRoot = (string) ($_SERVER['DOCUMENT_ROOT'] ?? '');
+    if ($configuredDocumentRoot === '') {
+        return '';
+    }
+
+    $documentRoot = realpath($configuredDocumentRoot);
+    $applicationRoot = realpath(__DIR__ . '/..');
+
+    if ($documentRoot === false || $applicationRoot === false) {
+        return '';
+    }
+
+    $documentRoot = str_replace('\\', '/', $documentRoot);
+    if ($documentRoot !== '/') {
+        $documentRoot = rtrim($documentRoot, '/');
+    }
+    $applicationRoot = str_replace('\\', '/', $applicationRoot);
+    if ($applicationRoot !== $documentRoot
+        && strpos($applicationRoot, $documentRoot . '/') !== 0) {
+        return '';
+    }
+
+    $relativePath = substr($applicationRoot, strlen($documentRoot));
+    return '/' . trim($relativePath, '/');
+}
+
+$configuredPath = APP_URL !== ''
+    ? (string) (parse_url(APP_URL, PHP_URL_PATH) ?? '')
+    : detectApplicationBasePath();
+define('APP_BASE_PATH', rtrim($configuredPath, '/'));
 
 function buildApplicationUrl(string $path): string
 {
@@ -25,5 +57,5 @@ function buildApplicationUrl(string $path): string
     if (APP_URL !== '') {
         return APP_URL . $path;
     }
-    return APP_FALLBACK_PATH . $path;
+    return APP_BASE_PATH . $path;
 }

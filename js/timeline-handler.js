@@ -5,7 +5,7 @@ document.querySelectorAll('.btn-view-timeline').forEach(btn => {
         const applicationId = e.target.closest('button').dataset.applicationId;
 
         try {
-            const response = await fetch(`/ATS/api/get-timeline.php?application_id=${applicationId}`);
+            const response = await fetch(appUrl(`api/get-timeline.php?application_id=${applicationId}`));
             const result = await response.json();
 
             if (result.success) {

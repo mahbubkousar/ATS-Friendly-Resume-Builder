@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadTemplatePreview() {
     isTemplateLoading = true;
     const timestamp = new Date().getTime();
-    previewIframe.src = `/ATS/templates/professional.html?v=${timestamp}`;
+    previewIframe.src = appUrl(`templates/professional.html?v=${timestamp}`);
 
     previewIframe.onload = () => {
         setTimeout(() => {
@@ -595,7 +595,7 @@ async function saveResume() {
         formData.append('affiliations', resumeState.affiliations);
         formData.append('status', 'draft');
 
-        const response = await fetch('/ATS/api/save-resume.php', {
+        const response = await fetch(appUrl('api/save-resume.php'), {
             method: 'POST',
             body: formData
         });
@@ -735,7 +735,7 @@ async function performAIAnalysis() {
         setStepActive(3);
         updateProgress(45, 'Checking keywords and terminology...');
 
-        const response = await fetch('/ATS/api/analyze-ats-score.php', {
+        const response = await fetch(appUrl('api/analyze-ats-score.php'), {
             method: 'POST',
             body: formData
         });

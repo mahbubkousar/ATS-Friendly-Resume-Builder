@@ -605,6 +605,7 @@ requireLogin();
         </div>
     </div>
 
+    <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/shared/csrf.js?v=1"></script>
     <script src="js/app.js"></script>
     <script src="js/score-checker.js?v=10"></script>

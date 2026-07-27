@@ -233,6 +233,7 @@ if (!$resumeData) {
         const userId = <?php echo $user['id']; ?>;
     </script>
     <script src="config/gemini-config.php"></script>
+    <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/navigation-fix.js"></script>
     <script src="js/shared/csrf.js?v=1"></script>
     <script src="js/shared/utils.js"></script>

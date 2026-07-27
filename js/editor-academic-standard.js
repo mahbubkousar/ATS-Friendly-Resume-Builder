@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadTemplatePreview() {
     isTemplateLoading = true;
     const timestamp = new Date().getTime();
-    previewIframe.src = `/ATS/templates/academic-standard.html?v=${timestamp}`;
+    previewIframe.src = appUrl(`templates/academic-standard.html?v=${timestamp}`);
 
     previewIframe.onload = () => {
         setTimeout(() => {
@@ -882,7 +882,7 @@ async function saveResume() {
         formData.append('memberships', resumeState.memberships);
         formData.append('status', 'draft');
 
-        const response = await fetch('/ATS/api/save-resume.php', {
+        const response = await fetch(appUrl('api/save-resume.php'), {
             method: 'POST',
             body: formData
         });

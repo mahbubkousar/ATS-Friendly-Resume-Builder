@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'config/app.php';
 
 // Helper function to show private resume page
 function showPrivatePage() {
@@ -135,10 +136,10 @@ function showPrivatePage() {
             <div class="cta-text">Want to create your own professional resume?</div>
 
             <div class="btn-container">
-                <a href="/ATS/register.php" class="btn-primary">
+                <a href="<?php echo htmlspecialchars(buildApplicationUrl('register.php'), ENT_QUOTES, 'UTF-8'); ?>" class="btn-primary">
                     <i class="fas fa-user-plus"></i> Create Your Resume for Free
                 </a>
-                <a href="/ATS/" class="btn-secondary">
+                <a href="<?php echo htmlspecialchars(buildApplicationUrl(''), ENT_QUOTES, 'UTF-8'); ?>" class="btn-secondary">
                     <i class="fas fa-home"></i> Go to Homepage
                 </a>
             </div>
@@ -283,10 +284,10 @@ function showNotFoundPage() {
             <div class="cta-text">Why not create your own professional resume?</div>
 
             <div class="btn-container">
-                <a href="/ATS/register.php" class="btn-primary">
+                <a href="<?php echo htmlspecialchars(buildApplicationUrl('register.php'), ENT_QUOTES, 'UTF-8'); ?>" class="btn-primary">
                     <i class="fas fa-user-plus"></i> Create Your Resume for Free
                 </a>
-                <a href="/ATS/" class="btn-secondary">
+                <a href="<?php echo htmlspecialchars(buildApplicationUrl(''), ENT_QUOTES, 'UTF-8'); ?>" class="btn-secondary">
                     <i class="fas fa-home"></i> Go to Homepage
                 </a>
             </div>
@@ -473,7 +474,7 @@ $templateHTML = file_get_contents($templatePath);
             <h1 class="public-header-title">
                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($personalDetails['fullName'] ?? 'Resume'); ?>
             </h1>
-            <a href="/ATS/register.php" class="create-resume-btn">
+            <a href="<?php echo htmlspecialchars(buildApplicationUrl('register.php'), ENT_QUOTES, 'UTF-8'); ?>" class="create-resume-btn">
                 <i class="fas fa-plus-circle"></i> Create Your Own
             </a>
         </div>
@@ -486,6 +487,7 @@ $templateHTML = file_get_contents($templatePath);
         <iframe id="resumeFrame" style="width: 100%; border: none; min-height: 1100px;"></iframe>
     </div>
 
+    <script src="js/shared/app-url.js?v=1"></script>
     <script>
         const resumeToken = <?php echo json_encode($token, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
         const templateName = <?php echo json_encode($templateName, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
@@ -493,7 +495,7 @@ $templateHTML = file_get_contents($templatePath);
         // Track download
         function handleDownload() {
             // Track download via API
-            fetch('/ATS/api/track-download.php', {
+            fetch(appUrl('api/track-download.php'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -514,7 +516,7 @@ $templateHTML = file_get_contents($templatePath);
             const iframe = document.getElementById('resumeFrame');
 
             // Load template into iframe
-            iframe.src = '/ATS/templates/' + templateName + '.html';
+            iframe.src = appUrl('templates/' + templateName + '.html');
 
             iframe.onload = () => {
                 // Wait a bit for template to fully load

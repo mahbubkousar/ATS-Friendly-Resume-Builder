@@ -40,7 +40,7 @@
             } else {
                 
                 event.preventDefault();
-                window.location.href = '/ATS/dashboard.php';
+                window.location.href = appUrl('dashboard.php');
             }
         }
     });

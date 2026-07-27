@@ -47,7 +47,7 @@ document.getElementById('educationForm')?.addEventListener('submit', async (e) =
     };
 
     try {
-        const response = await fetch('/ATS/api/add-education.php', {
+        const response = await fetch(appUrl('api/add-education.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ document.getElementById('experienceForm')?.addEventListener('submit', async (e) 
     };
 
     try {
-        const response = await fetch('/ATS/api/add-experience.php', {
+        const response = await fetch(appUrl('api/add-experience.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ async function deleteEducation(id) {
     }
 
     try {
-        const response = await fetch(`/ATS/api/delete-education.php?id=${id}`, {
+        const response = await fetch(appUrl(`api/delete-education.php?id=${id}`), {
             method: 'DELETE'
         });
 
@@ -142,7 +142,7 @@ async function deleteExperience(id) {
     }
 
     try {
-        const response = await fetch(`/ATS/api/delete-experience.php?id=${id}`, {
+        const response = await fetch(appUrl(`api/delete-experience.php?id=${id}`), {
             method: 'DELETE'
         });
 

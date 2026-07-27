@@ -83,7 +83,7 @@ function selectTemplate(templateName) {
     const resumeId = currentUrl.searchParams.get('id');
 
     
-    let editorUrl = `/ATS/editor-${templateName}.php`;
+    let editorUrl = appUrl(`editor-${templateName}.php`);
     if (resumeId) {
         editorUrl += `?id=${resumeId}`;
     }
@@ -152,7 +152,7 @@ function adjustFieldsForTemplate(templateName) {
 
 function loadExperienceAndEducation() {
     
-    fetch('/ATS/api/get-user-data.php?type=experience')
+    fetch(appUrl('api/get-user-data.php?type=experience'))
         .then(response => response.json())
         .then(data => {
             if (data.success && data.data.length > 0) {
@@ -168,7 +168,7 @@ function loadExperienceAndEducation() {
         });
 
     
-    fetch('/ATS/api/get-user-data.php?type=education')
+    fetch(appUrl('api/get-user-data.php?type=education'))
         .then(response => response.json())
         .then(data => {
             if (data.success && data.data.length > 0) {
@@ -669,7 +669,7 @@ function loadTemplatePreview() {
 
     
     const timestamp = new Date().getTime();
-    iframe.src = `/ATS/templates/${templateName}.html?v=${timestamp}`;
+    iframe.src = appUrl(`templates/${templateName}.html?v=${timestamp}`);
 
     
     iframe.onload = () => {
@@ -885,7 +885,7 @@ function saveResume() {
 
     console.log('Saving resume...');
 
-    fetch('/ATS/api/save-resume.php', {
+    fetch(appUrl('api/save-resume.php'), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -975,7 +975,7 @@ async function performAIAnalysis() {
         console.log('Resume text length:', resumeText.length);
         console.log('Has job description:', !!jobDescText || !!jobDescFile);
 
-        const response = await fetch('/ATS/api/analyze-ats-score.php', {
+        const response = await fetch(appUrl('api/analyze-ats-score.php'), {
             method: 'POST',
             body: formData
         });

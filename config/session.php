@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/security.php';
+require_once __DIR__ . '/app.php';
 
 const SESSION_IDLE_TIMEOUT = 1800;
 const SESSION_ABSOLUTE_TIMEOUT = 43200;
@@ -22,7 +23,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_name('resumesync_session');
     session_set_cookie_params([
         'lifetime' => 0,
-        'path' => '/',
+        'path' => APP_BASE_PATH . '/',
         'domain' => '',
         'secure' => isHttpsRequest(),
         'httponly' => true,
@@ -38,7 +39,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        header('Location: /ATS/login.php');
+        header('Location: ' . buildApplicationUrl('login.php'));
         exit();
     }
 }

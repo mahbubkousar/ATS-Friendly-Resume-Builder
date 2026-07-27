@@ -147,7 +147,7 @@ async function deleteResume(resumeId, button) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
 
         
-        const response = await fetch('/ATS/api/delete-resume.php', {
+        const response = await fetch(appUrl('api/delete-resume.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -267,7 +267,7 @@ async function openShareModal(resumeId) {
     
     try {
         console.log('Fetching share stats for resume ID:', resumeId);
-        const response = await fetch(`/ATS/api/get-share-stats.php?resume_id=${resumeId}`);
+        const response = await fetch(appUrl(`api/get-share-stats.php?resume_id=${resumeId}`));
         const result = await response.json();
         console.log('Share stats response:', result);
 
@@ -334,7 +334,7 @@ document.getElementById('generateLinkBtn')?.addEventListener('click', async () =
     const resumeIdToGenerate = currentResumeId; 
 
     try {
-        const response = await fetch('/ATS/api/generate-share-link.php', {
+        const response = await fetch(appUrl('api/generate-share-link.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -401,7 +401,7 @@ document.getElementById('togglePublicBtn')?.addEventListener('click', async () =
     const resumeIdToToggle = currentResumeId; 
 
     try {
-        const response = await fetch('/ATS/api/toggle-resume-public.php', {
+        const response = await fetch(appUrl('api/toggle-resume-public.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -908,7 +908,7 @@ document.addEventListener('keydown', (e) => {
 async function markAsReadAndView(notificationId, applicationId) {
     
     try {
-        await fetch('/ATS/api/mark-notification-read.php', {
+        await fetch(appUrl('api/mark-notification-read.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

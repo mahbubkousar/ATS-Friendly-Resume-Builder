@@ -11,7 +11,7 @@ function showPrivatePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Resume Not Available</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
         <style>
             body {
                 margin: 0;
@@ -159,7 +159,7 @@ function showNotFoundPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Resume Not Found</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
         <style>
             body {
                 margin: 0;
@@ -380,7 +380,7 @@ $templateHTML = file_get_contents($templatePath);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($resumeData['resume_title']); ?> - <?php echo htmlspecialchars($personalDetails['fullName'] ?? 'Resume'); ?></title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
     <style>
         body {
             margin: 0;

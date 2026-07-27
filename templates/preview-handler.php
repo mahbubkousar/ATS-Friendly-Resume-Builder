@@ -54,8 +54,11 @@ $templateHTML = file_get_contents($templatePath);
     console.log('Preview handler loaded');
 
     window.addEventListener('message', function(event) {
+        if (event.origin !== window.location.origin || event.source !== window.parent) {
+            return;
+        }
         console.log('Received message:', event.data);
-        if (event.data.type === 'updateResume') {
+        if (event.data && event.data.type === 'updateResume') {
             console.log('Updating resume with data:', event.data.data);
             updateResumePreview(event.data.data);
         }

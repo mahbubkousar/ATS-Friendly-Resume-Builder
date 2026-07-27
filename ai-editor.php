@@ -54,6 +54,7 @@ if (!$resumeData) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
     <title>AI Resume Editor - ResumeSync</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -233,6 +234,7 @@ if (!$resumeData) {
     </script>
     <script src="config/gemini-config.php"></script>
     <script src="js/navigation-fix.js"></script>
+    <script src="js/shared/csrf.js?v=1"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/ai-editor.js?v=5"></script>

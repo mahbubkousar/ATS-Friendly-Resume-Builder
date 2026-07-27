@@ -53,6 +53,7 @@ if (!$resumeData) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
     <title>Academic Standard Resume Editor - ResumeSync</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -328,6 +329,7 @@ if (!$resumeData) {
         ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     </script>
     <script src="js/navigation-fix.js"></script>
+    <script src="js/shared/csrf.js?v=1"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/app.js?v=5"></script>

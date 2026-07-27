@@ -7,6 +7,7 @@ requireLogin();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
     <title>ATS Score Checker - ResumeSync</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta name="description" content="Check your resume's ATS compatibility score for free. Get instant feedback and recommendations.">
@@ -48,10 +49,13 @@ requireLogin();
                                 <span>New Resume</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="api/logout.php" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Logout</span>
-                            </a>
+                            <form action="logout.php" method="POST">
+                                <input type="hidden" name="_csrf_token" value="<?php echo htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
+                                <button type="submit" class="dropdown-item" style="width: 100%; border: 0; background: none; cursor: pointer;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 <?php else: ?>
@@ -601,6 +605,7 @@ requireLogin();
         </div>
     </div>
 
+    <script src="js/shared/csrf.js?v=1"></script>
     <script src="js/app.js"></script>
     <script src="js/score-checker.js?v=10"></script>
     <script>

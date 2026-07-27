@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/security.php';
+
 const SESSION_IDLE_TIMEOUT = 1800;
 const SESSION_ABSOLUTE_TIMEOUT = 43200;
 const SESSION_REGENERATION_INTERVAL = 900;

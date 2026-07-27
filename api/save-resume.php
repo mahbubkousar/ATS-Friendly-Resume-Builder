@@ -109,20 +109,15 @@ try {
         } else {
             $error = $stmt->error;
             error_log("SQL Error creating resume: " . $error);
-            error_log("Resume data: " . json_encode([
-                'userId' => $userId,
-                'resumeTitle' => $resumeTitle,
-                'templateName' => $templateName,
-                'experience' => substr($experience, 0, 100),
-                'education' => substr($education, 0, 100)
-            ]));
-            echo json_encode(['success' => false, 'message' => 'Failed to create resume: ' . $error]);
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Failed to create resume']);
         }
         $stmt->close();
     }
 } catch (Exception $e) {
     error_log("Exception saving resume: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Unable to save resume']);
 }
 
 $conn->close();

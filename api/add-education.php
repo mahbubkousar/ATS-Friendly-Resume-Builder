@@ -39,7 +39,9 @@ try {
     $stmt = $conn->prepare("INSERT INTO user_education (user_id, institution_name, degree, field_of_study, start_date, end_date, gpa) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
-        echo json_encode(['success' => false, 'message' => 'SQL Error: ' . $conn->error]);
+        error_log('Unable to prepare education insert: ' . $conn->error);
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Unable to save education']);
         exit();
     }
 
@@ -56,6 +58,8 @@ try {
     }
     $stmt->close();
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    error_log('Education insert failed: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Unable to save education']);
 }
 ?>

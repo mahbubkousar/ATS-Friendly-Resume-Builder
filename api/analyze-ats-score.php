@@ -119,7 +119,15 @@ try {
     }
 } catch (UploadValidationException $e) {
     http_response_code($e->getStatusCode());
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    if ($e->getStatusCode() >= 500) {
+        error_log('Upload validation service error: ' . $e->getMessage());
+    }
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getStatusCode() >= 500
+            ? 'Unable to validate uploaded document'
+            : $e->getMessage(),
+    ]);
     exit();
 }
 
@@ -219,10 +227,13 @@ function callGeminiAPIWithFile($base64Content, $mimeType, $prompt) {
     curl_close($ch);
 
     if ($httpCode !== 200) {
+        error_log(
+            'Gemini file analysis failed with HTTP status ' . $httpCode
+            . ($curlError ? ': ' . $curlError : '')
+        );
         return [
             'success' => false,
-            'error' => 'API error: ' . $httpCode . ($curlError ? ' - ' . $curlError : ''),
-            'response' => $response
+            'error' => 'AI document processing failed.'
         ];
     }
 
@@ -234,8 +245,7 @@ function callGeminiAPIWithFile($base64Content, $mimeType, $prompt) {
 
     return [
         'success' => false,
-        'error' => 'Unexpected response format',
-        'response' => $response
+        'error' => 'AI service returned an invalid response.'
     ];
 }
 
@@ -258,8 +268,7 @@ function performATSAnalysis($resumeText, $jobDescription = '') {
     if (!$analysis) {
         return [
             'success' => false,
-            'error' => 'Failed to parse analysis results',
-            'raw_response' => substr($result['text'], 0, 500)
+            'error' => 'Failed to parse analysis results'
         ];
     }
 

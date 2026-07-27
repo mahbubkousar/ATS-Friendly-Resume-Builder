@@ -57,7 +57,9 @@ try {
             }
             $stmt->close();
         } else {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
+            error_log('Education lookup query failed: ' . $conn->error);
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Unable to load education data']);
         }
     } elseif ($type === 'education') {
         $stmt = $conn->prepare("SELECT id, user_id, institution, degree, field, start_date, end_date FROM education WHERE user_id = ? ORDER BY start_date DESC");
@@ -90,10 +92,14 @@ try {
             }
             $stmt->close();
         } else {
-            echo json_encode(['success' => false, 'message' => 'Database error: ' . $conn->error]);
+            error_log('Experience lookup query failed: ' . $conn->error);
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Unable to load experience data']);
         }
     }
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    error_log('User data lookup failed: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Unable to load user data']);
 }
 ?>

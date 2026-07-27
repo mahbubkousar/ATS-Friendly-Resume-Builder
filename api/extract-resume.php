@@ -6,17 +6,6 @@ ini_set('max_execution_time', '75');
 ini_set('memory_limit', '128M');
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
-error_reporting(E_ALL);
-ini_set('display_errors', '1'); 
-
-
-error_log("Extract resume request received");
-error_log("POST data: " . print_r($_POST, true));
-error_log("FILES data: " . print_r($_FILES, true));
 
 try {
     require_once '../config/session.php';
@@ -25,7 +14,8 @@ try {
     require_once '../includes/ai-security.php';
 } catch (Throwable $e) {
     error_log("Configuration error: " . $e->getMessage());
-    echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Service configuration error']);
     exit;
 }
 
@@ -53,11 +43,7 @@ try {
     $document = validateDocumentUpload($_FILES['resume'], ['pdf', 'doc', 'docx', 'txt']);
     $base64Content = base64_encode(readValidatedDocument($document));
 
-    error_log("File encoded to base64, length: " . strlen($base64Content));
-
     $extractedData = extractResumeDataFromFile($base64Content, $document['mime_type']);
-
-    error_log("Successfully extracted resume data");
 
     echo json_encode([
         'success' => true,
@@ -69,19 +55,23 @@ try {
     error_log("Resume upload rejected: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage()
+        'error' => $e->getStatusCode() >= 500
+            ? 'Unable to validate uploaded document'
+            : $e->getMessage()
     ]);
 } catch (Exception $e) {
     error_log("Resume extraction error: " . $e->getMessage());
+    http_response_code(502);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage()
+        'error' => 'Unable to extract resume data'
     ]);
 } catch (Throwable $e) {
     error_log("Fatal error in resume extraction: " . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'System error: ' . $e->getMessage()
+        'error' => 'Unable to process resume'
     ]);
 }
 
@@ -119,8 +109,6 @@ function extractResumeDataFromFile($base64Content, $mimeType) {
         ]
     ];
 
-    error_log("Calling Gemini Vision API for resume extraction...");
-
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -134,10 +122,9 @@ function extractResumeDataFromFile($base64Content, $mimeType) {
     $curlError = curl_error($ch);
     curl_close($ch);
 
-    error_log("Gemini Vision API HTTP Code: " . $httpCode);
-
     if ($curlError) {
-        throw new Exception('CURL error: ' . $curlError);
+        error_log('Gemini resume extraction transport error: ' . $curlError);
+        throw new Exception('AI transport failure');
     }
 
     if ($httpCode !== 200) {
@@ -147,20 +134,16 @@ function extractResumeDataFromFile($base64Content, $mimeType) {
             $errorMsg .= ' - ' . $result['error']['message'];
         }
         error_log("Gemini Vision API Error: " . $errorMsg);
-        error_log("Response: " . substr($response, 0, 500));
-        throw new Exception($errorMsg);
+        throw new Exception('AI request failure');
     }
 
     $result = json_decode($response, true);
 
     if (!isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-        error_log("Unexpected response format: " . json_encode($result));
         throw new Exception('Unexpected API response format');
     }
 
     $responseText = $result['candidates'][0]['content']['parts'][0]['text'];
-    error_log("Gemini Vision returned text length: " . strlen($responseText));
-
     
     if (preg_match('/\{[\s\S]*\}/s', $responseText, $matches)) {
         $jsonText = $matches[0];
@@ -175,7 +158,7 @@ function extractResumeDataFromFile($base64Content, $mimeType) {
     $data = json_decode($jsonText, true);
 
     if (!$data) {
-        error_log("Failed to parse JSON: " . $jsonText);
+        error_log("Failed to parse resume extraction response as JSON");
         throw new Exception('Failed to parse extracted data as JSON');
     }
 

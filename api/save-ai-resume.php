@@ -200,10 +200,10 @@ try {
     sendRequestValidationError($e);
 } catch (Exception $e) {
     error_log("Save Resume Error: " . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'Failed to save resume',
-        'details' => $e->getMessage()
+        'error' => 'Failed to save resume'
     ]);
 }
 ?>

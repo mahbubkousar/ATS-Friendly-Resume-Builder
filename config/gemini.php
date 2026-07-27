@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/environment.php';
 
 define('GEMINI_API_KEY', (string) environmentValue('GEMINI_API_KEY', ''));
@@ -14,7 +15,7 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
     if ($apiKey === '' || $apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
         return [
             'success' => false,
-            'error' => 'Gemini API key not configured. Please update config/gemini.php'
+            'error' => 'AI service is not configured.'
         ];
     }
 
@@ -29,15 +30,10 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
 
     $url = GEMINI_API_ENDPOINT . '?key=' . $apiKey;
 
-    error_log("Prompt length: " . strlen($prompt));
-    error_log("System instruction: " . $systemInstruction);
-
     $fullPrompt = $prompt;
     if ($systemInstruction) {
         $fullPrompt = $systemInstruction . "\n\n" . $prompt;
     }
-
-    error_log("Full prompt length: " . strlen($fullPrompt));
 
     $data = [
         'contents' => [
@@ -60,11 +56,9 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
         error_log("JSON encode error: " . json_last_error_msg());
         return [
             'success' => false,
-            'error' => 'Failed to encode request: ' . json_last_error_msg()
+            'error' => 'Unable to prepare AI request.'
         ];
     }
-
-    error_log("Gemini API Request size: " . strlen($jsonData) . " bytes");
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -81,15 +75,11 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
     $curlError = curl_error($ch);
     curl_close($ch);
 
-    error_log("Gemini API HTTP Code: " . $httpCode);
-    error_log("Gemini API Response: " . substr($response, 0, 1000));
-
     if ($curlError) {
         error_log("Gemini CURL Error: " . $curlError);
         return [
             'success' => false,
-            'error' => 'CURL error: ' . $curlError,
-            'response' => $response
+            'error' => 'AI service is temporarily unavailable.'
         ];
     }
 
@@ -102,8 +92,7 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
         error_log("Gemini API Error: " . $errorMsg);
         return [
             'success' => false,
-            'error' => $errorMsg,
-            'response' => $response
+            'error' => 'AI service request failed.'
         ];
     }
 
@@ -121,16 +110,14 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
         error_log("Gemini blocked/filtered response: " . $reason);
         return [
             'success' => false,
-            'error' => 'Content filtered/blocked: ' . $reason,
-            'response' => $response
+            'error' => 'AI response was blocked by content safety controls.'
         ];
     }
 
-    error_log("Unexpected Gemini response format: " . json_encode($result));
+    error_log("Unexpected Gemini response format");
     return [
         'success' => false,
-        'error' => 'Unexpected API response format',
-        'response' => $response
+        'error' => 'AI service returned an invalid response.'
     ];
 }
 ?>

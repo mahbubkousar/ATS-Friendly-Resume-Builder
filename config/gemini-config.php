@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/environment.php';
 
 define('GEMINI_API_KEY', (string) environmentValue('GEMINI_API_KEY', ''));

@@ -2,8 +2,6 @@
 
 
 header('Content-Type: application/json');
-error_reporting(E_ALL);
-ini_set('display_errors', '0'); 
 
 try {
     require_once '../config/session.php';
@@ -11,7 +9,9 @@ try {
     require_once '../config/gemini.php';
     require_once '../includes/ai-security.php';
 } catch (Throwable $e) {
-    echo json_encode(['success' => false, 'error' => 'Configuration error: ' . $e->getMessage()]);
+    error_log('AI conversation configuration error: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Service configuration error']);
     exit;
 }
 
@@ -88,9 +88,10 @@ try {
 
 } catch (Exception $e) {
     error_log("AI Conversation Error: " . $e->getMessage());
+    http_response_code(502);
     echo json_encode([
         'success' => false,
-        'error' => 'Failed to process conversation: ' . $e->getMessage()
+        'error' => 'Failed to process conversation'
     ]);
 }
 

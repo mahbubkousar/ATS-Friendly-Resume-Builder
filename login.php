@@ -28,7 +28,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     setUserSession($user['user_id'], $user['full_name'], $user['email']);
 
                     if (isset($_POST['remember']) && $_POST['remember'] === 'on') {
-                        setcookie('remember_email', $email, time() + (86400 * 30), '/');
+                        setcookie('remember_email', $email, [
+                            'expires' => time() + (86400 * 30),
+                            'path' => '/',
+                            'secure' => isHttpsRequest(),
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
+                    } elseif (isset($_COOKIE['remember_email'])) {
+                        setcookie('remember_email', '', [
+                            'expires' => time() - 42000,
+                            'path' => '/',
+                            'secure' => isHttpsRequest(),
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
                     }
 
                     header('Location: dashboard.php');

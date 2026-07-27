@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require_once '../config/database.php';
+require_once '../includes/request-validation.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -8,7 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
+try {
+    $input = readValidatedJsonBody(16384);
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
+}
 $shareToken = isset($input['share_token']) && is_string($input['share_token'])
     ? $input['share_token']
     : '';

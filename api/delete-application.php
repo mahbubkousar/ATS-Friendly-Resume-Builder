@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -11,17 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (empty($input['application_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Application ID is required']);
-    exit();
+try {
+    $input = readValidatedJsonBody(16384);
+    $applicationId = positiveIntegerField($input, 'application_id', 'Application ID');
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 $user = getCurrentUser();
 $userId = $user['id'];
-$applicationId = $input['application_id'];
-
 $conn = getDBConnection();
 if (!$conn) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed']);

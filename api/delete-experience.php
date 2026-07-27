@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -13,11 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     exit();
 }
 
-$experienceId = $_GET['id'] ?? null;
-
-if (!$experienceId) {
-    echo json_encode(['success' => false, 'message' => 'Experience ID is required']);
-    exit();
+try {
+    $experienceId = positiveIntegerField($_GET, 'id', 'Experience ID');
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 $conn = getDBConnection();

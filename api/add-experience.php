@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -13,19 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-$title = trim($input['title'] ?? '');
-$company = trim($input['company'] ?? '');
-$location = trim($input['location'] ?? '');
-$startDate = $input['start_date'] ?? null;
-$endDate = $input['end_date'] ?? null;
-$isCurrent = $input['is_current'] ?? false;
-$description = trim($input['description'] ?? '');
-
-if (empty($title) || empty($company)) {
-    echo json_encode(['success' => false, 'message' => 'Title and company are required']);
-    exit();
+try {
+    $input = readValidatedJsonBody(65536);
+    $title = requiredStringField($input, 'title', 'Title', 255);
+    $company = requiredStringField($input, 'company', 'Company', 255);
+    $location = optionalStringField($input, 'location', 'Location', 255);
+    $startDate = dateField($input, 'start_date', 'Start date');
+    $endDate = dateField($input, 'end_date', 'End date');
+    $isCurrent = booleanField($input, 'is_current', 'Current position');
+    $description = optionalStringField($input, 'description', 'Description', 10000, '');
+    if (!$isCurrent && $startDate !== null && $endDate !== null && $endDate < $startDate) {
+        throw new RequestValidationException('End date cannot be before start date.');
+    }
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 

@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -11,18 +12,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (empty($input['application_id']) || empty($input['status'])) {
-    echo json_encode(['success' => false, 'message' => 'Application ID and status are required']);
-    exit();
+try {
+    $input = readValidatedJsonBody(16384);
+    $applicationId = positiveIntegerField($input, 'application_id', 'Application ID');
+    $newStatus = enumField(
+        $input,
+        'status',
+        'Status',
+        ['Applied', 'In Review', 'Interview Scheduled', 'Interview Completed', 'Offer Received', 'Accepted', 'Rejected', 'Withdrawn']
+    );
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 $user = getCurrentUser();
 $userId = $user['id'];
-$applicationId = $input['application_id'];
-$newStatus = $input['status'];
-
 $conn = getDBConnection();
 if (!$conn) {
     echo json_encode(['success' => false, 'message' => 'Database connection failed']);

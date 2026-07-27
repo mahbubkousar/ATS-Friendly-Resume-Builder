@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -11,11 +12,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (empty($input['company_name']) || empty($input['job_title']) || empty($input['application_date'])) {
-    echo json_encode(['success' => false, 'message' => 'Company name, job title, and application date are required']);
-    exit();
+try {
+    $input = readValidatedJsonBody();
+    $companyName = requiredStringField($input, 'company_name', 'Company name', 255);
+    $jobTitle = requiredStringField($input, 'job_title', 'Job title', 255);
+    $jobLocation = optionalStringField($input, 'job_location', 'Job location', 255);
+    $jobType = enumField(
+        $input,
+        'job_type',
+        'Job type',
+        ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'],
+        'Full-time'
+    );
+    $salaryRange = optionalStringField($input, 'salary_range', 'Salary range', 100);
+    $applicationDate = dateField($input, 'application_date', 'Application date', true);
+    $status = enumField(
+        $input,
+        'status',
+        'Status',
+        ['Applied', 'In Review', 'Interview Scheduled', 'Interview Completed', 'Offer Received', 'Accepted', 'Rejected', 'Withdrawn'],
+        'Applied'
+    );
+    $applicationUrl = optionalHttpUrlField($input, 'application_url', 'Application URL');
+    $notes = optionalStringField($input, 'notes', 'Notes', 10000);
+    $contactPerson = optionalStringField($input, 'contact_person', 'Contact person', 255);
+    $contactEmail = optionalEmailField($input, 'contact_email', 'Contact email');
+    $priority = enumField($input, 'priority', 'Priority', ['Low', 'Medium', 'High'], 'Medium');
+    $interviewDate = dateTimeField($input, 'interview_date', 'Interview date');
+    $interviewLocation = optionalStringField($input, 'interview_location', 'Interview location', 255);
+    $interviewNotes = optionalStringField($input, 'interview_notes', 'Interview notes', 10000);
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 $user = getCurrentUser();
@@ -32,22 +59,6 @@ $stmt = $conn->prepare("INSERT INTO job_applications (
     application_date, status, application_url, notes, contact_person,
     contact_email, priority, interview_date, interview_location, interview_notes
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-$companyName = $input['company_name'];
-$jobTitle = $input['job_title'];
-$jobLocation = $input['job_location'] ?? null;
-$jobType = $input['job_type'] ?? 'Full-time';
-$salaryRange = $input['salary_range'] ?? null;
-$applicationDate = $input['application_date'];
-$status = $input['status'] ?? 'Applied';
-$applicationUrl = $input['application_url'] ?? null;
-$notes = $input['notes'] ?? null;
-$contactPerson = $input['contact_person'] ?? null;
-$contactEmail = $input['contact_email'] ?? null;
-$priority = $input['priority'] ?? 'Medium';
-$interviewDate = $input['interview_date'] ?? null;
-$interviewLocation = $input['interview_location'] ?? null;
-$interviewNotes = $input['interview_notes'] ?? null;
 
 $stmt->bind_param(
     "isssssssssssssss",

@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/session.php';
 require_once '../config/database.php';
+require_once '../includes/request-validation.php';
 
 if (!isLoggedIn()) {
     echo json_encode([
@@ -11,15 +12,14 @@ if (!isLoggedIn()) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+    exit;
+}
+
 $user = getCurrentUser();
 $conn = getDBConnection();
-
-$input = json_decode(file_get_contents('php://input'), true);
-
-$resumeId = $input['resume_id'] ?? null;
-$resumeTitle = $input['resume_title'] ?? 'Untitled Resume';
-$templateName = $input['template'] ?? 'classic';
-$resumeState = $input['resumeState'] ?? [];
 
 $allowedTemplates = [
     'classic', 'modern', 'professional', 'technical',
@@ -27,30 +27,55 @@ $allowedTemplates = [
     'research-scientist', 'teaching-faculty'
 ];
 
-if (!in_array($templateName, $allowedTemplates)) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Invalid template'
-    ]);
-    exit;
+try {
+    $input = readValidatedJsonBody(1048576);
+    $resumeId = $input['resume_id'] ?? null;
+    if ($resumeId !== null && $resumeId !== '') {
+        $resumeId = positiveIntegerField($input, 'resume_id', 'Resume ID');
+    } else {
+        $resumeId = null;
+    }
+    $resumeTitle = optionalStringField($input, 'resume_title', 'Resume title', 255, 'Untitled Resume');
+    $templateName = enumField($input, 'template', 'Template', $allowedTemplates, 'classic');
+    $resumeState = $input['resumeState'] ?? [];
+    if (!is_array($resumeState)) {
+        throw new RequestValidationException('Invalid resume data.');
+    }
+    $encodedResumeState = json_encode($resumeState);
+    if ($encodedResumeState === false || strlen($encodedResumeState) > 900000) {
+        throw new RequestValidationException('Resume data is too large.');
+    }
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 try {
+    if (isset($resumeState['personal_details']) && !is_array($resumeState['personal_details'])) {
+        throw new RequestValidationException('Invalid personal details.');
+    }
     $personalDetails = json_encode($resumeState['personal_details'] ?? []);
-    $summaryText = $resumeState['summary_text'] ?? '';
-    $experience = json_encode($resumeState['experience'] ?? []);
-    $education = json_encode($resumeState['education'] ?? []);
-    $skills = $resumeState['skills'] ?? '';
-
-    $projects = json_encode($resumeState['projects'] ?? []);
-    $achievements = $resumeState['achievements'] ?? '';
-    $portfolio = json_encode($resumeState['portfolio'] ?? []);
-    $board = json_encode($resumeState['board'] ?? []);
-    $researchInterests = $resumeState['research_interests'] ?? '';
-    $publications = json_encode($resumeState['publications'] ?? []);
-    $grants = json_encode($resumeState['grants'] ?? []);
-    $teaching = json_encode($resumeState['teaching'] ?? []);
-    $references = json_encode($resumeState['references'] ?? []);
+    if ($personalDetails === false || strlen($personalDetails) > 20000) {
+        throw new RequestValidationException('Personal details are too large.');
+    }
+    $summaryText = optionalStringField($resumeState, 'summary_text', 'Summary', 50000, '');
+    $experience = encodedStructuredField($resumeState, 'experience', 'Experience', 200000);
+    $education = encodedStructuredField($resumeState, 'education', 'Education', 200000);
+    $skills = encodedStructuredField($resumeState, 'skills', 'Skills', 100000, '', true);
+    $projects = encodedStructuredField($resumeState, 'projects', 'Projects', 100000);
+    $achievements = optionalStringField($resumeState, 'achievements', 'Achievements', 50000, '');
+    $portfolio = encodedStructuredField($resumeState, 'portfolio', 'Portfolio', 100000);
+    $board = encodedStructuredField($resumeState, 'board', 'Board experience', 100000);
+    $researchInterests = optionalStringField(
+        $resumeState,
+        'research_interests',
+        'Research interests',
+        20000,
+        ''
+    );
+    $publications = encodedStructuredField($resumeState, 'publications', 'Publications', 200000);
+    $grants = encodedStructuredField($resumeState, 'grants', 'Grants', 100000);
+    $teaching = encodedStructuredField($resumeState, 'teaching', 'Teaching', 100000);
+    $references = encodedStructuredField($resumeState, 'references', 'References', 100000);
 
     if ($resumeId) {
         $stmt = $conn->prepare("
@@ -171,6 +196,8 @@ try {
 
         $stmt->close();
     }
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 } catch (Exception $e) {
     error_log("Save Resume Error: " . $e->getMessage());
     echo json_encode([

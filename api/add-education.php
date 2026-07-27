@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -13,27 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-
-
-error_log("Add Education Input: " . print_r($input, true));
-error_log("User ID: " . $userId);
-
-$institution = trim($input['institution'] ?? '');
-$degree = trim($input['degree'] ?? '');
-$field = trim($input['field'] ?? '');
-$startDate = $input['start_date'] ?? null;
-$endDate = $input['end_date'] ?? null;
-$gpa = trim($input['gpa'] ?? '');
-
-
-if (empty($startDate)) $startDate = null;
-if (empty($endDate)) $endDate = null;
-if (empty($gpa)) $gpa = null;
-
-if (empty($institution)) {
-    echo json_encode(['success' => false, 'message' => 'Institution is required']);
-    exit();
+try {
+    $input = readValidatedJsonBody(65536);
+    $institution = requiredStringField($input, 'institution', 'Institution', 255);
+    $degree = optionalStringField($input, 'degree', 'Degree', 255, '');
+    $field = optionalStringField($input, 'field', 'Field of study', 255, '');
+    $startDate = dateField($input, 'start_date', 'Start date');
+    $endDate = dateField($input, 'end_date', 'End date');
+    $gpa = optionalStringField($input, 'gpa', 'GPA', 10);
+    if ($startDate !== null && $endDate !== null && $endDate < $startDate) {
+        throw new RequestValidationException('End date cannot be before start date.');
+    }
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 $conn = getDBConnection();

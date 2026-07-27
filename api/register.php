@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../includes/auth-rate-limit.php';
+require_once '../includes/request-validation.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -18,41 +19,76 @@ if ($retryAfter > 0) {
     exit();
 }
 
-$maximumRequestBytes = 200000;
-$contentLength = isset($_SERVER['CONTENT_LENGTH']) ? (int) $_SERVER['CONTENT_LENGTH'] : 0;
-if ($contentLength > $maximumRequestBytes) {
-    http_response_code(413);
-    echo json_encode(['success' => false, 'message' => 'Request body is too large']);
-    exit();
-}
-$rawInput = file_get_contents('php://input', false, null, 0, $maximumRequestBytes + 1);
-if ($rawInput === false || strlen($rawInput) > $maximumRequestBytes) {
-    http_response_code(413);
-    echo json_encode(['success' => false, 'message' => 'Request body is too large']);
-    exit();
-}
-$input = json_decode($rawInput, true);
-if (!is_array($input)) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Request body must contain valid JSON']);
-    exit();
-}
+try {
+    $input = readValidatedJsonBody(200000);
+    $input['fullname'] = requiredStringField($input, 'fullname', 'Full name', 255);
+    $input['email'] = strtolower(requiredStringField($input, 'email', 'Email', 255));
+    $input['phone'] = requiredStringField($input, 'phone', 'Phone', 20);
+    $input['address'] = requiredStringField($input, 'address', 'Address', 255);
+    $input['city'] = requiredStringField($input, 'city', 'City', 100);
+    $input['state'] = requiredStringField($input, 'state', 'State', 100);
+    $input['zipcode'] = requiredStringField($input, 'zipcode', 'ZIP code', 20);
+    $input['country'] = requiredStringField($input, 'country', 'Country', 100);
 
-$required = ['fullname', 'email', 'password', 'phone', 'address', 'city', 'state', 'zipcode', 'country'];
-foreach ($required as $field) {
-    if (!isset($input[$field]) || !is_string($input[$field]) || trim($input[$field]) === '') {
-        echo json_encode(['success' => false, 'message' => "Field '{$field}' is required"]);
-        exit();
+    if (!isset($input['password']) || !is_string($input['password'])) {
+        throw new RequestValidationException('Password is required.');
     }
+    if (strlen($input['password']) < 8 || strlen($input['password']) > 128) {
+        throw new RequestValidationException('Password must be between 8 and 128 characters.');
+    }
+
+    $input['dob'] = dateField($input, 'dob', 'Date of birth');
+    $input['professional-title'] = optionalStringField(
+        $input,
+        'professional-title',
+        'Professional title',
+        255
+    );
+    $input['bio'] = optionalStringField($input, 'bio', 'Professional summary', 10000);
+
+    foreach (['education', 'experience'] as $collection) {
+        if (isset($input[$collection])
+            && (!is_array($input[$collection]) || count($input[$collection]) > 20)) {
+            throw new RequestValidationException(
+                ucfirst($collection) . ' must contain no more than 20 entries.'
+            );
+        }
+    }
+
+    foreach ($input['education'] ?? [] as $index => $education) {
+        if (!is_array($education)) {
+            throw new RequestValidationException('Invalid education entry.');
+        }
+        $input['education'][$index] = [
+            'institution' => optionalStringField($education, 'institution', 'Institution', 255),
+            'degree' => optionalStringField($education, 'degree', 'Degree', 255),
+            'field' => optionalStringField($education, 'field', 'Field of study', 255),
+            'startDate' => monthField($education, 'startDate', 'Education start date'),
+            'endDate' => monthField($education, 'endDate', 'Education end date'),
+            'gpa' => optionalStringField($education, 'gpa', 'GPA', 10),
+        ];
+    }
+
+    foreach ($input['experience'] ?? [] as $index => $experience) {
+        if (!is_array($experience)) {
+            throw new RequestValidationException('Invalid experience entry.');
+        }
+        $input['experience'][$index] = [
+            'company' => optionalStringField($experience, 'company', 'Company', 255),
+            'title' => optionalStringField($experience, 'title', 'Job title', 255),
+            'location' => optionalStringField($experience, 'location', 'Location', 255),
+            'startDate' => monthField($experience, 'startDate', 'Experience start date'),
+            'endDate' => monthField($experience, 'endDate', 'Experience end date'),
+            'current' => booleanField($experience, 'current', 'Current position'),
+            'description' => optionalStringField($experience, 'description', 'Description', 10000),
+        ];
+    }
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['success' => false, 'message' => 'Invalid email format']);
-    exit();
-}
-
-if (strlen($input['password']) < 8) {
-    echo json_encode(['success' => false, 'message' => 'Password must be at least 8 characters']);
     exit();
 }
 

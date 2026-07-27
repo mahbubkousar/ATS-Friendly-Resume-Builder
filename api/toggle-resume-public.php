@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config/database.php';
 require_once '../config/session.php';
+require_once '../includes/request-validation.php';
 
 requireLogin();
 
@@ -11,12 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = json_decode(file_get_contents('php://input'), true);
-$resumeId = $input['resume_id'] ?? null;
-
-if (!$resumeId) {
-    echo json_encode(['success' => false, 'message' => 'Resume ID required']);
-    exit();
+try {
+    $input = readValidatedJsonBody(16384);
+    $resumeId = positiveIntegerField($input, 'resume_id', 'Resume ID');
+} catch (RequestValidationException $e) {
+    sendRequestValidationError($e);
 }
 
 $user = getCurrentUser();

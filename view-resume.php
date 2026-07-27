@@ -299,7 +299,7 @@ function showNotFoundPage() {
 
 $token = $_GET['token'] ?? null;
 
-if (!$token) {
+if (!is_string($token) || !preg_match('/^[a-f0-9]{64}$/', $token)) {
     http_response_code(404);
     showNotFoundPage();
     exit();
@@ -307,38 +307,20 @@ if (!$token) {
 
 $conn = getDBConnection();
 
-// First check if resume exists with this token (regardless of public status)
-$checkStmt = $conn->prepare("SELECT resume_id, is_public FROM resumes WHERE share_token = ?");
-$checkStmt->bind_param("s", $token);
-$checkStmt->execute();
-$checkResult = $checkStmt->get_result();
-
-if ($checkResult->num_rows === 0) {
-    // Token doesn't exist at all
-    $checkStmt->close();
-    http_response_code(404);
-    showNotFoundPage();
-    exit();
-}
-
-$checkData = $checkResult->fetch_assoc();
-$checkStmt->close();
-
-// Check if resume is private
-if ($checkData['is_public'] == 0) {
-    http_response_code(403);
-    showPrivatePage();
-    exit();
-}
-
-// Fetch full resume data (only if public)
 $stmt = $conn->prepare("SELECT * FROM resumes WHERE share_token = ? AND is_public = 1");
 $stmt->bind_param("s", $token);
 $stmt->execute();
 $result = $stmt->get_result();
 $resumeData = $result->fetch_assoc();
-$resumeId = $resumeData['resume_id'];
 $stmt->close();
+
+if (!$resumeData) {
+    http_response_code(404);
+    showNotFoundPage();
+    exit();
+}
+
+$resumeId = $resumeData['resume_id'];
 
 // Track view
 $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
@@ -506,7 +488,6 @@ $templateHTML = file_get_contents($templatePath);
 
     <script>
         const resumeToken = <?php echo json_encode($token, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-        const resumeId = <?php echo json_encode((int)$resumeId); ?>;
         const templateName = <?php echo json_encode($templateName, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
         // Track download
@@ -517,7 +498,7 @@ $templateHTML = file_get_contents($templatePath);
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ resume_id: resumeId })
+                body: JSON.stringify({ share_token: resumeToken })
             }).then(() => {
                 // Trigger print dialog
                 window.print();

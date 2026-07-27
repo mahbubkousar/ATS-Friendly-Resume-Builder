@@ -38,10 +38,10 @@ $stmt->close();
 
 $newStatus = $resume['is_public'] ? 0 : 1;
 
-$updateStmt = $conn->prepare("UPDATE resumes SET is_public = ? WHERE resume_id = ?");
-$updateStmt->bind_param("ii", $newStatus, $resumeId);
+$updateStmt = $conn->prepare("UPDATE resumes SET is_public = ? WHERE resume_id = ? AND user_id = ?");
+$updateStmt->bind_param("iii", $newStatus, $resumeId, $userId);
 
-if ($updateStmt->execute()) {
+if ($updateStmt->execute() && $updateStmt->affected_rows === 1) {
     echo json_encode([
         'success' => true,
         'is_public' => (bool)$newStatus,

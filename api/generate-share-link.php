@@ -43,9 +43,15 @@ if (empty($shareToken)) {
     $shareToken = bin2hex(random_bytes(32));
     $isNewLink = true;
 
-    $updateStmt = $conn->prepare("UPDATE resumes SET share_token = ?, is_public = 1, shared_at = NOW() WHERE resume_id = ?");
-    $updateStmt->bind_param("si", $shareToken, $resumeId);
+    $updateStmt = $conn->prepare("UPDATE resumes SET share_token = ?, is_public = 1, shared_at = NOW() WHERE resume_id = ? AND user_id = ?");
+    $updateStmt->bind_param("sii", $shareToken, $resumeId, $userId);
     $updateStmt->execute();
+    if ($updateStmt->affected_rows !== 1) {
+        $updateStmt->close();
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Resume not found']);
+        exit();
+    }
     $updateStmt->close();
 
     $isPublic = true;

@@ -27,6 +27,38 @@ $fileType = isset($_POST['file_type']) && is_string($_POST['file_type'])
     ? $_POST['file_type']
     : '';
 $resumeId = $_POST['resume_id'] ?? null;
+if ($resumeId !== null && $resumeId !== '') {
+    $resumeId = filter_var($resumeId, FILTER_VALIDATE_INT, [
+        'options' => ['min_range' => 1],
+    ]);
+    if ($resumeId === false) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid resume ID']);
+        exit();
+    }
+
+    $ownershipConnection = getDBConnection();
+    if (!$ownershipConnection) {
+        http_response_code(503);
+        echo json_encode(['success' => false, 'message' => 'Service temporarily unavailable']);
+        exit();
+    }
+    $ownershipStatement = $ownershipConnection->prepare(
+        'SELECT 1 FROM resumes WHERE resume_id = ? AND user_id = ?'
+    );
+    $ownershipStatement->bind_param('ii', $resumeId, $userId);
+    $ownershipStatement->execute();
+    $ownedResume = $ownershipStatement->get_result()->fetch_row();
+    $ownershipStatement->close();
+
+    if (!$ownedResume) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Resume not found']);
+        exit();
+    }
+} else {
+    $resumeId = null;
+}
 
 $aiRequestCost = 1;
 if (isset($_FILES['resume_file']) && ($_FILES['resume_file']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {

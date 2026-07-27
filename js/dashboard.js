@@ -715,10 +715,10 @@ function createEducationEntry(edu, index) {
     div.innerHTML = `
         <div class="profile-entry-header">
             <div class="profile-entry-info">
-                <h4>${edu.institution || 'Institution Name'}</h4>
-                <p>${edu.degree || 'Degree'} in ${edu.field || 'Field of Study'}</p>
-                ${edu.startDate || edu.endDate ? `<p class="entry-duration">${edu.startDate || ''} - ${edu.endDate || 'Present'}</p>` : ''}
-                ${edu.gpa ? `<p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">GPA: ${edu.gpa}</p>` : ''}
+                <h4>${escapeHtml(edu.institution || 'Institution Name')}</h4>
+                <p>${escapeHtml(edu.degree || 'Degree')} in ${escapeHtml(edu.field || 'Field of Study')}</p>
+                ${edu.startDate || edu.endDate ? `<p class="entry-duration">${escapeHtml(edu.startDate || '')} - ${escapeHtml(edu.endDate || 'Present')}</p>` : ''}
+                ${edu.gpa ? `<p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.25rem;">GPA: ${escapeHtml(edu.gpa)}</p>` : ''}
             </div>
             <div class="profile-entry-actions">
                 <button class="btn-entry-action" onclick="editEducation(${index})">
@@ -756,9 +756,9 @@ function createExperienceEntry(exp, index) {
     div.innerHTML = `
         <div class="profile-entry-header">
             <div class="profile-entry-info">
-                <h4>${exp.title || 'Job Title'}</h4>
-                <p>${exp.company || 'Company Name'}${exp.location ? ` • ${exp.location}` : ''}</p>
-                ${exp.startDate || exp.endDate ? `<p class="entry-duration">${exp.startDate || ''} - ${exp.current ? 'Present' : (exp.endDate || '')}</p>` : ''}
+                <h4>${escapeHtml(exp.title || 'Job Title')}</h4>
+                <p>${escapeHtml(exp.company || 'Company Name')}${exp.location ? ` • ${escapeHtml(exp.location)}` : ''}</p>
+                ${exp.startDate || exp.endDate ? `<p class="entry-duration">${escapeHtml(exp.startDate || '')} - ${exp.current ? 'Present' : escapeHtml(exp.endDate || '')}</p>` : ''}
             </div>
             <div class="profile-entry-actions">
                 <button class="btn-entry-action" onclick="editExperience(${index})">
@@ -769,7 +769,7 @@ function createExperienceEntry(exp, index) {
                 </button>
             </div>
         </div>
-        ${exp.description ? `<div class="profile-entry-description">${exp.description}</div>` : ''}
+        ${exp.description ? `<div class="profile-entry-description">${escapeHtml(exp.description)}</div>` : ''}
     `;
     return div;
 }

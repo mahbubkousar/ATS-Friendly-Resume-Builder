@@ -192,14 +192,14 @@ function renderExperienceItems() {
         const div = document.createElement('div');
         div.className = 'experience-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Job Title" value="${item.job_title || ''}" data-index="${index}" data-field="job_title">
-            <input type="text" class="form-input" placeholder="Company Name" value="${item.company_name || ''}" data-index="${index}" data-field="company_name">
-            <input type="text" class="form-input" placeholder="Location" value="${item.location || ''}" data-index="${index}" data-field="location">
+            <input type="text" class="form-input" placeholder="Job Title" value="${escapeHtml(item.job_title || '')}" data-index="${index}" data-field="job_title">
+            <input type="text" class="form-input" placeholder="Company Name" value="${escapeHtml(item.company_name || '')}" data-index="${index}" data-field="company_name">
+            <input type="text" class="form-input" placeholder="Location" value="${escapeHtml(item.location || '')}" data-index="${index}" data-field="location">
             <div style="display: flex; gap: 10px;">
-                <input type="text" class="form-input small" placeholder="Start Date (e.g., Jan 2020)" value="${item.start_date || ''}" data-index="${index}" data-field="start_date">
-                <input type="text" class="form-input small" placeholder="End Date (e.g., Present)" value="${item.end_date || ''}" data-index="${index}" data-field="end_date">
+                <input type="text" class="form-input small" placeholder="Start Date (e.g., Jan 2020)" value="${escapeHtml(item.start_date || '')}" data-index="${index}" data-field="start_date">
+                <input type="text" class="form-input small" placeholder="End Date (e.g., Present)" value="${escapeHtml(item.end_date || '')}" data-index="${index}" data-field="end_date">
             </div>
-            <textarea class="form-textarea" placeholder="Description (separate bullet points with new lines)" rows="3" data-index="${index}" data-field="description">${item.description || ''}</textarea>
+            <textarea class="form-textarea" placeholder="Description (separate bullet points with new lines)" rows="3" data-index="${index}" data-field="description">${escapeHtml(item.description || '')}</textarea>
             ${experienceItems.length > 1 ? `<button class="remove-btn" onclick="removeExperience(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -224,12 +224,12 @@ function renderEducationItems() {
         const div = document.createElement('div');
         div.className = 'education-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Degree" value="${item.degree || ''}" data-index="${index}" data-field="degree">
-            <input type="text" class="form-input" placeholder="Institution" value="${item.institution || ''}" data-index="${index}" data-field="institution">
-            <input type="text" class="form-input" placeholder="Location" value="${item.location || ''}" data-index="${index}" data-field="location">
+            <input type="text" class="form-input" placeholder="Degree" value="${escapeHtml(item.degree || '')}" data-index="${index}" data-field="degree">
+            <input type="text" class="form-input" placeholder="Institution" value="${escapeHtml(item.institution || '')}" data-index="${index}" data-field="institution">
+            <input type="text" class="form-input" placeholder="Location" value="${escapeHtml(item.location || '')}" data-index="${index}" data-field="location">
             <div style="display: flex; gap: 10px;">
-                <input type="text" class="form-input small" placeholder="Start Date" value="${item.start_date || ''}" data-index="${index}" data-field="start_date">
-                <input type="text" class="form-input small" placeholder="End Date" value="${item.end_date || ''}" data-index="${index}" data-field="end_date">
+                <input type="text" class="form-input small" placeholder="Start Date" value="${escapeHtml(item.start_date || '')}" data-index="${index}" data-field="start_date">
+                <input type="text" class="form-input small" placeholder="End Date" value="${escapeHtml(item.end_date || '')}" data-index="${index}" data-field="end_date">
             </div>
             ${educationItems.length > 1 ? `<button class="remove-btn" onclick="removeEducation(${index})">Remove</button>` : ''}
         `;
@@ -309,9 +309,9 @@ function renderProjectItems() {
         const div = document.createElement('div');
         div.className = 'experience-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Project Name" value="${item.name || ''}" data-index="${index}" data-field="name">
-            <input type="text" class="form-input" placeholder="Technologies Used (e.g., React, Node.js)" value="${item.technologies || ''}" data-index="${index}" data-field="technologies">
-            <textarea class="form-textarea" placeholder="Project Description" rows="3" data-index="${index}" data-field="description">${item.description || ''}</textarea>
+            <input type="text" class="form-input" placeholder="Project Name" value="${escapeHtml(item.name || '')}" data-index="${index}" data-field="name">
+            <input type="text" class="form-input" placeholder="Technologies Used (e.g., React, Node.js)" value="${escapeHtml(item.technologies || '')}" data-index="${index}" data-field="technologies">
+            <textarea class="form-textarea" placeholder="Project Description" rows="3" data-index="${index}" data-field="description">${escapeHtml(item.description || '')}</textarea>
             ${projectItems.length > 1 ? `<button class="remove-btn" onclick="removeProject(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -354,9 +354,9 @@ function renderBoardItems() {
         const div = document.createElement('div');
         div.className = 'education-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Title (e.g., Board of Directors)" value="${item.title || ''}" data-index="${index}" data-field="title">
-            <input type="text" class="form-input" placeholder="Organization Name" value="${item.organization || ''}" data-index="${index}" data-field="organization">
-            <input type="text" class="form-input" placeholder="Years (e.g., 2020-Present)" value="${item.years || ''}" data-index="${index}" data-field="years">
+            <input type="text" class="form-input" placeholder="Title (e.g., Board of Directors)" value="${escapeHtml(item.title || '')}" data-index="${index}" data-field="title">
+            <input type="text" class="form-input" placeholder="Organization Name" value="${escapeHtml(item.organization || '')}" data-index="${index}" data-field="organization">
+            <input type="text" class="form-input" placeholder="Years (e.g., 2020-Present)" value="${escapeHtml(item.years || '')}" data-index="${index}" data-field="years">
             ${boardItems.length > 1 ? `<button class="remove-btn" onclick="removeBoard(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -400,10 +400,10 @@ function renderPortfolioItems() {
         const div = document.createElement('div');
         div.className = 'experience-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Project Name" value="${item.name || ''}" data-index="${index}" data-field="name">
-            <input type="text" class="form-input" placeholder="Role (e.g., Lead Designer)" value="${item.role || ''}" data-index="${index}" data-field="role">
-            <textarea class="form-textarea" placeholder="Description" rows="2" data-index="${index}" data-field="description">${item.description || ''}</textarea>
-            <input type="text" class="form-input" placeholder="Portfolio Link (optional)" value="${item.link || ''}" data-index="${index}" data-field="link">
+            <input type="text" class="form-input" placeholder="Project Name" value="${escapeHtml(item.name || '')}" data-index="${index}" data-field="name">
+            <input type="text" class="form-input" placeholder="Role (e.g., Lead Designer)" value="${escapeHtml(item.role || '')}" data-index="${index}" data-field="role">
+            <textarea class="form-textarea" placeholder="Description" rows="2" data-index="${index}" data-field="description">${escapeHtml(item.description || '')}</textarea>
+            <input type="text" class="form-input" placeholder="Portfolio Link (optional)" value="${escapeHtml(item.link || '')}" data-index="${index}" data-field="link">
             ${portfolioItems.length > 1 ? `<button class="remove-btn" onclick="removePortfolio(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -448,11 +448,11 @@ function renderPublicationItems() {
         const div = document.createElement('div');
         div.className = 'experience-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Authors (e.g., Smith, J., & Doe, A.)" value="${item.authors || ''}" data-index="${index}" data-field="authors">
-            <input type="text" class="form-input small" placeholder="Year" value="${item.year || ''}" data-index="${index}" data-field="year">
-            <input type="text" class="form-input" placeholder="Publication Title" value="${item.title || ''}" data-index="${index}" data-field="title">
-            <input type="text" class="form-input" placeholder="Journal/Conference Name" value="${item.journal || ''}" data-index="${index}" data-field="journal">
-            <input type="text" class="form-input" placeholder="Details (e.g., 45(3), 234-256)" value="${item.details || ''}" data-index="${index}" data-field="details">
+            <input type="text" class="form-input" placeholder="Authors (e.g., Smith, J., & Doe, A.)" value="${escapeHtml(item.authors || '')}" data-index="${index}" data-field="authors">
+            <input type="text" class="form-input small" placeholder="Year" value="${escapeHtml(item.year || '')}" data-index="${index}" data-field="year">
+            <input type="text" class="form-input" placeholder="Publication Title" value="${escapeHtml(item.title || '')}" data-index="${index}" data-field="title">
+            <input type="text" class="form-input" placeholder="Journal/Conference Name" value="${escapeHtml(item.journal || '')}" data-index="${index}" data-field="journal">
+            <input type="text" class="form-input" placeholder="Details (e.g., 45(3), 234-256)" value="${escapeHtml(item.details || '')}" data-index="${index}" data-field="details">
             ${publicationItems.length > 1 ? `<button class="remove-btn" onclick="removePublication(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -496,10 +496,10 @@ function renderGrantItems() {
         const div = document.createElement('div');
         div.className = 'education-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Grant Title (e.g., NIH R01)" value="${item.title || ''}" data-index="${index}" data-field="title">
-            <input type="text" class="form-input" placeholder="Role (e.g., Principal Investigator)" value="${item.role || ''}" data-index="${index}" data-field="role">
-            <input type="text" class="form-input" placeholder="Amount (e.g., $500,000)" value="${item.amount || ''}" data-index="${index}" data-field="amount">
-            <input type="text" class="form-input" placeholder="Years (e.g., 2023-2028)" value="${item.years || ''}" data-index="${index}" data-field="years">
+            <input type="text" class="form-input" placeholder="Grant Title (e.g., NIH R01)" value="${escapeHtml(item.title || '')}" data-index="${index}" data-field="title">
+            <input type="text" class="form-input" placeholder="Role (e.g., Principal Investigator)" value="${escapeHtml(item.role || '')}" data-index="${index}" data-field="role">
+            <input type="text" class="form-input" placeholder="Amount (e.g., $500,000)" value="${escapeHtml(item.amount || '')}" data-index="${index}" data-field="amount">
+            <input type="text" class="form-input" placeholder="Years (e.g., 2023-2028)" value="${escapeHtml(item.years || '')}" data-index="${index}" data-field="years">
             ${grantItems.length > 1 ? `<button class="remove-btn" onclick="removeGrant(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -542,9 +542,9 @@ function renderTeachingItems() {
         const div = document.createElement('div');
         div.className = 'education-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Course(s) Taught" value="${item.courses || ''}" data-index="${index}" data-field="courses">
-            <input type="text" class="form-input" placeholder="Institution" value="${item.institution || ''}" data-index="${index}" data-field="institution">
-            <input type="text" class="form-input" placeholder="Years" value="${item.years || ''}" data-index="${index}" data-field="years">
+            <input type="text" class="form-input" placeholder="Course(s) Taught" value="${escapeHtml(item.courses || '')}" data-index="${index}" data-field="courses">
+            <input type="text" class="form-input" placeholder="Institution" value="${escapeHtml(item.institution || '')}" data-index="${index}" data-field="institution">
+            <input type="text" class="form-input" placeholder="Years" value="${escapeHtml(item.years || '')}" data-index="${index}" data-field="years">
             ${teachingItems.length > 1 ? `<button class="remove-btn" onclick="removeTeaching(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -589,11 +589,11 @@ function renderReferenceItems() {
         const div = document.createElement('div');
         div.className = 'experience-item';
         div.innerHTML = `
-            <input type="text" class="form-input" placeholder="Name (e.g., Dr. Jane Smith)" value="${item.name || ''}" data-index="${index}" data-field="name">
-            <input type="text" class="form-input" placeholder="Title (e.g., Professor of Psychology)" value="${item.title || ''}" data-index="${index}" data-field="title">
-            <input type="text" class="form-input" placeholder="Institution" value="${item.institution || ''}" data-index="${index}" data-field="institution">
-            <input type="email" class="form-input" placeholder="Email" value="${item.email || ''}" data-index="${index}" data-field="email">
-            <input type="tel" class="form-input" placeholder="Phone" value="${item.phone || ''}" data-index="${index}" data-field="phone">
+            <input type="text" class="form-input" placeholder="Name (e.g., Dr. Jane Smith)" value="${escapeHtml(item.name || '')}" data-index="${index}" data-field="name">
+            <input type="text" class="form-input" placeholder="Title (e.g., Professor of Psychology)" value="${escapeHtml(item.title || '')}" data-index="${index}" data-field="title">
+            <input type="text" class="form-input" placeholder="Institution" value="${escapeHtml(item.institution || '')}" data-index="${index}" data-field="institution">
+            <input type="email" class="form-input" placeholder="Email" value="${escapeHtml(item.email || '')}" data-index="${index}" data-field="email">
+            <input type="tel" class="form-input" placeholder="Phone" value="${escapeHtml(item.phone || '')}" data-index="${index}" data-field="phone">
             ${referenceItems.length > 1 ? `<button class="remove-btn" onclick="removeReference(${index})">Remove</button>` : ''}
         `;
         container.appendChild(div);
@@ -766,17 +766,17 @@ function updatePreview() {
 
             let html = '<div class="entry-header">';
             html += '<div class="entry-title-line">';
-            html += `<div class="entry-title">${item.job_title || ''}</div>`;
-            html += `<div class="entry-date">${item.start_date || ''} ${item.end_date ? '- ' + item.end_date : ''}</div>`;
+            html += `<div class="entry-title">${escapeHtml(item.job_title || '')}</div>`;
+            html += `<div class="entry-date">${escapeHtml(item.start_date || '')} ${item.end_date ? '- ' + escapeHtml(item.end_date) : ''}</div>`;
             html += '</div>';
-            html += `<div class="entry-company">${item.company_name || ''}${item.location ? ', ' + item.location : ''}</div>`;
+            html += `<div class="entry-company">${escapeHtml(item.company_name || '')}${item.location ? ', ' + escapeHtml(item.location) : ''}</div>`;
             html += '</div>';
 
             if (item.description) {
                 html += '<div class="entry-description"><ul>';
                 const bullets = item.description.split('\n').filter(line => line.trim());
                 bullets.forEach(bullet => {
-                    html += `<li>${bullet}</li>`;
+                    html += `<li>${escapeHtml(bullet)}</li>`;
                 });
                 html += '</ul></div>';
             }
@@ -798,10 +798,10 @@ function updatePreview() {
 
             let html = '<div class="entry-header">';
             html += '<div class="entry-title-line">';
-            html += `<div class="entry-title">${item.degree || ''}</div>`;
-            html += `<div class="entry-date">${item.start_date || ''} ${item.end_date ? '- ' + item.end_date : ''}</div>`;
+            html += `<div class="entry-title">${escapeHtml(item.degree || '')}</div>`;
+            html += `<div class="entry-date">${escapeHtml(item.start_date || '')} ${item.end_date ? '- ' + escapeHtml(item.end_date) : ''}</div>`;
             html += '</div>';
-            html += `<div class="entry-company">${item.institution || ''}${item.location ? ', ' + item.location : ''}</div>`;
+            html += `<div class="entry-company">${escapeHtml(item.institution || '')}${item.location ? ', ' + escapeHtml(item.location) : ''}</div>`;
             html += '</div>';
 
             entryDiv.innerHTML = html;
@@ -835,7 +835,7 @@ function updatePreview() {
             categoryDiv.className = 'skill-category';
             categoryDiv.innerHTML = `
                 <div class="skill-category-title">Skills</div>
-                <div class="skill-items">${skillArray.join(', ')}</div>
+                <div class="skill-items">${escapeHtml(skillArray.join(', '))}</div>
             `;
             skillsContainer.appendChild(categoryDiv);
         } else if (templateName === 'professional') {
@@ -847,7 +847,7 @@ function updatePreview() {
             rowDiv.className = 'skill-row';
             rowDiv.innerHTML = `
                 <span class="skill-label">Skills:</span>
-                <span class="skill-items">${skillArray.join(', ')}</span>
+                <span class="skill-items">${escapeHtml(skillArray.join(', '))}</span>
             `;
             skillsContainer.appendChild(rowDiv);
         }

@@ -296,12 +296,12 @@ if (!$resumeData) {
             'skills' => $resumeData['skills'] ?? null,
             'certifications' => $resumeData['certifications'] ?? null,
             'affiliations' => $resumeData['affiliations'] ?? null
-        ]); ?>;
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     </script>
     <script src="js/navigation-fix.js"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=3"></script>
     <script src="js/app.js?v=5"></script>
-    <script src="js/editor-professional.js?v=10"></script>
+    <script src="js/editor-professional.js?v=11"></script>
 </body>
 </html>

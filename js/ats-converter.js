@@ -367,7 +367,7 @@ function addActivityLog(message, type = 'active') {
 
     activityItem.innerHTML = `
         <i class="fa-solid ${icon}"></i>
-        <span>${message}</span>
+        <span>${escapeHtml(message)}</span>
     `;
 
     activityLog.appendChild(activityItem);
@@ -636,12 +636,12 @@ function updateExperience(iframeDoc, experience) {
         entry.innerHTML = `
             <div class="entry-header">
                 <div class="entry-title-line">
-                    <div class="entry-title">${item.jobTitle || ''}</div>
-                    <div class="entry-date">${item.dates || ''}</div>
+                    <div class="entry-title">${escapeHtml(item.jobTitle || '')}</div>
+                    <div class="entry-date">${escapeHtml(item.dates || '')}</div>
                 </div>
-                <div class="entry-company">${item.company || ''}</div>
+                <div class="entry-company">${escapeHtml(item.company || '')}</div>
             </div>
-            ${item.description ? `<div class="entry-description">${item.description}</div>` : ''}
+            ${item.description ? `<div class="entry-description">${escapeHtml(item.description)}</div>` : ''}
         `;
         container.appendChild(entry);
     });
@@ -658,12 +658,12 @@ function updateEducation(iframeDoc, education) {
         entry.innerHTML = `
             <div class="entry-header">
                 <div class="entry-title-line">
-                    <div class="entry-title">${item.degree || ''}</div>
-                    <div class="entry-date">${item.year || ''}</div>
+                    <div class="entry-title">${escapeHtml(item.degree || '')}</div>
+                    <div class="entry-date">${escapeHtml(item.year || '')}</div>
                 </div>
-                <div class="entry-company">${item.institution || ''}</div>
+                <div class="entry-company">${escapeHtml(item.institution || '')}</div>
             </div>
-            ${item.details ? `<div class="entry-description">${item.details}</div>` : ''}
+            ${item.details ? `<div class="entry-description">${escapeHtml(item.details)}</div>` : ''}
         `;
         container.appendChild(entry);
     });
@@ -687,10 +687,10 @@ function updateCertifications(iframeDoc, certifications) {
         entry.innerHTML = `
             <div class="entry-header">
                 <div class="entry-title-line">
-                    <div class="entry-title">${cert.name || ''}</div>
-                    <div class="entry-date">${cert.year || ''}</div>
+                    <div class="entry-title">${escapeHtml(cert.name || '')}</div>
+                    <div class="entry-date">${escapeHtml(cert.year || '')}</div>
                 </div>
-                <div class="entry-company">${cert.issuer || ''}</div>
+                <div class="entry-company">${escapeHtml(cert.issuer || '')}</div>
             </div>
         `;
         container.appendChild(entry);
@@ -718,7 +718,7 @@ function updateAcademicFields(iframeDoc, resumeState) {
         resumeState.publications.forEach(pub => {
             const entry = iframeDoc.createElement('div');
             entry.className = 'entry';
-            entry.innerHTML = `<p>${pub}</p>`;
+            entry.innerHTML = `<p>${escapeHtml(pub)}</p>`;
             pubContainer.appendChild(entry);
         });
     }

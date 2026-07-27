@@ -227,13 +227,14 @@ if (!$resumeData) {
             'experience' => $resumeData['experience'] ?? null,
             'education' => $resumeData['education'] ?? null,
             'skills' => $resumeData['skills'] ?? null
-        ]); ?>;
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
         const userId = <?php echo $user['id']; ?>;
     </script>
     <script src="config/gemini-config.php"></script>
     <script src="js/navigation-fix.js"></script>
+    <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
-    <script src="js/ai-editor.js?v=3"></script>
+    <script src="js/ai-editor.js?v=4"></script>
 </body>
 </html>

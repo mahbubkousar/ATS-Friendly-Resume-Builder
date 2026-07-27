@@ -276,7 +276,7 @@ if (!$resumeData) {
         <!-- Center: Resume Preview -->
         <main class="resume-preview">
             <div class="template-header">
-                <span class="template-label">Template: <span id="currentTemplateName"><?php echo ucfirst($templateName); ?></span></span>
+                <span class="template-label">Template: <span id="currentTemplateName"><?php echo htmlspecialchars(ucfirst($templateName ?? '')); ?></span></span>
                 <button class="change-template-btn" id="changeTemplateBtn">Change Template</button>
             </div>
 
@@ -363,11 +363,11 @@ if (!$resumeData) {
             'personal_details' => $personalDetails,
             'summary_text' => $resumeData['summary_text'] ?? '',
             'status' => $resumeData['status'] ?? 'draft'
-        ]); ?>;
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/app.js?v=5"></script>
-    <script src="js/editor.js?v=23"></script>
+    <script src="js/editor.js?v=24"></script>
 </body>
 </html>

@@ -186,10 +186,10 @@ function updateExperienceList(iframeDoc) {
         const header = `
             <div class="entry-header">
                 <div class="entry-title-line">
-                    <div class="entry-title">${item.position || ''}</div>
-                    <div class="entry-date">${item.startDate || ''} - ${item.endDate || ''}</div>
+                    <div class="entry-title">${escapeHtml(item.position || '')}</div>
+                    <div class="entry-date">${escapeHtml(item.startDate || '')} - ${escapeHtml(item.endDate || '')}</div>
                 </div>
-                <div class="entry-company">${item.company || ''}${item.location ? ', ' + item.location : ''}</div>
+                <div class="entry-company">${escapeHtml(item.company || '')}${item.location ? ', ' + escapeHtml(item.location) : ''}</div>
             </div>
         `;
 
@@ -199,7 +199,7 @@ function updateExperienceList(iframeDoc) {
             if (points.length > 0) {
                 description = '<div class="entry-description"><ul>';
                 points.forEach(point => {
-                    description += `<li>${point.trim()}</li>`;
+                    description += `<li>${escapeHtml(point.trim())}</li>`;
                 });
                 description += '</ul></div>';
             }
@@ -222,10 +222,10 @@ function updateEducationList(iframeDoc) {
         entry.innerHTML = `
             <div class="entry-header">
                 <div class="entry-title-line">
-                    <div class="entry-title">${item.degree || ''}</div>
-                    <div class="entry-date">${item.startDate || ''} - ${item.endDate || ''}</div>
+                    <div class="entry-title">${escapeHtml(item.degree || '')}</div>
+                    <div class="entry-date">${escapeHtml(item.startDate || '')} - ${escapeHtml(item.endDate || '')}</div>
                 </div>
-                <div class="entry-company">${item.institution || ''}${item.location ? ', ' + item.location : ''}</div>
+                <div class="entry-company">${escapeHtml(item.institution || '')}${item.location ? ', ' + escapeHtml(item.location) : ''}</div>
             </div>
         `;
 
@@ -276,10 +276,10 @@ function updateCertificationsList(iframeDoc) {
             entry.innerHTML = `
                 <div class="entry-header">
                     <div class="entry-title-line">
-                        <div class="entry-title">${item.name || ''}</div>
-                        <div class="entry-date">${item.year || ''}</div>
+                        <div class="entry-title">${escapeHtml(item.name || '')}</div>
+                        <div class="entry-date">${escapeHtml(item.year || '')}</div>
                     </div>
-                    ${item.issuer ? `<div class="entry-company">${item.issuer}</div>` : ''}
+                    ${item.issuer ? `<div class="entry-company">${escapeHtml(item.issuer)}</div>` : ''}
                 </div>
             `;
 
@@ -307,7 +307,7 @@ function updateAffiliations(iframeDoc) {
             lines.forEach(line => {
                 
                 const cleanLine = line.replace(/^[•\-\*]\s*/, '');
-                container.innerHTML += `<li>${cleanLine}</li>`;
+                container.innerHTML += `<li>${escapeHtml(cleanLine)}</li>`;
             });
             container.innerHTML += '</ul>';
         }
@@ -865,7 +865,7 @@ function displaySuggestions(improvements, keywordsFound, keywordsMissing) {
     if (keywordsFound && keywordsFound.length > 0) {
         html += '<div class="suggestion-box success-box"><h4><i class="fa-solid fa-check-circle"></i> Keywords Found</h4><div class="keywords-list">';
         keywordsFound.forEach(keyword => {
-            html += `<span class="keyword-badge found">${keyword}</span>`;
+            html += `<span class="keyword-badge found">${escapeHtml(keyword)}</span>`;
         });
         html += '</div></div>';
     }
@@ -873,7 +873,7 @@ function displaySuggestions(improvements, keywordsFound, keywordsMissing) {
     if (keywordsMissing && keywordsMissing.length > 0) {
         html += '<div class="suggestion-box warning-box"><h4><i class="fa-solid fa-exclamation-triangle"></i> Missing Keywords</h4><div class="keywords-list">';
         keywordsMissing.forEach(keyword => {
-            html += `<span class="keyword-badge missing">${keyword}</span>`;
+            html += `<span class="keyword-badge missing">${escapeHtml(keyword)}</span>`;
         });
         html += '</div></div>';
     }
@@ -881,7 +881,7 @@ function displaySuggestions(improvements, keywordsFound, keywordsMissing) {
     if (improvements && improvements.length > 0) {
         html += '<div class="suggestion-box info-box"><h4><i class="fa-solid fa-lightbulb"></i> Improvements</h4><ul class="suggestions-list">';
         improvements.forEach(item => {
-            html += `<li><strong>${item.category}:</strong> ${item.issue} - ${item.suggestion}</li>`;
+            html += `<li><strong>${escapeHtml(item.category || 'General')}:</strong> ${escapeHtml(item.issue || '')} - ${escapeHtml(item.suggestion || '')}</li>`;
         });
         html += '</ul></div>';
     }

@@ -1015,9 +1015,10 @@ $resumeCount = count($resumes);
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/app.js?v=14"></script>
-    <script src="js/dashboard.js?v=19"></script>
+    <script src="js/dashboard.js?v=20"></script>
     <script src="js/profile-manager.js?v=14"></script>
     <script src="js/application-tracker.js?v=3"></script>
     <script src="js/timeline-handler.js?v=1"></script>

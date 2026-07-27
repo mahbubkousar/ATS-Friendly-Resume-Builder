@@ -615,12 +615,12 @@ function updateExperienceList(iframeDoc) {
             entry.innerHTML = `
                 <div class="entry-header">
                     <div class="entry-title-line">
-                        <div class="entry-title">${item.jobTitle || ''}</div>
-                        <div class="entry-date">${item.dates || ''}</div>
+                        <div class="entry-title">${escapeHtml(item.jobTitle || '')}</div>
+                        <div class="entry-date">${escapeHtml(item.dates || '')}</div>
                     </div>
-                    <div class="entry-company">${item.company || ''}</div>
+                    <div class="entry-company">${escapeHtml(item.company || '')}</div>
                 </div>
-                ${item.description ? `<div class="entry-description">${item.description}</div>` : ''}
+                ${item.description ? `<div class="entry-description">${escapeHtml(item.description)}</div>` : ''}
             `;
             container.appendChild(entry);
         });
@@ -643,10 +643,10 @@ function updateEducationList(iframeDoc) {
             entry.innerHTML = `
                 <div class="entry-header">
                     <div class="entry-title-line">
-                        <div class="entry-title">${item.degree || ''}</div>
-                        <div class="entry-date">${item.dates || ''}</div>
+                        <div class="entry-title">${escapeHtml(item.degree || '')}</div>
+                        <div class="entry-date">${escapeHtml(item.dates || '')}</div>
                     </div>
-                    <div class="entry-company">${item.institution || ''}</div>
+                    <div class="entry-company">${escapeHtml(item.institution || '')}</div>
                 </div>
             `;
             container.appendChild(entry);
@@ -680,7 +680,7 @@ function updateCertifications(iframeDoc) {
         resumeState.certifications.forEach(cert => {
             const entry = iframeDoc.createElement('div');
             entry.className = 'entry';
-            entry.innerHTML = `<div class="entry-title">${cert.name || ''}</div>`;
+            entry.innerHTML = `<div class="entry-title">${escapeHtml(cert.name || '')}</div>`;
             container.appendChild(entry);
         });
     } else if (section) {

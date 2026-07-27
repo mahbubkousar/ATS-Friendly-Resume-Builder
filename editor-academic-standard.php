@@ -325,12 +325,12 @@ if (!$resumeData) {
             'grants' => $resumeData['grants'] ?? null,
             'teaching' => $resumeData['teaching'] ?? null,
             'memberships' => $resumeData['memberships'] ?? ''
-        ]); ?>;
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     </script>
     <script src="js/navigation-fix.js"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/app.js?v=5"></script>
-    <script src="js/editor-academic-standard.js?v=14"></script>
+    <script src="js/editor-academic-standard.js?v=15"></script>
 </body>
 </html>

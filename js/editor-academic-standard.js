@@ -218,10 +218,10 @@ function updateExperienceList(iframeDoc) {
             entry.className = 'experience-entry';
 
             const header = `
-                <div class="position-title">${item.position || ''}</div>
+                <div class="position-title">${escapeHtml(item.position || '')}</div>
                 <div class="employer-date">
-                    <span class="employer">${item.company || ''}${item.location ? ', ' + item.location : ''}</span>
-                    <span style="float: right;">${item.startDate || ''} - ${item.endDate || ''}</span>
+                    <span class="employer">${escapeHtml(item.company || '')}${item.location ? ', ' + escapeHtml(item.location) : ''}</span>
+                    <span style="float: right;">${escapeHtml(item.startDate || '')} - ${escapeHtml(item.endDate || '')}</span>
                 </div>
             `;
 
@@ -232,7 +232,7 @@ function updateExperienceList(iframeDoc) {
                     description = '<div class="description"><ul>';
                     points.forEach(point => {
                         const cleanPoint = point.trim().replace(/^[•\-\*]\s*/, '');
-                        description += `<li>${cleanPoint}</li>`;
+                        description += `<li>${escapeHtml(cleanPoint)}</li>`;
                     });
                     description += '</ul></div>';
                 }
@@ -272,9 +272,9 @@ function updateEducationList(iframeDoc) {
             entry.className = 'education-entry';
 
             entry.innerHTML = `
-                <div class="degree-line">${item.degree || ''}</div>
-                <div class="institution">${item.institution || ''}</div>
-                <div class="date-gpa">${item.startDate || ''} - ${item.endDate || ''}</div>
+                <div class="degree-line">${escapeHtml(item.degree || '')}</div>
+                <div class="institution">${escapeHtml(item.institution || '')}</div>
+                <div class="date-gpa">${escapeHtml(item.startDate || '')} - ${escapeHtml(item.endDate || '')}</div>
             `;
 
             container.appendChild(entry);
@@ -308,9 +308,9 @@ function updatePublications(iframeDoc) {
             const pub = iframeDoc.createElement('div');
             pub.className = 'publication';
             pub.innerHTML = `
-                ${item.authors || ''} <span class="publication-year">(${item.year || ''}).</span>
-                <span class="publication-title">${item.title || ''}</span>
-                <em>${item.journal || ''}</em>
+                ${escapeHtml(item.authors || '')} <span class="publication-year">(${escapeHtml(item.year || '')}).</span>
+                <span class="publication-title">${escapeHtml(item.title || '')}</span>
+                <em>${escapeHtml(item.journal || '')}</em>
             `;
             container.appendChild(pub);
         });
@@ -332,10 +332,10 @@ function updateGrants(iframeDoc) {
             const grant = iframeDoc.createElement('div');
             grant.className = 'grant-entry';
             grant.innerHTML = `
-                <div class="grant-title">${item.title || ''}</div>
+                <div class="grant-title">${escapeHtml(item.title || '')}</div>
                 <div class="grant-details">
-                    ${item.role || ''} (${item.year || ''})<br>
-                    ${item.amount ? 'Amount: ' + item.amount : ''}
+                    ${escapeHtml(item.role || '')} (${escapeHtml(item.year || '')})<br>
+                    ${item.amount ? 'Amount: ' + escapeHtml(item.amount) : ''}
                 </div>
             `;
             container.appendChild(grant);
@@ -358,7 +358,7 @@ function updateTeaching(iframeDoc) {
             const course = iframeDoc.createElement('div');
             course.className = 'course';
             course.innerHTML = `
-                <span class="course-title">${item.course || ''}</span> - ${item.term || ''}
+                <span class="course-title">${escapeHtml(item.course || '')}</span> - ${escapeHtml(item.term || '')}
             `;
             container.appendChild(course);
         });

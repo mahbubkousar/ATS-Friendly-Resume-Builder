@@ -96,7 +96,13 @@ $templateHTML = file_get_contents($templatePath);
             const linkedinEl = document.querySelector('[data-field="linkedin"]');
             if (linkedinEl && isValidValue(pd.linkedin)) {
                 linkedinEl.textContent = pd.linkedin;
-                linkedinEl.href = pd.linkedin;
+                const linkedinUrl = safeUrl(pd.linkedin);
+                if (linkedinUrl) {
+                    linkedinEl.href = linkedinUrl;
+                    linkedinEl.rel = 'noopener noreferrer';
+                } else {
+                    linkedinEl.removeAttribute('href');
+                }
                 console.log('Updated linkedin to:', pd.linkedin);
             }
 
@@ -202,11 +208,11 @@ $templateHTML = file_get_contents($templatePath);
         div.className = 'entry';
         div.innerHTML = `
             <div class="entry-header">
-                <div class="entry-title">${exp.title || ''}</div>
-                <div class="entry-date">${formatDate(exp.start_date)} - ${exp.end_date === 'Present' ? 'Present' : formatDate(exp.end_date)}</div>
+                <div class="entry-title">${escapeHtml(exp.title || '')}</div>
+                <div class="entry-date">${escapeHtml(formatDate(exp.start_date))} - ${escapeHtml(exp.end_date === 'Present' ? 'Present' : formatDate(exp.end_date))}</div>
             </div>
-            <div class="entry-company">${exp.company || ''}</div>
-            <div class="entry-description">${exp.description || ''}</div>
+            <div class="entry-company">${escapeHtml(exp.company || '')}</div>
+            <div class="entry-description">${escapeHtml(exp.description || '')}</div>
         `;
         return div;
     }
@@ -216,11 +222,11 @@ $templateHTML = file_get_contents($templatePath);
         div.className = 'entry';
         div.innerHTML = `
             <div class="entry-header">
-                <div class="entry-title">${edu.degree || ''} ${edu.field ? 'in ' + edu.field : ''}</div>
-                <div class="entry-date">${formatDate(edu.graduation_date)}</div>
+                <div class="entry-title">${escapeHtml(edu.degree || '')} ${edu.field ? 'in ' + escapeHtml(edu.field) : ''}</div>
+                <div class="entry-date">${escapeHtml(formatDate(edu.graduation_date))}</div>
             </div>
-            <div class="entry-company">${edu.institution || ''}</div>
-            ${edu.gpa ? `<div class="entry-description">GPA: ${edu.gpa}</div>` : ''}
+            <div class="entry-company">${escapeHtml(edu.institution || '')}</div>
+            ${edu.gpa ? `<div class="entry-description">GPA: ${escapeHtml(edu.gpa)}</div>` : ''}
         `;
         return div;
     }
@@ -229,10 +235,10 @@ $templateHTML = file_get_contents($templatePath);
         const div = document.createElement('div');
         div.className = 'entry';
         div.innerHTML = `
-            <div class="entry-title">${proj.name || ''}</div>
-            <div class="entry-description">${proj.description || ''}</div>
-            ${proj.technologies ? `<div class="entry-company">Technologies: ${proj.technologies}</div>` : ''}
-            ${proj.link ? `<div class="entry-company"><a href="${proj.link}" target="_blank">${proj.link}</a></div>` : ''}
+            <div class="entry-title">${escapeHtml(proj.name || '')}</div>
+            <div class="entry-description">${escapeHtml(proj.description || '')}</div>
+            ${proj.technologies ? `<div class="entry-company">Technologies: ${escapeHtml(proj.technologies)}</div>` : ''}
+            ${safeUrl(proj.link) ? `<div class="entry-company"><a href="${escapeHtml(safeUrl(proj.link))}" target="_blank" rel="noopener noreferrer">${escapeHtml(proj.link)}</a></div>` : ''}
         `;
         return div;
     }
@@ -242,8 +248,8 @@ $templateHTML = file_get_contents($templatePath);
         div.className = 'entry';
         div.innerHTML = `
             <div class="entry-description">
-                ${pub.authors || ''}. "${pub.title || ''}." <em>${pub.venue || ''}</em>, ${pub.year || ''}.
-                ${pub.link ? `<a href="${pub.link}" target="_blank">Link</a>` : ''}
+                ${escapeHtml(pub.authors || '')}. "${escapeHtml(pub.title || '')}." <em>${escapeHtml(pub.venue || '')}</em>, ${escapeHtml(pub.year || '')}.
+                ${safeUrl(pub.link) ? `<a href="${escapeHtml(safeUrl(pub.link))}" target="_blank" rel="noopener noreferrer">Link</a>` : ''}
             </div>
         `;
         return div;
@@ -253,10 +259,10 @@ $templateHTML = file_get_contents($templatePath);
         const div = document.createElement('div');
         div.className = 'entry';
         div.innerHTML = `
-            <div class="entry-title">${ref.name || ''}</div>
-            <div class="entry-company">${ref.title || ''}, ${ref.institution || ''}</div>
+            <div class="entry-title">${escapeHtml(ref.name || '')}</div>
+            <div class="entry-company">${escapeHtml(ref.title || '')}, ${escapeHtml(ref.institution || '')}</div>
             <div class="entry-description">
-                ${ref.email || ''} ${ref.phone ? '| ' + ref.phone : ''}
+                ${escapeHtml(ref.email || '')} ${ref.phone ? '| ' + escapeHtml(ref.phone) : ''}
             </div>
         `;
         return div;
@@ -272,6 +278,22 @@ $templateHTML = file_get_contents($templatePath);
             return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
         }
         return dateStr;
+    }
+
+    function escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value == null ? '' : String(value);
+        return div.innerHTML;
+    }
+
+    function safeUrl(value) {
+        if (!value) return '';
+        try {
+            const url = new URL(String(value), window.location.origin);
+            return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : '';
+        } catch (error) {
+            return '';
+        }
     }
 
     console.log('Preview handler loaded for template: <?php echo $templateName; ?>');

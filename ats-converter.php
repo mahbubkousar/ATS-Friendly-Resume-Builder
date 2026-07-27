@@ -230,6 +230,7 @@ $user = getCurrentUser();
         const userId = <?php echo $user['id']; ?>;
     </script>
     <script src="js/navigation-fix.js"></script>
+    <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/ats-converter.js?v=<?php echo time(); ?>"></script>
 </body>

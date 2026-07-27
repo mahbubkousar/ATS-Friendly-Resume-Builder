@@ -505,9 +505,9 @@ $templateHTML = file_get_contents($templatePath);
     </div>
 
     <script>
-        const resumeToken = '<?php echo $token; ?>';
-        const resumeId = <?php echo $resumeId; ?>;
-        const templateName = '<?php echo $templateName; ?>';
+        const resumeToken = <?php echo json_encode($token, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        const resumeId = <?php echo json_encode((int)$resumeId); ?>;
+        const templateName = <?php echo json_encode($templateName, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
         // Track download
         function handleDownload() {
@@ -547,11 +547,11 @@ $templateHTML = file_get_contents($templatePath);
             const iframe = document.getElementById('resumeFrame');
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-            const personalDetails = <?php echo json_encode($personalDetails); ?>;
-            const summary = <?php echo json_encode($summaryText); ?>;
-            const experience = <?php echo json_encode($experience); ?>;
-            const education = <?php echo json_encode($education); ?>;
-            const skills = <?php echo json_encode($skills); ?>;
+            const personalDetails = <?php echo json_encode($personalDetails, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+            const summary = <?php echo json_encode($summaryText, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+            const experience = <?php echo json_encode($experience, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+            const education = <?php echo json_encode($education, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+            const skills = <?php echo json_encode($skills, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
             console.log('Populating resume with data:', { personalDetails, summary, experience, education, skills });
 
@@ -567,6 +567,7 @@ $templateHTML = file_get_contents($templatePath);
                 if (!value) return;
 
                 const dataField = fieldMapping[key] || key;
+                if (!/^[a-zA-Z][\w-]*$/.test(dataField)) return;
                 const elements = iframeDoc.querySelectorAll(`[data-field="${dataField}"]`);
                 elements.forEach(el => {
                     el.textContent = value;
@@ -600,7 +601,7 @@ $templateHTML = file_get_contents($templatePath);
 
             if (!experience || experience.length === 0) return;
 
-            container.innerHTML = '';
+            container.replaceChildren();
             experience.forEach(item => {
                 const entry = iframeDoc.createElement('div');
                 entry.className = 'entry';
@@ -620,29 +621,35 @@ $templateHTML = file_get_contents($templatePath);
                     dateStr = `${item.start_date} - ${item.end_date}`;
                 }
 
-                const header = `
-                    <div class="entry-header">
-                        <div class="entry-title-line">
-                            <div class="entry-title">${position}</div>
-                            <div class="entry-date">${dateStr}</div>
-                        </div>
-                        <div class="entry-company">${company}${location ? ', ' + location : ''}</div>
-                    </div>
-                `;
+                const header = iframeDoc.createElement('div');
+                header.className = 'entry-header';
+                const titleLine = iframeDoc.createElement('div');
+                titleLine.className = 'entry-title-line';
+                titleLine.appendChild(createTextElement(iframeDoc, 'div', 'entry-title', position));
+                titleLine.appendChild(createTextElement(iframeDoc, 'div', 'entry-date', dateStr));
+                header.appendChild(titleLine);
+                header.appendChild(createTextElement(
+                    iframeDoc,
+                    'div',
+                    'entry-company',
+                    company + (location ? ', ' + location : '')
+                ));
+                entry.appendChild(header);
 
-                let description = '';
                 if (item.description) {
                     const points = item.description.split('\n').filter(p => p.trim());
                     if (points.length > 0) {
-                        description = '<div class="entry-description"><ul>';
+                        const description = iframeDoc.createElement('div');
+                        description.className = 'entry-description';
+                        const list = iframeDoc.createElement('ul');
                         points.forEach(point => {
-                            description += `<li>${point.trim()}</li>`;
+                            list.appendChild(createTextElement(iframeDoc, 'li', '', point.trim()));
                         });
-                        description += '</ul></div>';
+                        description.appendChild(list);
+                        entry.appendChild(description);
                     }
                 }
 
-                entry.innerHTML = header + description;
                 container.appendChild(entry);
             });
         }
@@ -653,7 +660,7 @@ $templateHTML = file_get_contents($templatePath);
 
             if (!education || education.length === 0) return;
 
-            container.innerHTML = '';
+            container.replaceChildren();
             education.forEach(item => {
                 const entry = iframeDoc.createElement('div');
                 entry.className = 'entry';
@@ -672,15 +679,20 @@ $templateHTML = file_get_contents($templatePath);
                     dateStr = `${item.start_date} - ${item.end_date}`;
                 }
 
-                entry.innerHTML = `
-                    <div class="entry-header">
-                        <div class="entry-title-line">
-                            <div class="entry-title">${degree}</div>
-                            <div class="entry-date">${dateStr}</div>
-                        </div>
-                        <div class="entry-company">${institution}${location ? ', ' + location : ''}</div>
-                    </div>
-                `;
+                const header = iframeDoc.createElement('div');
+                header.className = 'entry-header';
+                const titleLine = iframeDoc.createElement('div');
+                titleLine.className = 'entry-title-line';
+                titleLine.appendChild(createTextElement(iframeDoc, 'div', 'entry-title', degree));
+                titleLine.appendChild(createTextElement(iframeDoc, 'div', 'entry-date', dateStr));
+                header.appendChild(titleLine);
+                header.appendChild(createTextElement(
+                    iframeDoc,
+                    'div',
+                    'entry-company',
+                    institution + (location ? ', ' + location : '')
+                ));
+                entry.appendChild(header);
 
                 container.appendChild(entry);
             });
@@ -690,7 +702,7 @@ $templateHTML = file_get_contents($templatePath);
             const skillsContainer = iframeDoc.querySelector('[data-field="skills"]');
             if (!skillsContainer) return;
 
-            skillsContainer.innerHTML = '';
+            skillsContainer.replaceChildren();
 
             // Handle array of skill categories (from modern editor)
             if (Array.isArray(skills) && skills.length > 0) {
@@ -702,10 +714,18 @@ $templateHTML = file_get_contents($templatePath);
                         if (skillCategory.category && skillCategory.items && skillCategory.items.length > 0) {
                             const skillCard = iframeDoc.createElement('div');
                             skillCard.className = 'skill-category';
-                            skillCard.innerHTML = `
-                                <div class="skill-category-title">${skillCategory.category}</div>
-                                <div class="skill-items">${skillCategory.items.join(', ')}</div>
-                            `;
+                            skillCard.appendChild(createTextElement(
+                                iframeDoc,
+                                'div',
+                                'skill-category-title',
+                                skillCategory.category
+                            ));
+                            skillCard.appendChild(createTextElement(
+                                iframeDoc,
+                                'div',
+                                'skill-items',
+                                skillCategory.items.join(', ')
+                            ));
                             skillsContainer.appendChild(skillCard);
                         }
                     });
@@ -722,6 +742,13 @@ $templateHTML = file_get_contents($templatePath);
                 // Comma-separated string
                 skillsContainer.textContent = skills;
             }
+        }
+
+        function createTextElement(doc, tagName, className, value) {
+            const element = doc.createElement(tagName);
+            if (className) element.className = className;
+            element.textContent = value == null ? '' : String(value);
+            return element;
         }
 
         function resizeIframe() {

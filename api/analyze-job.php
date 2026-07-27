@@ -1,7 +1,7 @@
 <?php
 
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 
 try {
     require_once '../config/session.php';
@@ -15,14 +15,9 @@ try {
 }
 
 
-if (!isLoggedIn()) {
-    echo json_encode(['success' => false, 'error' => 'User not authenticated']);
-    exit;
-}
+requireApiUser('error');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    rejectAiRequest('Method not allowed.', 405);
-}
+requireApiMethod('POST', 'error');
 
 $input = readLimitedJsonRequest();
 $jobDescription = isset($input['jobDescription']) && is_string($input['jobDescription'])

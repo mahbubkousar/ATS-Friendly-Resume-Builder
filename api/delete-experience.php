@@ -1,18 +1,15 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../includes/request-validation.php';
 
-requireLogin();
+requireApiUser();
 
 $user = getCurrentUser();
 $userId = $user['id'];
 
-if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-    exit();
-}
+requireApiMethod('DELETE', 'message');
 
 try {
     $experienceId = positiveIntegerField($_GET, 'id', 'Experience ID');

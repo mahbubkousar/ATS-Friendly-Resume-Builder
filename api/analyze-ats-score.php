@@ -1,18 +1,14 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../config/gemini.php';
 require_once '../includes/upload-security.php';
 require_once '../includes/ai-security.php';
 
-requireLogin();
+requireApiUser();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-    exit();
-}
+requireApiMethod('POST', 'message');
 
 $user = getCurrentUser();
 $userId = $user['id'];

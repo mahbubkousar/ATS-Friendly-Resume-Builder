@@ -1,15 +1,11 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../includes/auth-rate-limit.php';
 require_once '../includes/request-validation.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-    exit();
-}
+requireApiMethod('POST', 'message');
 
 $retryAfter = consumeRegistrationRateLimit();
 if ($retryAfter > 0) {

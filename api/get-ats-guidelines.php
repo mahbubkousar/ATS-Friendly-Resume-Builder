@@ -5,7 +5,7 @@
  * These are the official standards/sources used for ATS score calculation
  */
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 
 try {
     require_once '../config/session.php';
@@ -16,11 +16,8 @@ try {
     exit;
 }
 
-// Check authentication
-if (!isLoggedIn()) {
-    echo json_encode(['success' => false, 'error' => 'User not authenticated']);
-    exit;
-}
+requireApiMethod('GET', 'error');
+requireApiUser('error');
 
 try {
     $guidelineDir = '../external_resources/';

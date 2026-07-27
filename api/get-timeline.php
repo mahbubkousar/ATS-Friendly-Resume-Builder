@@ -1,9 +1,10 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 
-requireLogin();
+requireApiUser();
+requireApiMethod('GET');
 
 $applicationId = $_GET['application_id'] ?? null;
 

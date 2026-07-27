@@ -1,17 +1,14 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 
-requireLogin();
+requireApiUser();
 
 $user = getCurrentUser();
 $userId = $user['id'];
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-    exit();
-}
+requireApiMethod('GET', 'message');
 
 $resumeId = $_GET['id'] ?? null;
 

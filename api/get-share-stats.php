@@ -1,10 +1,11 @@
 <?php
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../config/app.php';
 
-requireLogin();
+requireApiUser();
+requireApiMethod('GET');
 
 $resumeId = $_GET['resume_id'] ?? null;
 

@@ -5,7 +5,7 @@
 ini_set('max_execution_time', '75');
 ini_set('memory_limit', '128M');
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/../includes/api-bootstrap.php';
 
 try {
     require_once '../config/session.php';
@@ -19,17 +19,8 @@ try {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-    exit;
-}
-
-if (!isLoggedIn()) {
-    error_log("User not authenticated");
-    echo json_encode(['success' => false, 'error' => 'User not authenticated']);
-    exit;
-}
+requireApiMethod('POST', 'error');
+requireApiUser('error');
 
 
 if (!isset($_FILES['resume'])) {

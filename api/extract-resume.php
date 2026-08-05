@@ -12,6 +12,7 @@ try {
     require_once '../config/gemini.php';
     require_once '../includes/upload-security.php';
     require_once '../includes/ai-security.php';
+    require_once '../includes/ai-consent.php';
 } catch (Throwable $e) {
     error_log("Configuration error: " . $e->getMessage());
     http_response_code(500);
@@ -21,6 +22,7 @@ try {
 
 requireApiMethod('POST', 'error');
 requireApiUser('error');
+requireAiProcessingConsent((int) getCurrentUserId());
 
 
 if (!isset($_FILES['resume'])) {
@@ -68,85 +70,35 @@ try {
 
 
 function extractResumeDataFromFile($base64Content, $mimeType) {
-    $apiKey = GEMINI_API_KEY;
-
-    if ($apiKey === '' || $apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
-        throw new Exception('Gemini API key not configured');
-    }
-
     $prompt = "Extract all information from this resume document and return ONLY valid JSON in this exact format:\n\n";
     $prompt .= '{"personal_details":{"fullName":"","email":"","phone":"","location":"","linkedin":"","professionalTitle":""},"summary_text":"","experience":[{"jobTitle":"","company":"","dates":"","description":""}],"education":[{"degree":"","institution":"","year":"","details":""}],"skills":"","certifications":[{"name":"","issuer":"","year":""}],"languages":""}\n\n';
     $prompt .= "Extract all text from the resume and fill in the JSON fields. Return ONLY the JSON, no markdown, no explanations.";
 
-    $url = GEMINI_API_ENDPOINT . '?key=' . $apiKey;
-
-    $data = [
-        'contents' => [
+    $response = callGeminiParts(
+        [
             [
-                'parts' => [
-                    [
-                        'inline_data' => [
-                            'mime_type' => $mimeType,
-                            'data' => $base64Content
-                        ]
-                    ],
-                    ['text' => $prompt]
-                ]
-            ]
+                'inline_data' => [
+                    'mime_type' => $mimeType,
+                    'data' => $base64Content,
+                ],
+            ],
+            ['text' => $prompt],
         ],
-        'generationConfig' => [
+        [
             'temperature' => 0.1,
             'maxOutputTokens' => 4096,
         ]
-    ];
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, GEMINI_CONNECT_TIMEOUT);
-    curl_setopt($ch, CURLOPT_TIMEOUT, GEMINI_REQUEST_TIMEOUT);
-
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError = curl_error($ch);
-    curl_close($ch);
-
-    if ($curlError) {
-        error_log('Gemini resume extraction transport error: ' . $curlError);
-        throw new Exception('AI transport failure');
+    );
+    if (!$response['success']) {
+        throw new Exception($response['error']);
     }
 
-    if ($httpCode !== 200) {
-        $result = json_decode($response, true);
-        $errorMsg = 'API error: ' . $httpCode;
-        if (isset($result['error']['message'])) {
-            $errorMsg .= ' - ' . $result['error']['message'];
-        }
-        error_log("Gemini Vision API Error: " . $errorMsg);
-        throw new Exception('AI request failure');
-    }
-
-    $result = json_decode($response, true);
-
-    if (!isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-        throw new Exception('Unexpected API response format');
-    }
-
-    $responseText = $result['candidates'][0]['content']['parts'][0]['text'];
-    
-    if (preg_match('/\{[\s\S]*\}/s', $responseText, $matches)) {
-        $jsonText = $matches[0];
-    } else {
-        $jsonText = $responseText;
-    }
-
-    
-    $jsonText = preg_replace('/^```json\s*/s', '', $jsonText);
-    $jsonText = preg_replace('/\s*```$/s', '', $jsonText);
-
-    $data = json_decode($jsonText, true);
+    $data = decodeGeminiJsonObject($response['text'], [
+        'personal_details' => 'object',
+        'summary_text' => 'string',
+        'experience' => 'list',
+        'education' => 'list',
+    ]);
 
     if (!$data) {
         error_log("Failed to parse resume extraction response as JSON");

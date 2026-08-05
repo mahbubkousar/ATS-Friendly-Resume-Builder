@@ -94,7 +94,7 @@
 | API | Purpose | Integration |
 |-----|---------|-------------|
 | **Google Gemini API** | AI resume generation & analysis | REST API via cURL |
-| Model: `gemini-2.0-flash-exp` | Natural language processing | JSON responses |
+| Environment-configured Gemini model | Natural language processing | Validated JSON responses |
 
 ### **AJAX & Communication**
 - **Fetch API**: Modern promise-based HTTP requests

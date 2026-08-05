@@ -343,7 +343,8 @@ A: Each template is separate HTML file, user selects template, appropriate edito
 
 2. **Import Database**:
    ```bash
-   mysql -u root -p < create_database.sql
+   mysql -u root -p resumesync_db < resumesync_db_structure.sql
+   mysql -u root -p resumesync_db < database_seed.sql
    ```
 
 3. **Configure Gemini API**:

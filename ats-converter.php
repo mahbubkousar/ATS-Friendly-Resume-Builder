@@ -20,6 +20,7 @@ $user = getCurrentUser();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8'); ?>">
     <title>ATS Resume Converter - ResumeSync</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +29,7 @@ $user = getCurrentUser();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css?v=8">
     <link rel="stylesheet" href="css/ats-converter.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/ai-consent.css?v=1">
 </head>
 <body>
     <nav class="floating-nav">
@@ -231,6 +233,8 @@ $user = getCurrentUser();
     </script>
     <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/navigation-fix.js"></script>
+    <script src="js/shared/csrf.js?v=1"></script>
+    <script src="js/shared/ai-consent.js?v=1"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/ats-converter.js?v=<?php echo time(); ?>"></script>

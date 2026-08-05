@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('saveResumeBtn').addEventListener('click', saveResume);
 
     
-    document.getElementById('downloadBtn').addEventListener('click', downloadPDF);
+    document.getElementById('downloadBtn').addEventListener('click', EditorPreviewControls.print);
 
     
-    setupZoomControls();
+    EditorPreviewControls.setupZoom();
 });
 
 function loadTemplatePreview() {
@@ -910,35 +910,3 @@ async function saveResume() {
         saveBtn.disabled = false;
     }
 }
-
-async function downloadPDF() {
-    const downloadBtn = document.getElementById('downloadBtn');
-    const originalText = downloadBtn.textContent;
-
-    try {
-        const iframeDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
-        const iframeWindow = previewIframe.contentWindow;
-
-        
-        
-        
-        
-        
-        iframeWindow.print();
-
-        
-        
-        
-        
-
-    } catch (error) {
-        console.error('Print error:', error);
-        showNotificationModal('Error opening print dialog. Please try again.', 'error');
-    }
-}
-
-function setupZoomControls() {
-    
-}
-
-// Debounce function moved to shared/utils.js

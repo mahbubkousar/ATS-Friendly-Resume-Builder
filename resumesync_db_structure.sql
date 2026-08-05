@@ -480,6 +480,8 @@ CREATE TABLE `users` (
   `profile_visibility` enum('public','private','contacts') DEFAULT 'private',
   `dark_mode` tinyint(1) DEFAULT 0,
   `two_factor_enabled` tinyint(1) DEFAULT 0,
+  `ai_processing_consent_at` timestamp NULL DEFAULT NULL,
+  `ai_consent_version` varchar(20) DEFAULT NULL,
   `email_verified` tinyint(1) DEFAULT 0,
   `verification_token` varchar(255) DEFAULT NULL,
   `reset_token` varchar(255) DEFAULT NULL,
@@ -1027,6 +1029,31 @@ ALTER TABLE `user_languages`
 --
 ALTER TABLE `user_skills`
   ADD CONSTRAINT `user_skills_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Security counter tables introduced by migrations 001 and 002
+--
+CREATE TABLE IF NOT EXISTS `ai_rate_limits` (
+  `user_id` int(11) NOT NULL,
+  `action_name` varchar(64) NOT NULL,
+  `minute_window_start` int unsigned NOT NULL,
+  `minute_count` int unsigned NOT NULL DEFAULT 0,
+  `daily_window_start` int unsigned NOT NULL,
+  `daily_count` int unsigned NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`user_id`, `action_name`),
+  CONSTRAINT `ai_rate_limits_user_fk`
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `auth_rate_limits` (
+  `action_name` varchar(32) NOT NULL,
+  `limit_key` char(64) NOT NULL,
+  `window_start` int unsigned NOT NULL,
+  `attempt_count` int unsigned NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`action_name`, `limit_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DELIMITER $$
 --

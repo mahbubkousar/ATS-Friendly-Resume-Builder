@@ -17,6 +17,7 @@ requireLogin();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
     <link rel="stylesheet" href="css/styles.css?v=17">
     <link rel="stylesheet" href="css/score-checker.css?v=4">
+    <link rel="stylesheet" href="css/ai-consent.css?v=1">
 </head>
 <body>
     <nav class="floating-nav">
@@ -607,6 +608,7 @@ requireLogin();
 
     <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/shared/csrf.js?v=1"></script>
+    <script src="js/shared/ai-consent.js?v=1"></script>
     <script src="js/app.js"></script>
     <script src="js/score-checker.js?v=10"></script>
     <script>

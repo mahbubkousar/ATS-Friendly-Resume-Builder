@@ -81,7 +81,8 @@ AUTHENTICATION:
 
 DATABASE:
 - config/database.php → getDBConnection()
-- create_database.sql → Schema
+- resumesync_db_structure.sql → Canonical schema
+- database_seed.sql → Synthetic template seed data
 
 AI FEATURES:
 - config/gemini.php → callGeminiAPI()

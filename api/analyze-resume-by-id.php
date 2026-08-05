@@ -3,6 +3,8 @@ require_once __DIR__ . '/../includes/api-bootstrap.php';
 require_once '../config/database.php';
 require_once '../config/session.php';
 require_once '../config/gemini.php';
+require_once '../includes/ai-consent.php';
+require_once '../services/AtsAnalysisService.php';
 
 requireApiUser();
 
@@ -10,6 +12,7 @@ requireApiMethod('POST', 'message');
 
 $user = getCurrentUser();
 $userId = $user['id'];
+requireAiProcessingConsent((int) $userId);
 
 $resumeId = $_POST['resume_id'] ?? null;
 
@@ -82,7 +85,6 @@ $resumeText = buildResumeText($resumeData);
 
 $jobDescription = $_POST['job_description'] ?? '';
 
-require_once 'analyze-ats-score.php';
 $analysisResult = performATSAnalysis($resumeText, $jobDescription);
 
 if (!$analysisResult['success']) {

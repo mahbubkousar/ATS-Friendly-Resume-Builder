@@ -906,17 +906,21 @@ document.addEventListener('keydown', (e) => {
 
 
 async function markAsReadAndView(notificationId, applicationId) {
-    
-    try {
-        await fetch(appUrl('api/mark-notification-read.php'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ notification_id: notificationId })
-        });
-    } catch (error) {
-        console.error('Error marking notification as read:', error);
+    if (notificationId) {
+        try {
+            const response = await fetch(appUrl('api/mark-notification-read.php'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ notification_id: notificationId })
+            });
+            if (!response.ok) {
+                throw new Error('Unable to update notification');
+            }
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
     }
 
     

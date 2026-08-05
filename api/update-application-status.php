@@ -29,15 +29,18 @@ if (!$conn) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT status, job_title, company_name FROM job_applications WHERE application_id = ? AND user_id = ?");
+$conn->begin_transaction();
+
+try {
+$stmt = $conn->prepare("SELECT status, job_title, company_name FROM job_applications WHERE application_id = ? AND user_id = ? FOR UPDATE");
 $stmt->bind_param("ii", $applicationId, $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    echo json_encode(['success' => false, 'message' => 'Application not found or access denied']);
     $stmt->close();
-    exit();
+    $conn->rollback();
+    sendApiError('Application not found or access denied', 404);
 }
 
 $application = $result->fetch_assoc();
@@ -56,8 +59,12 @@ if ($stmt->execute()) {
         $eventTitle = "Status Updated: $newStatus";
         $eventDesc = "Application status changed from '$oldStatus' to '$newStatus'";
         $timelineStmt->bind_param("isss", $applicationId, $eventType, $eventTitle, $eventDesc);
-        $timelineStmt->execute();
+        if (!$timelineStmt->execute()) {
+            throw new RuntimeException('Unable to create status timeline.');
+        }
         $timelineStmt->close();
+    } else {
+        throw new RuntimeException('Unable to prepare status timeline.');
     }
 
     $activityStmt = $conn->prepare("INSERT INTO application_activity (application_id, activity_type, activity_description) VALUES (?, ?, ?)");
@@ -65,9 +72,15 @@ if ($stmt->execute()) {
         $activityType = 'status_changed';
         $activityDesc = "Status changed from '$oldStatus' to '$newStatus' for $jobTitle at $companyName";
         $activityStmt->bind_param("iss", $applicationId, $activityType, $activityDesc);
-        $activityStmt->execute();
+        if (!$activityStmt->execute()) {
+            throw new RuntimeException('Unable to create status activity.');
+        }
         $activityStmt->close();
+    } else {
+        throw new RuntimeException('Unable to prepare status activity.');
     }
+
+    $conn->commit();
 
     echo json_encode([
         'success' => true,
@@ -75,8 +88,13 @@ if ($stmt->execute()) {
         'new_status' => $newStatus
     ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to update application status']);
+    throw new RuntimeException('Unable to update application status.');
 }
 
 $stmt->close();
+} catch (Throwable $exception) {
+    $conn->rollback();
+    error_log('Application status transaction failed: ' . $exception->getMessage());
+    sendApiError('Failed to update application status', 500);
+}
 ?>

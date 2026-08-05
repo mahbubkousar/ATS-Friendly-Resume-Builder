@@ -8,6 +8,7 @@ try {
     require_once '../config/database.php';
     require_once '../config/gemini.php';
     require_once '../includes/ai-security.php';
+    require_once '../includes/ai-consent.php';
 } catch (Throwable $e) {
     error_log('AI conversation configuration error: ' . $e->getMessage());
     http_response_code(500);
@@ -19,6 +20,7 @@ try {
 requireApiUser('error');
 
 $user = getCurrentUser();
+requireAiProcessingConsent((int) $user['id']);
 
 requireApiMethod('POST', 'error');
 

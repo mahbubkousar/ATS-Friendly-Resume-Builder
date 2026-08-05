@@ -23,7 +23,7 @@ The application integrates **Google Gemini API** (Generative AI) for:
 
 ### API Details
 - **Provider**: Google Generative AI
-- **Model**: `gemini-2.0-flash-exp`
+- **Model**: Configured with `GEMINI_MODEL` in `.env`
 - **Endpoint**: `https://generativelanguage.googleapis.com/v1beta/models/`
 - **Authentication**: API Key (query parameter)
 - **Format**: JSON (REST API)
@@ -38,6 +38,7 @@ The application integrates **Google Gemini API** (Generative AI) for:
 
 ```env
 GEMINI_API_KEY=your_actual_api_key_here
+GEMINI_MODEL=a_model_enabled_for_your_key
 ```
 
 ### Configuration Code
@@ -62,10 +63,10 @@ if (file_exists($envFile)) {
     }
 }
 
-// Define constants
-define('GEMINI_API_KEY', getenv('GEMINI_API_KEY') ?: $_ENV['GEMINI_API_KEY'] ?? '');
-define('GEMINI_MODEL_NAME', 'gemini-2.0-flash-exp');
-define('GEMINI_API_ENDPOINT', 'https://generativelanguage.googleapis.com/v1beta/models/' . GEMINI_MODEL_NAME . ':generateContent');
+// Runtime configuration is loaded centrally from .env
+define('GEMINI_API_KEY', (string) environmentValue('GEMINI_API_KEY', ''));
+define('GEMINI_MODEL_NAME', (string) environmentValue('GEMINI_MODEL', ''));
+define('GEMINI_API_BASE', 'https://generativelanguage.googleapis.com/v1beta/models/');
 ```
 
 ### Why .env File?
@@ -158,8 +159,8 @@ function callGeminiAPI($prompt, $systemInstruction = '') {
         ];
     }
 
-    // Build URL with API key
-    $url = GEMINI_API_ENDPOINT . '?key=' . $apiKey;
+    $url = GEMINI_API_BASE . rawurlencode(GEMINI_MODEL_NAME)
+        . ':generateContent?key=' . rawurlencode($apiKey);
 
     // Combine system instruction with prompt
     $fullPrompt = $prompt;
@@ -675,7 +676,7 @@ DATA_UPDATES:
 A: It's a REST API that accepts text prompts via HTTP POST and returns AI-generated text in JSON format.
 
 **Q: What model are you using?**
-A: `gemini-2.0-flash-exp` - Google's fast experimental model for text generation.
+A: The supported model configured through `GEMINI_MODEL`; model selection is deployment-specific rather than hard-coded.
 
 **Q: How do you secure the API key?**
 A: Stored in `.env` file (not in version control), loaded via `config/gemini.php`.

@@ -1,203 +1,136 @@
-# ResumeSync - AI-Powered ATS Resume Builder
+# ResumeSync
 
-AI-powered Applicant Tracking System (ATS) resume builder and career management platform.
+ResumeSync is a framework-free PHP/MySQL resume builder with ATS analysis,
+Google Gemini-assisted editing, public resume sharing, profile management, and
+job-application tracking.
 
+## Requirements
 
-## Quick Start
+- PHP 8.0+ with `mysqli`, `curl`, `fileinfo`, and `zip`
+- MySQL 8+ or a compatible MariaDB release
+- Apache with `mod_headers` and `mod_rewrite`, or PHP's development server
+- Node.js 20+ only for JavaScript syntax checks
 
-### 1. Setup Database
+## Installation
+
+1. Create the database and import the one canonical schema:
+
+   ```bash
+   mysql -u root -p -e "CREATE DATABASE resumesync_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+   mysql -u root -p resumesync_db < resumesync_db_structure.sql
+   mysql -u root -p resumesync_db < database_seed.sql
+   ```
+
+2. Copy `.env.example` to `.env` and configure:
+
+   ```env
+   APP_ENV=development
+   APP_URL=http://localhost/ATS
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_NAME=resumesync_db
+   DB_USER=resumesync_app
+   DB_PASS=use-a-strong-password
+   GEMINI_API_KEY=your-api-key
+   GEMINI_MODEL=a-model-enabled-for-your-key
+   ```
+
+   `APP_URL` may point to the domain root or any subdirectory. Production mode
+   rejects root or blank-password database accounts.
+
+3. Serve the repository through Apache/XAMPP, or locally with:
+
+   ```bash
+   APP_ENV=development php -S 127.0.0.1:8080
+   ```
+
+### Existing databases
+
+Do not re-import the full schema. Back up the database and apply files in
+[`migrations`](migrations/README.md) in numeric order.
+
+## Architecture
+
+```text
+Browser pages and shared JavaScript
+              ↓
+PHP pages / JSON API bootstrap
+              ↓
+Services and repositories
+              ↓
+MySQL                  Google Gemini
+```
+
+Important shared components:
+
+- `config/` — environment, application URL, database, session, and AI client
+- `includes/api-bootstrap.php` — JSON errors, authentication, and HTTP methods
+- `includes/editor-bootstrap.php` — shared editor initialization
+- `repositories/` and `services/` — dashboard data and view-model logic
+- `js/shared/` — deployment URLs, CSRF, editor controls, ATS flow, and AI consent
+- `resumesync_db_structure.sql` — canonical schema for new installations
+- `database_seed.sql` — synthetic/public template data only
+- `migrations/` — ordered changes for existing installations
+
+## Feature status
+
+Implemented:
+
+- Registration, login, protected sessions, and logout
+- Resume editing with modern, professional, and academic templates
+- ATS scoring and Gemini-assisted resume workflows
+- Explicit, revocable consent before external AI processing
+- Resume sharing with public tokens and download/view statistics
+- Profile education/experience management
+- Job-application tracking, timelines, and notification updates
+
+The ATS converter navigation item is currently hidden while its user experience
+is being finalized. Photo upload, two-factor authentication, email verification,
+and account deletion fields exist in the schema but are not complete workflows.
+
+## AI privacy
+
+AI features are optional. Before the first AI request, the application explains
+that the minimum required resume, prompt, or job-description data will be sent
+to Google Gemini. Consent is stored with a policy version and can be revoked
+from the “AI privacy” control. Server endpoints reject AI processing without a
+current consent record.
+
+Operators must configure their Google project retention settings and privacy
+notice for their jurisdiction. Do not send information that is unnecessary for
+the requested result.
+
+## Security controls
+
+- Prepared SQL statements and ownership-scoped resource queries
+- CSRF protection for authenticated mutations
+- Strict session lifecycle and protected cookie settings
+- Upload validation, request limits, and AI/authentication rate limits
+- Content Security Policy, SRI-pinned CDN assets, and hardened headers
+- Server-side request validation and generic production errors
+- Environment-managed credentials and model selection
+
+Never commit `.env`, user data, production exports, resumes, tokens, or logs.
+
+## Testing
+
+Run the local checks:
+
 ```bash
-# Open MySQL
-mysql -u root -p
-
-# Create database
-CREATE DATABASE resumesync_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-# Import schema
-mysql -u root -p < create_database.sql
-
-# Existing installations: apply security counter tables
-mysql -u root -p resumesync_db < migrations/001_create_ai_rate_limits.sql
-mysql -u root -p resumesync_db < migrations/002_create_auth_rate_limits.sql
+find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+find js -name '*.js' -print0 | xargs -0 -n1 node --check
+APP_ENV=test GEMINI_API_KEY=test-key GEMINI_MODEL=test-model php tests/run.php
+bash tests/http-smoke.sh
 ```
 
-### 2. Configure Environment
-
-Copy `.env.example` to `.env`, set `APP_URL`, configure a dedicated database
-account, and add your Gemini API key. The runtime database account only needs
-`SELECT`, `INSERT`, `UPDATE`, and `DELETE` access to `resumesync_db`.
-
-Set `APP_ENV=production` when deploying. Production startup rejects root or
-empty-password database credentials.
-
-### 3. Start XAMPP
-- Start Apache
-- Start MySQL
-
-### 4. Access the Application
-```
-Homepage: http://localhost/ATS/
-Login: http://localhost/ATS/login.php
-Register: http://localhost/ATS/register.php
-Dashboard: http://localhost/ATS/dashboard.php
-```
-
-## Features
-
-### Authentication
-- User registration with multi-step form
-- Secure login with password hashing
-- Session-based authentication
-- Remember me functionality
-- Logout capability
-- Protected pages (dashboard, editors, score checker)
-
-### User Management
-- Personal information storage
-- Education history
-- Work experience
-- Profile management
-
-### Security
-- Bcrypt password hashing
-- SQL injection prevention (prepared statements)
-- XSS protection (output escaping)
-- Session security
-- Access control on protected pages
-
-## File Structure
-
-```
-/ATS/
-├── config/               # Configuration files
-│   ├── database.php      # DB connection
-│   └── session.php       # Session management
-├── api/                  # API endpoints
-│   └── register.php      # Registration handler
-├── login.php             # Login page
-├── register.php          # Registration page
-├── dashboard.php         # User dashboard (protected)
-├── editor.php            # Resume editor (protected)
-├── ai-editor.php         # AI editor (protected)
-├── score-checker.php     # ATS checker (protected)
-├── logout.php            # Logout handler
-└── database_schema.sql   # Database schema
-```
-
-## Usage
-
-### Register New User
-1. Go to `http://localhost/ATS/register.php`
-2. Complete the 4-step registration:
-   - Step 1: Account (email, password)
-   - Step 2: Personal (phone, address, etc.)
-   - Step 3: Education (optional)
-   - Step 4: Experience (optional)
-3. Submit and auto-login
-
-### Login
-1. Go to `http://localhost/ATS/login.php`
-2. Enter email and password
-3. Optional: Check "Remember me"
-4. Access dashboard and protected features
-
-### Logout
-1. Navigate to Dashboard → Settings tab
-2. Click the red "Logout" button
-3. Session destroyed, redirected to login
-
-## Protected Pages
-
-These pages require authentication:
-- `dashboard.php` - User dashboard
-- `editor.php` - Resume editor
-- `ai-editor.php` - AI-powered editor
-- `score-checker.php` - ATS score checker
-
-Unauthenticated access automatically redirects to login page.
-
-## Database Schema
-
-### users
-- User accounts with hashed passwords
-- Personal information (name, email, phone, address)
-- Professional details (title, bio)
-
-### education
-- Linked to users
-- Institution, degree, field of study
-- Start/end dates, GPA
-
-### work_experience
-- Linked to users
-- Company, job title, location
-- Start/end dates, current job flag
-- Job description
-
-## API Endpoints
-
-### POST /api/register.php
-Register new user account
-- **Input**: JSON with user data
-- **Output**: Success/error message
-- **Side Effect**: Creates session on success
-
-## Development
-
-### Adding New Protected Pages
-```php
-<?php
-require_once 'config/session.php';
-requireLogin();
-?>
-<!DOCTYPE html>
-<!-- Your page content -->
-```
-
-### Accessing Current User
-```php
-<?php
-$user = getCurrentUser();
-echo $user['fullname']; // User's name
-echo $user['email'];    // User's email
-echo $user['id'];       // User's ID
-?>
-```
-
-## Troubleshooting
-
-### "Database connection failed"
-- Check MySQL is running in XAMPP
-- Verify credentials in `config/database.php`
-- Ensure database `resumesync_db` exists
-
-### Can't login after registration
-- Check browser console for errors
-- Verify user was created: `SELECT * FROM users;`
-- Clear browser cache and cookies
-
-### Redirected to login immediately
-- Check session is working: `var_dump($_SESSION);`
-- Verify PHP session support is enabled
-- Check file permissions on session directory
+GitHub Actions runs the same syntax, unit, architecture, and HTTP contract
+checks for every push and pull request.
 
 ## Documentation
 
-- `DATABASE_SETUP.md` - Detailed database setup instructions
-- `IMPLEMENTATION_SUMMARY.md` - Complete implementation details
-
-## Security Notes
-
-- Never commit `config/database.php` with production credentials
-- Never commit database exports containing user accounts, password hashes, resumes, tokens, or activity logs
-- Keep tracked SQL files limited to schema definitions and synthetic/public seed data
-- Store local exports under `database-backups/` or name them `*.local.sql` so Git ignores them
-- Keep `.env` private and use a dedicated least-privilege database account
-- Set `APP_URL` explicitly so generated share links never depend on request headers
-- Always use HTTPS in production
-- Keep CSRF protection enabled for state-changing requests
-- Keep authentication and AI rate limits aligned with production capacity
-- Add email verification for new accounts
+Detailed design and feature documentation is under [`docs`](docs/README.md).
+When implementation and documentation disagree, this README and the executable
+tests describe the supported setup.
 
 ## License
 

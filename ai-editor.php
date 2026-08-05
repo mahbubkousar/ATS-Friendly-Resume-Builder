@@ -64,6 +64,7 @@ if (!$resumeData) {
     <link rel="stylesheet" href="css/styles.css?v=9">
     <link rel="stylesheet" href="css/editor.css?v=16">
     <link rel="stylesheet" href="css/ai-editor.css?v=2">
+    <link rel="stylesheet" href="css/ai-consent.css?v=1">
 </head>
 <body class="ai-editor-body">
     <nav class="floating-nav">
@@ -232,10 +233,10 @@ if (!$resumeData) {
 
         const userId = <?php echo $user['id']; ?>;
     </script>
-    <script src="config/gemini-config.php"></script>
     <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/navigation-fix.js"></script>
     <script src="js/shared/csrf.js?v=1"></script>
+    <script src="js/shared/ai-consent.js?v=1"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=5"></script>
     <script src="js/ai-editor.js?v=5"></script>

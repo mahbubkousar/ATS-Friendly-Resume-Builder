@@ -7,6 +7,7 @@ try {
     require_once '../config/session.php';
     require_once '../config/gemini.php';
     require_once '../includes/ai-security.php';
+    require_once '../includes/ai-consent.php';
 } catch (Throwable $e) {
     error_log('Resume optimization configuration error: ' . $e->getMessage());
     http_response_code(500);
@@ -16,6 +17,7 @@ try {
 
 
 requireApiUser('error');
+requireAiProcessingConsent((int) getCurrentUserId());
 
 requireApiMethod('POST', 'error');
 
@@ -110,16 +112,12 @@ function optimizeForATS($resumeData, $jobAnalysis, $template) {
         throw new Exception($response['error'] ?? 'Gemini API call failed');
     }
 
-    $responseText = $response['text'];
-
-    
-    if (preg_match('/\{[\s\S]*\}/', $responseText, $matches)) {
-        $jsonText = $matches[0];
-    } else {
-        $jsonText = $responseText;
-    }
-
-    $optimizedData = json_decode($jsonText, true);
+    $optimizedData = decodeGeminiJsonObject($response['text'], [
+        'personal_details' => 'object',
+        'summary_text' => 'string',
+        'experience' => 'list',
+        'education' => 'list',
+    ]);
 
     if (!$optimizedData) {
         

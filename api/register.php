@@ -106,6 +106,10 @@ $stmt->close();
 
 $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
 
+$conn->begin_transaction();
+
+try {
+
 $stmt = $conn->prepare("INSERT INTO users (full_name, email, password_hash, phone, date_of_birth, address_line1, city, state, zip_code, country, professional_title, professional_summary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 $dob = !empty($input['dob']) ? $input['dob'] : null;
@@ -129,9 +133,7 @@ $stmt->bind_param(
 );
 
 if (!$stmt->execute()) {
-    echo json_encode(['success' => false, 'message' => 'Registration failed. Please try again.']);
-    $stmt->close();
-    exit();
+    throw new RuntimeException('Unable to create user.');
 }
 
 $userId = $stmt->insert_id;
@@ -159,7 +161,9 @@ if (!empty($input['education']) && is_array($input['education'])) {
                 $endDate,
                 $gpa
             );
-            $stmt->execute();
+            if (!$stmt->execute()) {
+                throw new RuntimeException('Unable to save education entry.');
+            }
         }
     }
     $stmt->close();
@@ -189,7 +193,9 @@ if (!empty($input['experience']) && is_array($input['experience'])) {
                 $isCurrent,
                 $description
             );
-            $stmt->execute();
+            if (!$stmt->execute()) {
+                throw new RuntimeException('Unable to save experience entry.');
+            }
         }
     }
     $stmt->close();
@@ -200,6 +206,17 @@ $stmt->bind_param("i", $userId);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
+
+if (!$user) {
+    throw new RuntimeException('Unable to load newly created user.');
+}
+
+$conn->commit();
+} catch (Throwable $exception) {
+    $conn->rollback();
+    error_log('Registration transaction failed: ' . $exception->getMessage());
+    sendApiError('Registration failed. Please try again.', 500);
+}
 
 setUserSession($user['user_id'], $user['full_name'], $user['email']);
 

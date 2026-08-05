@@ -20,6 +20,7 @@ $personalDetails = $editorContext['personalDetails'];
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css?v=4">
     <link rel="stylesheet" href="css/editor.css?v=14">
+    <link rel="stylesheet" href="css/ai-consent.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
 </head>
 <body class="editor-body">
@@ -261,9 +262,12 @@ $personalDetails = $editorContext['personalDetails'];
     <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/navigation-fix.js"></script>
     <script src="js/shared/csrf.js?v=1"></script>
+    <script src="js/shared/ai-consent.js?v=1"></script>
     <script src="js/shared/utils.js"></script>
     <script src="js/modal-utils.js?v=3"></script>
     <script src="js/app.js?v=5"></script>
-    <script src="js/editor-professional.js?v=11"></script>
+    <script src="js/editor-professional.js?v=12"></script>
+    <script src="js/shared/editor-preview-controls.js?v=1"></script>
+    <script src="js/shared/editor-ats-analysis.js?v=1"></script>
 </body>
 </html>

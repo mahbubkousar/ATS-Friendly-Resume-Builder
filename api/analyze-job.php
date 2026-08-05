@@ -7,6 +7,7 @@ try {
     require_once '../config/session.php';
     require_once '../config/gemini.php';
     require_once '../includes/ai-security.php';
+    require_once '../includes/ai-consent.php';
 } catch (Throwable $e) {
     error_log('Job analysis configuration error: ' . $e->getMessage());
     http_response_code(500);
@@ -16,6 +17,7 @@ try {
 
 
 requireApiUser('error');
+requireAiProcessingConsent((int) getCurrentUserId());
 
 requireApiMethod('POST', 'error');
 
@@ -88,25 +90,25 @@ function analyzeJob($jobDescription, $resumeData) {
         throw new Exception($response['error'] ?? 'Gemini API call failed');
     }
 
-    $responseText = $response['text'];
-
-    
-    if (preg_match('/\{[\s\S]*\}/', $responseText, $matches)) {
-        $jsonText = $matches[0];
-    } else {
-        $jsonText = $responseText;
-    }
-
-    $analysis = json_decode($jsonText, true);
+    $analysis = decodeGeminiJsonObject($response['text'], [
+        'recommendedTemplate' => 'string',
+        'reasoning' => 'string',
+        'jobType' => 'string',
+        'industry' => 'string',
+        'keySkills' => 'list',
+        'keywords' => 'list',
+        'experienceLevel' => 'string',
+        'suggestions' => 'list',
+    ]);
 
     if (!$analysis) {
-        throw new Exception('Failed to parse job analysis as JSON');
+        throw new Exception('AI service returned an invalid job analysis.');
     }
 
     
     $validTemplates = ['modern', 'professional', 'academic-standard', 'executive', 'technical', 'creative', 'classic'];
 
-    if (!isset($analysis['recommendedTemplate']) || !in_array($analysis['recommendedTemplate'], $validTemplates)) {
+    if (!in_array($analysis['recommendedTemplate'], $validTemplates, true)) {
         $analysis['recommendedTemplate'] = 'modern'; 
     }
 

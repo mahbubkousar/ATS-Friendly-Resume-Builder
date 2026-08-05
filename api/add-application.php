@@ -50,6 +50,9 @@ if (!$conn) {
     exit();
 }
 
+$conn->begin_transaction();
+
+try {
 $stmt = $conn->prepare("INSERT INTO job_applications (
     user_id, company_name, job_title, job_location, job_type, salary_range,
     application_date, status, application_url, notes, contact_person,
@@ -86,8 +89,12 @@ if ($stmt->execute()) {
         $eventDesc = "Application submitted to $companyName for $jobTitle position";
         $eventDate = $applicationDate . ' 00:00:00';
         $timelineStmt->bind_param("issss", $applicationId, $eventType, $eventTitle, $eventDesc, $eventDate);
-        $timelineStmt->execute();
+        if (!$timelineStmt->execute()) {
+            throw new RuntimeException('Unable to create application timeline.');
+        }
         $timelineStmt->close();
+    } else {
+        throw new RuntimeException('Unable to prepare application timeline.');
     }
 
     if ($interviewDate) {
@@ -100,8 +107,12 @@ if ($stmt->execute()) {
                 $eventDesc .= " at $interviewLocation";
             }
             $timelineStmt->bind_param("issss", $applicationId, $eventType, $eventTitle, $eventDesc, $interviewDate);
-            $timelineStmt->execute();
+            if (!$timelineStmt->execute()) {
+                throw new RuntimeException('Unable to create interview timeline.');
+            }
             $timelineStmt->close();
+        } else {
+            throw new RuntimeException('Unable to prepare interview timeline.');
         }
     }
 
@@ -110,9 +121,15 @@ if ($stmt->execute()) {
         $activityType = 'created';
         $activityDesc = "Application created for $jobTitle at $companyName";
         $activityStmt->bind_param("iss", $applicationId, $activityType, $activityDesc);
-        $activityStmt->execute();
+        if (!$activityStmt->execute()) {
+            throw new RuntimeException('Unable to create application activity.');
+        }
         $activityStmt->close();
+    } else {
+        throw new RuntimeException('Unable to prepare application activity.');
     }
+
+    $conn->commit();
 
     echo json_encode([
         'success' => true,
@@ -120,8 +137,13 @@ if ($stmt->execute()) {
         'application_id' => $applicationId
     ]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Failed to add application']);
+    throw new RuntimeException('Unable to create application.');
 }
 
 $stmt->close();
+} catch (Throwable $exception) {
+    $conn->rollback();
+    error_log('Application creation transaction failed: ' . $exception->getMessage());
+    sendApiError('Failed to add application', 500);
+}
 ?>

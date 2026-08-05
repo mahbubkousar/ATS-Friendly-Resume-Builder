@@ -21,6 +21,7 @@ $personalDetails = $editorContext['personalDetails'];
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css?v=9">
     <link rel="stylesheet" href="css/editor.css?v=16">
+    <link rel="stylesheet" href="css/ai-consent.css?v=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
 </head>
 <body class="editor-body">
@@ -311,6 +312,7 @@ $personalDetails = $editorContext['personalDetails'];
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
     <script src="js/shared/app-url.js?v=1"></script>
     <script src="js/shared/csrf.js?v=1"></script>
+    <script src="js/shared/ai-consent.js?v=1"></script>
     <script src="js/app.js?v=5"></script>
     <script src="js/editor.js?v=24"></script>
 </body>

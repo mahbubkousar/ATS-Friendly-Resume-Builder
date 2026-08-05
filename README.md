@@ -75,4 +75,4 @@ Never commit `.env`, API keys, production database exports, resumes, or logs.
 
 ## License
 
-Copyright © 2025 ResumeSync. All rights reserved.
+Copyright © 2025 Mahbub Kousar. All rights reserved. See [LICENSE](LICENSE).
